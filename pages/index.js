@@ -5,32 +5,25 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import {
   Avatar,
-  Fab,
   Grid,
   ImageList,
   ImageListItem,
   Box,
-  Card,
   CardContent,
-  List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  ListSubheader,
   ImageListItemBar,
-  IconButton,
   ListItemButton,
   Typography,
-  Divider,
 } from '@mui/material';
 import CallIcon from '@mui/icons-material/Call';
 import EmailIcon from '@mui/icons-material/Email';
 import InfoIcon from '@mui/icons-material/Info';
-import ShareIcon from '@mui/icons-material/Share';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import XIcon from '@mui/icons-material/X';
-import NoAccountsIcon from '@mui/icons-material/NoAccounts';
+import BusinessIcon from '@mui/icons-material/Business';
 import { styled } from '@mui/material/styles';
 
 const StyledListItemButton = styled(ListItemButton)`
@@ -46,25 +39,16 @@ const StyledListItemButton = styled(ListItemButton)`
 
 export default function Home() {
   const portfolio = {
+    username: 'michaeljordan',
     firstName: 'Michael',
     lastName: 'Jordan',
+    address: '',
     job: {
       title: 'Software Developer',
       company: 'Google',
     },
-    contact: [
-      {
-        icon: <CallIcon />,
-        category: 'contactInformation',
-        identifier: 'phoneNumber',
-        value: '094789920222',
-      },
-      {
-        icon: <EmailIcon />,
-        category: 'contactInformation',
-        identifier: 'emailAddress',
-        value: 'michael.jordan@gmail.com',
-      },
+    address: 'Blk. 3, Lot 8 & 12, St. Benevolent Street, Quezon City, Manila',
+    contactInformation: [
       {
         icon: <InfoIcon />,
         category: 'contactInformation',
@@ -72,6 +56,22 @@ export default function Home() {
         value:
           'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.',
       },
+      {
+        icon: <CallIcon />,
+        category: 'contactInformation',
+        identifier: 'phoneNumber',
+        label: 'Phone Number',
+        value: '094789920222',
+      },
+      {
+        icon: <EmailIcon />,
+        category: 'contactInformation',
+        identifier: 'emailAddress',
+        label: 'Email Address',
+        value: 'michael.jordan@gmail.com',
+      },
+    ],
+    socialMedia: [
       {
         icon: <XIcon />,
         category: 'socialMedia',
@@ -92,20 +92,6 @@ export default function Home() {
         identifier: 'instagram',
         value: '@michaeljordan',
         link: 'https://www.instagram.com/',
-      },
-      {
-        icon: <NoAccountsIcon />,
-        category: 'websites',
-        identifier: 'lazada',
-        value: '@michaeljordan',
-        link: 'http://localhost:3000/',
-      },
-      {
-        icon: <NoAccountsIcon />,
-        category: 'websites',
-        identifier: 'shopee',
-        value: '@michaeljordan',
-        link: 'http://localhost:3000/',
       },
     ],
     photos: [
@@ -175,6 +161,15 @@ export default function Home() {
       </Head>
 
       <main>
+        <div
+          style={{
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            backgroundImage:
+              "url('https://marketplace.canva.com/EAFOWEsiLHs/1/0/1600w/canva-beige-minimalist-book-shelf-home-staging-zoom-virtual-background-yx3Jh8_clqA.jpg')",
+          }}
+          className='header-banner'
+        ></div>
         <Grid
           container
           spacing={0}
@@ -185,6 +180,8 @@ export default function Home() {
           <Grid item lg={4} md={6} xs={12}>
             <Box>
               <CardContent className='card-main'>
+                {/* Header */}
+
                 <Grid
                   container
                   spacing={0}
@@ -202,6 +199,7 @@ export default function Home() {
                   </Grid>
                 </Grid>
 
+                {/* Body */}
                 <Box
                   className='card-secondary'
                   p={2}
@@ -221,56 +219,133 @@ export default function Home() {
                   </Typography>
 
                   <Box mt={4}>
-                    {/* <Typography
-                      variant='body1'
-                      mt={3}
-                      mb={1}
-                      style={{ textAlign: 'center', fontWeight: 'bold' }}
-                    >
-                      Contact Information
-                    </Typography>
-
-                    <Divider /> */}
-
-                    {/* <Fab color='primary' aria-label='add'>
-                    <CallIcon />
-                  </Fab>
-
-                  <Fab color='primary' aria-label='add'>
-                    <EmailIcon />
-                  </Fab>
-
-                  <Fab color='primary' aria-label='add'>
-                    <ShareIcon />
-                  </Fab> */}
-
+                    {/* Contact Information */}
                     <nav>
-                      {portfolio.contact.map((item) => {
+                      {portfolio.contactInformation.map((item) => {
                         if (item.identifier === 'emailAddress') {
                           return (
-                            <a
-                              href={`mailto:${item.link}`}
-                              style={{
-                                textDecoration: 'none',
-                                color: 'inherit',
-                              }}
-                            >
-                              <StyledListItemButton
-                                sx={{
-                                  margin: '8px 0px',
-                                  boxShadow: 1,
-                                  borderRadius: '6px',
+                            <>
+                              {item.label && (
+                                <Typography>{item.label}</Typography>
+                              )}
+                              <a
+                                href={`mailto:${item.link}`}
+                                style={{
+                                  textDecoration: 'none',
+                                  color: 'inherit',
                                 }}
-                                className='card-socials'
                               >
-                                <ListItemIcon>{item.icon}</ListItemIcon>
-                                <ListItemText primary={item.value} />
-                              </StyledListItemButton>
-                            </a>
+                                <StyledListItemButton
+                                  sx={{
+                                    margin: '8px 0px',
+                                    boxShadow: 1,
+                                    borderRadius: '6px',
+                                  }}
+                                  className='card-socials'
+                                >
+                                  <ListItemIcon>{item.icon}</ListItemIcon>
+                                  <ListItemText primary={item.value} />
+                                </StyledListItemButton>
+                              </a>
+                            </>
+                          );
+                        } else if (item.identifier === 'phoneNumber') {
+                          return (
+                            <>
+                              {item.label && (
+                                <Typography>{item.label}</Typography>
+                              )}
+
+                              <a
+                                href={`tel:${item.value}`}
+                                style={{
+                                  textDecoration: 'none',
+                                  color: 'inherit',
+                                }}
+                              >
+                                <StyledListItemButton
+                                  sx={{
+                                    margin: '8px 0px',
+                                    boxShadow: 1,
+                                    borderRadius: '6px',
+                                  }}
+                                  className='card-socials'
+                                >
+                                  <ListItemIcon>{item.icon}</ListItemIcon>
+                                  <ListItemText primary={item.value} />
+                                </StyledListItemButton>
+                              </a>
+                            </>
                           );
                         } else {
                           if (item.link) {
                             return (
+                              <>
+                                {item.label && (
+                                  <Typography>{item.label}</Typography>
+                                )}
+
+                                <a
+                                  href={item.link}
+                                  style={{
+                                    textDecoration: 'none',
+                                    color: 'inherit',
+                                  }}
+                                  target='_blank'
+                                >
+                                  <StyledListItemButton
+                                    sx={{
+                                      margin: '8px 0px',
+                                      boxShadow: 1,
+                                      borderRadius: '6px',
+                                    }}
+                                    className='card-socials'
+                                  >
+                                    <ListItemIcon>{item.icon}</ListItemIcon>
+                                    <ListItemText primary={item.value} />
+                                  </StyledListItemButton>
+                                </a>
+                              </>
+                            );
+                          } else {
+                            return (
+                              <>
+                                {item.label && (
+                                  <Typography>{item.label}</Typography>
+                                )}
+
+                                <ListItem
+                                  sx={{
+                                    margin: '8px 0px',
+                                    boxShadow: 1,
+                                    borderRadius: '6px',
+                                  }}
+                                  className='card-socials'
+                                >
+                                  <ListItemIcon>{item.icon}</ListItemIcon>
+                                  <ListItemText primary={item.value} />
+                                </ListItem>
+                              </>
+                            );
+                          }
+                        }
+                      })}
+                    </nav>
+                  </Box>
+
+                  {/* Social Media */}
+                  <Box>
+                    <Typography>Socials</Typography>
+
+                    <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                      {portfolio.socialMedia.map((item) => {
+                        if (item.link) {
+                          return (
+                            <Grid item xs={6}>
+                              {item.label && (
+                                <Typography>{item.label}</Typography>
+                              )}
+
                               <a
                                 href={item.link}
                                 style={{
@@ -291,9 +366,11 @@ export default function Home() {
                                   <ListItemText primary={item.value} />
                                 </StyledListItemButton>
                               </a>
-                            );
-                          } else {
-                            return (
+                            </Grid>
+                          );
+                        } else {
+                          return (
+                            <Grid item xs={6}>
                               <ListItem
                                 sx={{
                                   margin: '8px 0px',
@@ -305,24 +382,35 @@ export default function Home() {
                                 <ListItemIcon>{item.icon}</ListItemIcon>
                                 <ListItemText primary={item.value} />
                               </ListItem>
-                            );
-                          }
+                            </Grid>
+                          );
                         }
                       })}
-                    </nav>
+                    </Grid>
                   </Box>
 
-                  <Box mt={4}>
-                    {/* <Typography
-                      variant='body1'
-                      mt={3}
-                      mb={1}
-                      style={{ textAlign: 'center', fontWeight: 'bold' }}
-                    >
-                      Check out my portfolio
-                    </Typography>
+                  {/* Address */}
+                  <Box>
+                    <Typography>Address</Typography>
 
-                    <Divider /> */}
+                    <ListItem
+                      sx={{
+                        margin: '8px 0px',
+                        boxShadow: 1,
+                        borderRadius: '6px',
+                      }}
+                      className='card-socials'
+                    >
+                      <ListItemIcon>
+                        <BusinessIcon />
+                      </ListItemIcon>
+                      <ListItemText primary={portfolio.address} />
+                    </ListItem>
+                  </Box>
+
+                  {/* Portfolio */}
+                  <Box>
+                    <Typography>Portfolio</Typography>
 
                     <ImageList sx={{ height: 450 }}>
                       {portfolio.photos.map((item) => (
