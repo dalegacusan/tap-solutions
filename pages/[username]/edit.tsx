@@ -46,17 +46,6 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
-const modalStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  boxShadow: 24,
-  p: 4,
-};
-
 const socialMediaItems = [
   { icon: <XIcon />, identifier: 'twitter', label: 'Twitter' },
   { icon: <FacebookIcon />, identifier: 'facebook', label: 'Facebook' },
@@ -64,24 +53,27 @@ const socialMediaItems = [
   { icon: <LinkedInIcon />, identifier: 'linkedIn', label: 'LinkedIn' },
 ];
 
+const getWidgetContent = (formData) => {
+  return [
+    { id: 'aboutMe', content: formData.aboutMe || 'About Me' },
+    { id: 'emailAddress', content: formData.emailAddress || 'Email Address' },
+    { id: 'address', content: formData.address || 'Address' },
+    { id: 'jobTitle', content: formData.jobTitle || 'Job Title' },
+    { id: 'company', content: formData.company || 'Company' },
+  ].filter((widget) => widget.content); // Only include widgets with content
+};
+
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
+
 export default function EditPage() {
   const router = useRouter();
   const theme = useTheme();
-
-  // fake data generator
-  const getItems = (count) =>
-    Array.from({ length: count }, (v, k) => k).map((k) => ({
-      id: `widget-${k}`,
-      content: `Widget ${k}`,
-    }));
-
-  const reorder = (list, startIndex, endIndex) => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-
-    return result;
-  };
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -100,8 +92,7 @@ export default function EditPage() {
     company: '',
   });
 
-  const initialItems = getItems(10);
-  const [items, setItems] = useState(initialItems);
+  const [items, setItems] = useState(getWidgetContent({}));
   const [user, setUser] = useState<User | null>(null);
   const [isRetrievingUser, setIsRetrievingUser] = useState<boolean>(true);
   const [isErrorRetrievingUser, setIsErrorRetrievingUser] = useState<
@@ -125,7 +116,6 @@ export default function EditPage() {
   const handleSave = (newValue: string) => {
     if (currentIdentifier) {
       if (newValue === '') {
-        // Remove the social media link if the input value is empty
         setFormData({
           ...formData,
           socialMediaLinks: {
@@ -134,7 +124,6 @@ export default function EditPage() {
           },
         });
       } else {
-        // Update the social media link
         setFormData({
           ...formData,
           socialMediaLinks: {
@@ -154,12 +143,10 @@ export default function EditPage() {
     );
 
     if (!hasDefinedSocialMedia) {
-      // Provide feedback to the user or handle the error
       alert('At least one social media link must be defined.');
       return;
     }
 
-    // Proceed with saving the form data
     // Save the form data logic here
   };
 
@@ -175,7 +162,6 @@ export default function EditPage() {
       const user = result as User;
       setUser(user);
 
-      // Extract specific contact information
       const contactInfoMap = user.contactInformation.reduce((acc, contact) => {
         acc[contact.identifier] = contact.value;
         return acc;
@@ -206,6 +192,17 @@ export default function EditPage() {
           }
         ),
       });
+
+      // Update items based on the updated formData
+      setItems(
+        getWidgetContent({
+          aboutMe: formData.aboutMe,
+          emailAddress: formData.emailAddress,
+          address: formData.address,
+          jobTitle: formData.jobTitle,
+          company: formData.company,
+        })
+      );
     }
 
     setIsRetrievingUser(false);
@@ -220,7 +217,7 @@ export default function EditPage() {
     };
 
   useEffect(() => {
-    if(router.query.username){
+    if (router.query.username) {
       getUserDocument();
     }
   }, [router.query.username]);
@@ -270,8 +267,11 @@ export default function EditPage() {
         open={addWidgetModalIsOpen}
         onClose={() => setAddWidgetModalIsOpen(false)}
         formData={formData}
-        setFormData={setFormData}
-       />
+        setFormData={(updatedFormData) => {
+          setFormData(updatedFormData);
+          setItems(getWidgetContent(updatedFormData)); // Update items based on new formData
+        }}
+      />
 
       <main>
         <Grid
