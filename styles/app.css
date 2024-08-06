@@ -1,24 +1,38 @@
 html, body {
   margin: 0;
   padding: 0;
-  background-color: #f4f4f4;
-  /* background: rgb(255,202,146); */
-  /* background: linear-gradient(0deg, rgba(255,202,146,1) 0%, rgba(142,236,237,1) 100%); */
+  background: rgb(255, 238, 218);
+  background: linear-gradient(
+    0deg,
+    rgba(255, 238, 218, 1) 0%,
+    rgba(255, 255, 255, 1) 38%,
+    rgba(255, 255, 255, 1) 61%,
+    rgba(203, 242, 238, 1) 100%
+  );
+  background-repeat: no-repeat;
+  background-size: cover; /* Ensure background covers entire viewport */
 }
 
 .header-banner {
   height: 400px;
-  margin-bottom: -120px;
+}
+
+.header-banner-divider{
+  height: 20px;
+  margin-bottom: -350px;
+  background: rgb(30,213,195);
+  background: -moz-linear-gradient(90deg, rgba(30,213,195,1) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,1) 53%, rgba(255,145,77,1) 100%);
+  background: -webkit-linear-gradient(90deg, rgba(30,213,195,1) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,1) 53%, rgba(255,145,77,1) 100%);
+  background: linear-gradient(90deg, rgba(30,213,195,1) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,1) 53%, rgba(255,145,77,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#1ed5c3",endColorstr="#ff914d",GradientType=1);
 }
 
 .card-socials {
-  background: rgb(254, 254, 254);
- 
+  background: rgb(255, 255, 255) !important;
 }
 
 .card-main {
 }
 
 .card-secondary {
-
 }
