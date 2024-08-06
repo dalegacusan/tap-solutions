@@ -118,15 +118,43 @@ export default function EditPage() {
 
   const handleSave = (newValue: string) => {
     if (currentIdentifier) {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        socialMediaLinks: {
-          ...prevFormData.socialMediaLinks,
-          [currentIdentifier]: newValue,
-        },
-      }));
+      if (newValue === '') {
+        // Remove the social media link if the input value is empty
+        setFormData({
+          ...formData,
+          socialMediaLinks: {
+            ...formData.socialMediaLinks,
+            [currentIdentifier]: '',
+          },
+        });
+      } else {
+        // Update the social media link
+        setFormData({
+          ...formData,
+          socialMediaLinks: {
+            ...formData.socialMediaLinks,
+            [currentIdentifier]: newValue,
+          },
+        });
+      }
     }
     setEditSocialMediaModalIsOpen(false);
+  };
+
+  const handleSaveForm = () => {
+    const { socialMediaLinks } = formData;
+    const hasDefinedSocialMedia = Object.values(socialMediaLinks).some(
+      (link) => link.trim() !== ''
+    );
+
+    if (!hasDefinedSocialMedia) {
+      // Provide feedback to the user or handle the error
+      alert('At least one social media link must be defined.');
+      return;
+    }
+
+    // Proceed with saving the form data
+    // Save the form data logic here
   };
 
   async function getUserDocument() {
@@ -207,7 +235,6 @@ export default function EditPage() {
         </title>
         <link rel='icon' href='/favicon.ico' />
       </Head>
-
 
       <SocialMediaEditButtonModal
         open={editSocialMediaModalIsOpen}
@@ -389,7 +416,12 @@ export default function EditPage() {
               </Grid>
 
               <Box mt={6}>
-                <Button variant='contained' fullWidth color='success'>
+                <Button
+                  variant='contained'
+                  fullWidth
+                  color='success'
+                  onClick={handleSaveForm}
+                >
                   Save
                 </Button>
               </Box>

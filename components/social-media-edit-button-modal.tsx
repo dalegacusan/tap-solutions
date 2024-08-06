@@ -7,7 +7,7 @@ interface SocialMediaEditButtonModalProps {
   onClose: () => void;
   label: string;
   value: string;
-  onSave: (newValue: string | null) => void;
+  onSave: (newValue: string) => void;
 }
 
 const SocialMediaEditButtonModal: React.FC<SocialMediaEditButtonModalProps> = ({
@@ -27,11 +27,7 @@ const SocialMediaEditButtonModal: React.FC<SocialMediaEditButtonModalProps> = ({
 
   // Handle save action
   const handleSave = () => {
-    if (inputValue.trim() === '') {
-      onSave(null); // Indicate removal of the link
-    } else {
-      onSave(inputValue.trim()); // Save the new link
-    }
+    onSave(inputValue.trim()); // Trim the input value to remove unnecessary whitespace
     onClose();
   };
 
@@ -63,7 +59,7 @@ const SocialMediaEditButtonModal: React.FC<SocialMediaEditButtonModalProps> = ({
           fullWidth
           label='URL'
           value={inputValue}
-          placeholder='Enter URL or leave blank to remove'
+          placeholder='Enter URL'
           onChange={(e) => setInputValue(e.target.value)}
           sx={{ my: 2 }}
         />
