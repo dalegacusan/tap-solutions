@@ -43,6 +43,7 @@ const DraggableWidgets = ({ items, onDragEnd, setItems, setFormData }) => {
                       display: 'flex',
                       justifyContent: 'space-between', // Align delete button to the right
                     }}
+                    className='card-socials'
                   >
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                       <ListItemIcon>{item.icon}</ListItemIcon>
