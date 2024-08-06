@@ -3,25 +3,10 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import {
-  Grid,
-  Box,
-  Typography,
-  TextField,
-  Button,
-  Modal,
-  ListItemText,
-  ListItem,
-} from '@mui/material';
+import { Grid, Box, Typography, TextField, Button, Modal } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import AddIcon from '@mui/icons-material/Add';
 import { styled, useTheme } from '@mui/material/styles';
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  resetServerContext,
-} from 'react-beautiful-dnd';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import getDocument from '../../firestore/getDocument';
@@ -33,6 +18,13 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import SocialMediaEditButton from '../../components/social-media-edit-button';
 import SocialMediaEditButtonModal from '../../components/social-media-edit-button-modal';
 import AddWidgetModal from '../../components/add-widget-modal';
+import DraggableWidgets from '../../components/draggable-widgets'; // Import DraggableWidgets
+import { resetServerContext } from 'react-beautiful-dnd';
+import EmailIcon from '@mui/icons-material/Email';
+import InfoIcon from '@mui/icons-material/Info';
+import BusinessIcon from '@mui/icons-material/Business';
+import WorkIcon from '@mui/icons-material/Work';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -46,6 +38,15 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
+// Define icons for widgets
+const widgetIcons = {
+  aboutMe: <InfoIcon />,
+  emailAddress: <EmailIcon />,
+  address: <BusinessIcon />,
+  jobTitle: <WorkIcon />,
+  company: <AssignmentIcon />,
+};
+
 const socialMediaItems = [
   { icon: <XIcon />, identifier: 'twitter', label: 'Twitter' },
   { icon: <FacebookIcon />, identifier: 'facebook', label: 'Facebook' },
@@ -55,11 +56,31 @@ const socialMediaItems = [
 
 const getWidgetContent = (formData) => {
   return [
-    { id: 'aboutMe', content: formData.aboutMe || 'About Me' },
-    { id: 'emailAddress', content: formData.emailAddress || 'Email Address' },
-    { id: 'address', content: formData.address || 'Address' },
-    { id: 'jobTitle', content: formData.jobTitle || 'Job Title' },
-    { id: 'company', content: formData.company || 'Company' },
+    {
+      id: 'aboutMe',
+      content: formData.aboutMe || 'About Me',
+      icon: widgetIcons.aboutMe,
+    },
+    {
+      id: 'emailAddress',
+      content: formData.emailAddress || 'Email Address',
+      icon: widgetIcons.emailAddress,
+    },
+    {
+      id: 'address',
+      content: formData.address || 'Address',
+      icon: widgetIcons.address,
+    },
+    {
+      id: 'jobTitle',
+      content: formData.jobTitle || 'Job Title',
+      icon: widgetIcons.jobTitle,
+    },
+    {
+      id: 'company',
+      content: formData.company || 'Company',
+      icon: widgetIcons.company,
+    },
   ].filter((widget) => widget.content); // Only include widgets with content
 };
 
@@ -92,7 +113,7 @@ export default function EditPage() {
     company: '',
   });
 
-  const [items, setItems] = useState(getWidgetContent({}));
+  const [items, setItems] = useState(getWidgetContent(formData));
   const [user, setUser] = useState<User | null>(null);
   const [isRetrievingUser, setIsRetrievingUser] = useState<boolean>(true);
   const [isErrorRetrievingUser, setIsErrorRetrievingUser] = useState<
@@ -378,40 +399,7 @@ export default function EditPage() {
                   </Button>
                 </Grid>
                 <Grid item xs={12}>
-                  <DragDropContext onDragEnd={onDragEnd}>
-                    <Droppable droppableId='droppable'>
-                      {(provided) => (
-                        <div
-                          {...provided.droppableProps}
-                          ref={provided.innerRef}
-                        >
-                          {items.map((item, index) => (
-                            <Draggable
-                              key={item.id}
-                              draggableId={item.id}
-                              index={index}
-                            >
-                              {(provided) => (
-                                <ListItem
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}
-                                  sx={{
-                                    margin: '8px 0px',
-                                    boxShadow: 1,
-                                    borderRadius: '6px',
-                                  }}
-                                >
-                                  <ListItemText primary={item.content} />
-                                </ListItem>
-                              )}
-                            </Draggable>
-                          ))}
-                          {provided.placeholder}
-                        </div>
-                      )}
-                    </Droppable>
-                  </DragDropContext>
+                  <DraggableWidgets items={items} onDragEnd={onDragEnd} />
                 </Grid>
               </Grid>
 
