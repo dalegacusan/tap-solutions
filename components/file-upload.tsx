@@ -17,18 +17,16 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 const FileUpload = ({ onUpload }) => {
-  const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
 
   const handleFileChange = (e) => {
-    if (e.target.files[0]) {
-      setFile(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file) {
+      handleUpload(file);
     }
   };
 
-  const handleUpload = () => {
-    if (!file) return;
-
+  const handleUpload = (file) => {
     setUploading(true);
     const fileRef = ref(storage, `files/${file.name}`); // Create a reference to the file
     uploadBytes(fileRef, file)
@@ -60,14 +58,7 @@ const FileUpload = ({ onUpload }) => {
         Upload
         <VisuallyHiddenInput type='file' onChange={handleFileChange} />
       </Button>
-      <Button
-        variant='contained'
-        onClick={handleUpload}
-        disabled={uploading || !file}
-        sx={{ mt: 2 }}
-      >
-        {uploading ? 'Uploading...' : 'Start Upload'}
-      </Button>
+      {uploading && <p>Uploading...</p>}
     </div>
   );
 };

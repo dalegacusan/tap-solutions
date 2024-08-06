@@ -25,19 +25,8 @@ import InfoIcon from '@mui/icons-material/Info';
 import BusinessIcon from '@mui/icons-material/Business';
 import WorkIcon from '@mui/icons-material/Work';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import { updateDocument } from '../../firestore/updateDocument';
 import FileUpload from '../../components/file-upload';
-
-const VisuallyHiddenInput = styled('input')({
-  clip: 'rect(0 0 0 0)',
-  clipPath: 'inset(50%)',
-  height: 1,
-  overflow: 'hidden',
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  whiteSpace: 'nowrap',
-  width: 1,
-});
 
 // Define icons for widgets
 const widgetIcons = {
@@ -95,7 +84,6 @@ const reorder = (list, startIndex, endIndex) => {
 
 export default function EditPage() {
   const router = useRouter();
-  const theme = useTheme();
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -119,16 +107,12 @@ export default function EditPage() {
   const [items, setItems] = useState(getWidgetContent(formData));
   const [user, setUser] = useState<User | null>(null);
   const [isRetrievingUser, setIsRetrievingUser] = useState<boolean>(true);
-  const [isErrorRetrievingUser, setIsErrorRetrievingUser] = useState<
-    string | null
-  >(null);
-  const [editSocialMediaModalIsOpen, setEditSocialMediaModalIsOpen] =
-    useState(false);
-  const [currentIdentifier, setCurrentIdentifier] = useState<string | null>(
-    null
-  );
+  const [isErrorRetrievingUser, setIsErrorRetrievingUser] = useState<string | null>(null);
+  const [editSocialMediaModalIsOpen, setEditSocialMediaModalIsOpen] = useState(false);
+  const [currentIdentifier, setCurrentIdentifier] = useState<string | null>(null);
   const [currentValue, setCurrentValue] = useState<string>('');
   const [addWidgetModalIsOpen, setAddWidgetModalIsOpen] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState<{ [key: string]: string }>({});
 
   const handleButtonClick = (identifier: string) => {
     const link = formData.socialMediaLinks[identifier] || '';
@@ -139,46 +123,44 @@ export default function EditPage() {
 
   const handleSave = (newValue: string) => {
     if (currentIdentifier) {
-      if (newValue === '') {
-        setFormData({
-          ...formData,
-          socialMediaLinks: {
-            ...formData.socialMediaLinks,
-            [currentIdentifier]: '',
-          },
-        });
-      } else {
-        setFormData({
-          ...formData,
-          socialMediaLinks: {
-            ...formData.socialMediaLinks,
-            [currentIdentifier]: newValue,
-          },
-        });
-      }
+      setFormData((prevData) => ({
+        ...prevData,
+        socialMediaLinks: {
+          ...prevData.socialMediaLinks,
+          [currentIdentifier]: newValue,
+        },
+      }));
     }
     setEditSocialMediaModalIsOpen(false);
   };
 
-  const handleSaveForm = () => {
-    const { socialMediaLinks } = formData;
-    const hasDefinedSocialMedia = Object.values(socialMediaLinks).some(
-      (link) => link.trim() !== ''
-    );
+  const handleSaveForm = async () => {
+    const { socialMediaLinks, profilePictureUrl, bannerUrl } = formData;
+    const hasDefinedSocialMedia = Object.values(socialMediaLinks).some((link) => link.trim() !== '');
 
     if (!hasDefinedSocialMedia) {
       alert('At least one social media link must be defined.');
       return;
     }
 
-    // Save the form data logic here
+    const updatedFormData = {
+      ...formData,
+      profilePictureUrl: uploadedFiles.profilePictureUrl || profilePictureUrl,
+      bannerUrl: uploadedFiles.bannerUrl || bannerUrl,
+    };
+
+    // Save the form data to Firestore
+    const { result, error } = await updateDocument('users', router.query.username as string, updatedFormData);
+
+    if (error) {
+      alert(`Error saving data: ${error}`);
+    } else {
+      alert('Changes saved successfully!');
+    }
   };
 
   async function getUserDocument() {
-    const { result, error } = await getDocument(
-      'users',
-      router.query.username as string
-    );
+    const { result, error } = await getDocument('users', router.query.username as string);
 
     if (error) {
       setIsErrorRetrievingUser(error);
@@ -201,46 +183,32 @@ export default function EditPage() {
         company: user.job.company || '',
         profilePictureUrl: user.profilePictureUrl || '',
         bannerUrl: user.bannerUrl || '',
-        phoneNumber:
-          user.contactInformation.find(
-            (contact) => contact.identifier === 'phoneNumber'
-          )?.value || '',
-        socialMediaLinks: user.socialMedia.reduce(
-          (acc, item) => {
-            acc[item.identifier] = item.link;
-            return acc;
-          },
-          {
-            twitter: '',
-            facebook: '',
-            instagram: '',
-            linkedIn: '',
-          }
-        ),
+        phoneNumber: user.contactInformation.find((contact) => contact.identifier === 'phoneNumber')?.value || '',
+        socialMediaLinks: user.socialMedia.reduce((acc, item) => {
+          acc[item.identifier] = item.link;
+          return acc;
+        }, { twitter: '', facebook: '', instagram: '', linkedIn: '' }),
       });
 
       // Update items based on the updated formData
-      setItems(
-        getWidgetContent({
-          aboutMe: formData.aboutMe,
-          emailAddress: formData.emailAddress,
-          address: formData.address,
-          jobTitle: formData.jobTitle,
-          company: formData.company,
-        })
-      );
+      setItems(getWidgetContent({
+        aboutMe: formData.aboutMe,
+        emailAddress: formData.emailAddress,
+        address: formData.address,
+        jobTitle: formData.jobTitle,
+        company: formData.company,
+      }));
     }
 
     setIsRetrievingUser(false);
   }
 
-  const handleTextFieldChange =
-    (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      setFormData({
-        ...formData,
-        [field]: event.target.value,
-      });
-    };
+  const handleTextFieldChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [field]: event.target.value,
+    });
+  };
 
   useEffect(() => {
     if (router.query.username) {
@@ -253,12 +221,7 @@ export default function EditPage() {
       return;
     }
 
-    const reorderedItems = reorder(
-      items,
-      result.source.index,
-      result.destination.index
-    );
-
+    const reorderedItems = reorder(items, result.source.index, result.destination.index);
     setItems(reorderedItems);
   }
 
@@ -267,7 +230,7 @@ export default function EditPage() {
   };
 
   const handleFileUpload = (field: 'profilePictureUrl' | 'bannerUrl') => (url: string) => {
-    setFormData((prev) => ({ ...prev, [field]: url }));
+    setUploadedFiles((prev) => ({ ...prev, [field]: url }));
   };
 
   if (isRetrievingUser) return <p>Loading...</p>;
@@ -285,10 +248,7 @@ export default function EditPage() {
       <SocialMediaEditButtonModal
         open={editSocialMediaModalIsOpen}
         onClose={() => setEditSocialMediaModalIsOpen(false)}
-        label={
-          socialMediaItems.find((item) => item.identifier === currentIdentifier)
-            ?.label || ''
-        }
+        label={socialMediaItems.find((item) => item.identifier === currentIdentifier)?.label || ''}
         value={currentValue}
         onSave={handleSave}
       />
@@ -318,12 +278,12 @@ export default function EditPage() {
               </Typography>
 
               <Typography gutterBottom>Profile Picture</Typography>
-              <FileUpload onUpload={handleFileUpload('profilePictureUrl')}/>
+              <FileUpload onUpload={handleFileUpload('profilePictureUrl')} />
 
               <Typography gutterBottom mt={2}>
                 Banner
               </Typography>
-              <FileUpload onUpload={handleFileUpload('bannerUrl')}/>
+              <FileUpload onUpload={handleFileUpload('bannerUrl')} />
 
               <Box mt={4}>
                 <TextField
@@ -392,7 +352,7 @@ export default function EditPage() {
                   </Button>
                 </Grid>
                 <Grid item xs={12}>
-                  <DraggableWidgets items={items} onDragEnd={onDragEnd} setItems={setItems} setFormData={setFormData}/>
+                  <DraggableWidgets items={items} onDragEnd={onDragEnd} setItems={setItems} setFormData={setFormData} />
                 </Grid>
               </Grid>
 
