@@ -399,7 +399,7 @@ export default function EditPage() {
                   </Button>
                 </Grid>
                 <Grid item xs={12}>
-                  <DraggableWidgets items={items} onDragEnd={onDragEnd} setItems={setItems} />
+                  <DraggableWidgets items={items} onDragEnd={onDragEnd} setItems={setItems} setFormData={setFormData}/>
                 </Grid>
               </Grid>
 

@@ -3,11 +3,18 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Box, ListItemButton, ListItemIcon, ListItemText, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete'; // Import Delete Icon
 
-const DraggableWidgets = ({ items, onDragEnd, setItems }) => {
-  const handleDelete = (id) => {
-    const updatedItems = items.filter(item => item.id !== id);
-    setItems(updatedItems);
-  };
+const DraggableWidgets = ({ items, onDragEnd, setItems, setFormData }) => {
+    const handleDelete = (id) => {
+        // Remove the widget from the items
+        const updatedItems = items.filter(item => item.id !== id);
+        setItems(updatedItems);
+      
+        // Set the formData property for the deleted widget to an empty string
+        setFormData(prevFormData => ({
+          ...prevFormData,
+          [id]: '',
+        }));
+      };
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
