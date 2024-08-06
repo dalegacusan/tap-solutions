@@ -32,6 +32,7 @@ import XIcon from '@mui/icons-material/X';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import SocialMediaEditButton from '../../components/social-media-edit-button';
 import SocialMediaEditButtonModal from '../../components/social-media-edit-button-modal';
+import AddWidgetModal from '../../components/add-widget-modal';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -92,6 +93,11 @@ export default function EditPage() {
       instagram: '',
       linkedIn: '',
     },
+    aboutMe: '',
+    emailAddress: '',
+    address: '',
+    jobTitle: '',
+    company: '',
   });
 
   const initialItems = getItems(10);
@@ -169,9 +175,20 @@ export default function EditPage() {
       const user = result as User;
       setUser(user);
 
+      // Extract specific contact information
+      const contactInfoMap = user.contactInformation.reduce((acc, contact) => {
+        acc[contact.identifier] = contact.value;
+        return acc;
+      }, {} as Record<string, string>);
+
       setFormData({
         firstName: user.firstName || '',
         lastName: user.lastName || '',
+        aboutMe: contactInfoMap['aboutMe'] || '',
+        emailAddress: contactInfoMap['emailAddress'] || '',
+        address: user.address || '',
+        jobTitle: user.job.title || '',
+        company: user.job.company || '',
         phoneNumber:
           user.contactInformation.find(
             (contact) => contact.identifier === 'phoneNumber'
@@ -249,21 +266,12 @@ export default function EditPage() {
         onSave={handleSave}
       />
 
-      <Modal
+      <AddWidgetModal
         open={addWidgetModalIsOpen}
         onClose={() => setAddWidgetModalIsOpen(false)}
-        aria-labelledby='modal-modal-title'
-        aria-describedby='modal-modal-description'
-      >
-        <Box sx={modalStyle}>
-          <Typography id='modal-modal-title' variant='h6' component='h2'>
-            Add Widget
-          </Typography>
-          <Typography>Personal Information</Typography>
-          Phone Number Email Address
-          <Typography>Personal Information</Typography>
-        </Box>
-      </Modal>
+        formData={formData}
+        setFormData={setFormData}
+       />
 
       <main>
         <Grid
@@ -364,6 +372,7 @@ export default function EditPage() {
                     variant='contained'
                     startIcon={<AddIcon />}
                     onClick={() => setAddWidgetModalIsOpen(true)}
+                    style={{ backgroundColor: '#FF914D' }}
                   >
                     Add Widget
                   </Button>
@@ -411,7 +420,12 @@ export default function EditPage() {
                   <Typography variant='h6'>Portfolio</Typography>
                 </Grid>
                 <Grid item xs={4}>
-                  <Button fullWidth variant='contained' startIcon={<AddIcon />}>
+                  <Button
+                    fullWidth
+                    variant='contained'
+                    startIcon={<AddIcon />}
+                    style={{ backgroundColor: '#FF914D' }}
+                  >
                     Add Image
                   </Button>
                 </Grid>
@@ -423,8 +437,9 @@ export default function EditPage() {
                   fullWidth
                   color='success'
                   onClick={handleSaveForm}
+                  style={{ backgroundColor: '#FF914D' }}
                 >
-                  Save
+                  Save Changes
                 </Button>
               </Box>
             </Box>
