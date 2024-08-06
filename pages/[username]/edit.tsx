@@ -48,27 +48,27 @@ const getWidgetContent = (formData) => {
   return [
     {
       id: 'aboutMe',
-      content: formData.aboutMe || 'About Me',
+      content: formData.aboutMe || '',
       icon: widgetIcons.aboutMe,
     },
     {
       id: 'emailAddress',
-      content: formData.emailAddress || 'Email Address',
+      content: formData.emailAddress || '',
       icon: widgetIcons.emailAddress,
     },
     {
       id: 'address',
-      content: formData.address || 'Address',
+      content: formData.address || '',
       icon: widgetIcons.address,
     },
     {
       id: 'jobTitle',
-      content: formData.jobTitle || 'Job Title',
+      content: formData.jobTitle || '',
       icon: widgetIcons.jobTitle,
     },
     {
       id: 'company',
-      content: formData.company || 'Company',
+      content: formData.company || '',
       icon: widgetIcons.company,
     },
   ].filter((widget) => widget.content); // Only include widgets with content

@@ -59,6 +59,7 @@ export default function Home() {
     string | null
   >(null);
 
+
   async function getUserDocument() {
     const { result, error } = await getDocument(
       'users',
