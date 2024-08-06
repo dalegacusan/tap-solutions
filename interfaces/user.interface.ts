@@ -16,4 +16,5 @@ export interface User {
   company: string;
   profilePictureUrl: string;
   bannerUrl: string;
+  portfolioImages: string[];
 }
