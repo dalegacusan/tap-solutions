@@ -24,6 +24,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import XIcon from '@mui/icons-material/X';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import BusinessIcon from '@mui/icons-material/Business';
 import { styled } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
@@ -32,13 +33,11 @@ import Image from 'next/image';
 import { User } from '../../interfaces/user.interface';
 import getDocument from '../../firestore/getDocument';
 
-export const iconMapping: Record<string, React.ReactNode> = {
-  '<InfoIcon />': <InfoIcon />,
-  '<CallIcon />': <CallIcon />,
-  '<EmailIcon />': <EmailIcon />,
-  '<XIcon />': <XIcon />,
-  '<FacebookIcon />': <FacebookIcon />,
-  '<InstagramIcon />': <InstagramIcon />,
+const iconMapping = {
+  twitter: <XIcon />,
+  facebook: <FacebookIcon />,
+  instagram: <InstagramIcon />,
+  linkedIn: <LinkedInIcon />,
 };
 
 const StyledListItemButtonWithHover = styled(ListItemButton)`
@@ -76,7 +75,7 @@ export default function Home() {
   }
 
   useEffect(() => {
-    if(router.query.username){
+    if (router.query.username) {
       getUserDocument();
     }
   }, [router.query.username]);
@@ -148,96 +147,62 @@ export default function Home() {
                   </Typography>
 
                   <Typography variant='body2' style={{ textAlign: 'center' }}>
-                    {user.job.title}, {user.job.company}
+                    {user.jobTitle}, {user.company}
                   </Typography>
 
                   <Box style={{ marginTop: '160px' }}>
                     {/* Contact Information */}
+
                     <nav>
-                      {user.contactInformation.map((item) => {
-                        if (item.identifier === 'emailAddress') {
-                          return (
-                            <>
-                              {item.label && (
-                                <Typography mt={4}>{item.label}</Typography>
-                              )}
-                              <a
-                                href={`mailto:${item.value}`}
-                                style={{
-                                  textDecoration: 'none',
-                                  color: 'inherit',
-                                }}
-                              >
-                                <StyledListItemButtonWithHover
-                                  sx={{
-                                    margin: '8px 0px',
-                                    boxShadow: 1,
-                                    borderRadius: '6px',
-                                  }}
-                                  className='card-socials'
-                                >
-                                  <ListItemIcon>
-                                    {iconMapping[item.icon]}
-                                  </ListItemIcon>
-                                  <ListItemText primary={item.value} />
-                                </StyledListItemButtonWithHover>
-                              </a>
-                            </>
-                          );
-                        } else if (item.identifier === 'phoneNumber') {
-                          return (
-                            <>
-                              {item.label && (
-                                <Typography mt={4}>{item.label}</Typography>
-                              )}
+                      {/* Email Address */}
+                      {user.emailAddress && (
+                        <>
+                          <Typography mt={4}>Email Address</Typography>
+                          <a
+                            href={`mailto:${user.emailAddress}`}
+                            style={{ textDecoration: 'none', color: 'inherit' }}
+                          >
+                            <StyledListItemButtonWithHover
+                              sx={{
+                                margin: '8px 0px',
+                                boxShadow: 1,
+                                borderRadius: '6px',
+                              }}
+                              className='card-socials'
+                            >
+                              <ListItemIcon>
+                                <EmailIcon />
+                              </ListItemIcon>
+                              <ListItemText primary={user.emailAddress} />
+                            </StyledListItemButtonWithHover>
+                          </a>
+                        </>
+                      )}
 
-                              <a
-                                href={`tel:${item.value}`}
-                                style={{
-                                  textDecoration: 'none',
-                                  color: 'inherit',
-                                }}
-                              >
-                                <StyledListItemButtonWithHover
-                                  sx={{
-                                    margin: '8px 0px',
-                                    boxShadow: 1,
-                                    borderRadius: '6px',
-                                  }}
-                                  className='card-socials'
-                                >
-                                  <ListItemIcon>
-                                    {iconMapping[item.icon]}
-                                  </ListItemIcon>
-                                  <ListItemText primary={item.value} />
-                                </StyledListItemButtonWithHover>
-                              </a>
-                            </>
-                          );
-                        } else {
-                          return (
-                            <>
-                              {item.label && (
-                                <Typography mt={4}>{item.label}</Typography>
-                              )}
-
-                              <ListItem
-                                sx={{
-                                  margin: '8px 0px',
-                                  boxShadow: 1,
-                                  borderRadius: '6px',
-                                }}
-                                className='card-socials'
-                              >
-                                <ListItemIcon>
-                                  {iconMapping[item.icon]}
-                                </ListItemIcon>
-                                <ListItemText primary={item.value} />
-                              </ListItem>
-                            </>
-                          );
-                        }
-                      })}
+                      {/* Phone Number */}
+                      {user.phoneNumber && (
+                        <>
+                          <Typography mt={4}>Phone Number</Typography>
+                          <a
+                            href={`tel:${user.phoneNumber}`}
+                            style={{ textDecoration: 'none', color: 'inherit' }}
+                          >
+                            <StyledListItemButtonWithHover
+                              sx={{
+                                margin: '8px 0px',
+                                boxShadow: 1,
+                                borderRadius: '6px',
+                              }}
+                              className='card-socials'
+                            >
+                              <ListItemIcon>
+                                <CallIcon />
+                              </ListItemIcon>
+                              <ListItemText primary={user.phoneNumber} />
+                            </StyledListItemButtonWithHover>
+                          </a>
+                        </>
+                      )}
                     </nav>
                   </Box>
 
@@ -246,17 +211,18 @@ export default function Home() {
                     <Typography mt={4}>Socials</Typography>
 
                     <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                      {user.socialMedia.map((item) => {
-                        if (item.link) {
-                          return (
-                            <Grid item xs={6}>
+                      {Object.entries(user.socialMediaLinks).map(
+                        ([key, link]) =>
+                          link ? (
+                            <Grid item xs={6} key={key}>
                               <a
-                                href={item.link}
+                                href={link}
                                 style={{
                                   textDecoration: 'none',
                                   color: 'inherit',
                                 }}
                                 target='_blank'
+                                rel='noopener noreferrer'
                               >
                                 <StyledListItemButtonWithHover
                                   sx={{
@@ -267,33 +233,18 @@ export default function Home() {
                                   className='card-socials'
                                 >
                                   <ListItemIcon>
-                                    {iconMapping[item.icon]}
+                                    {iconMapping[key]}
                                   </ListItemIcon>
-                                  <ListItemText primary={item.value} />
+                                  <ListItemText
+                                    primary={
+                                      key.charAt(0).toUpperCase() + key.slice(1)
+                                    }
+                                  />
                                 </StyledListItemButtonWithHover>
                               </a>
                             </Grid>
-                          );
-                        } else {
-                          return (
-                            <Grid item xs={6}>
-                              <ListItem
-                                sx={{
-                                  margin: '8px 0px',
-                                  boxShadow: 1,
-                                  borderRadius: '6px',
-                                }}
-                                className='card-socials'
-                              >
-                                <ListItemIcon>
-                                  {iconMapping[item.icon]}
-                                </ListItemIcon>
-                                <ListItemText primary={item.value} />
-                              </ListItem>
-                            </Grid>
-                          );
-                        }
-                      })}
+                          ) : null
+                      )}
                     </Grid>
                   </Box>
 
@@ -331,7 +282,7 @@ export default function Home() {
                   <Box>
                     <Typography mt={4}>Portfolio</Typography>
 
-                    <ImageList sx={{ height: 450 }}>
+                    {/* <ImageList sx={{ height: 450 }}>
                       {user.photos.map((item) => (
                         <ImageListItem key={item.img}>
                           <img
@@ -346,7 +297,7 @@ export default function Home() {
                           />
                         </ImageListItem>
                       ))}
-                    </ImageList>
+                    </ImageList> */}
                   </Box>
 
                   {/* Save to Contact Button */}
