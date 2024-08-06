@@ -23,7 +23,7 @@ const SocialMediaEditButtonModal: React.FC<SocialMediaEditButtonModalProps> = ({
   // Set the initial value when the modal opens
   useEffect(() => {
     setInputValue(value);
-  }, [value]);
+  }, [value, open]);
 
   // Handle save action
   const handleSave = () => {
