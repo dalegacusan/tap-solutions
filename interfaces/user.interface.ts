@@ -41,4 +41,6 @@ export interface User {
   contactInformation: ContactInformation[];
   socialMedia: SocialMedia[];
   photos: Photo[];
+  profilePictureUrl: string;
+  bannerUrl: string;
 }

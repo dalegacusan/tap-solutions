@@ -25,6 +25,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import BusinessIcon from '@mui/icons-material/Business';
 import WorkIcon from '@mui/icons-material/Work';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import FileUpload from '../../components/file-upload';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -111,6 +112,8 @@ export default function EditPage() {
     address: '',
     jobTitle: '',
     company: '',
+    profilePictureUrl: '',
+    bannerUrl: '',
   });
 
   const [items, setItems] = useState(getWidgetContent(formData));
@@ -196,6 +199,8 @@ export default function EditPage() {
         address: user.address || '',
         jobTitle: user.job.title || '',
         company: user.job.company || '',
+        profilePictureUrl: user.profilePictureUrl || '',
+        bannerUrl: user.bannerUrl || '',
         phoneNumber:
           user.contactInformation.find(
             (contact) => contact.identifier === 'phoneNumber'
@@ -261,6 +266,10 @@ export default function EditPage() {
     return Boolean(formData.socialMediaLinks[identifier]);
   };
 
+  const handleFileUpload = (field: 'profilePictureUrl' | 'bannerUrl') => (url: string) => {
+    setFormData((prev) => ({ ...prev, [field]: url }));
+  };
+
   if (isRetrievingUser) return <p>Loading...</p>;
   if (isErrorRetrievingUser) return <p>Error: {isErrorRetrievingUser}</p>;
 
@@ -309,28 +318,12 @@ export default function EditPage() {
               </Typography>
 
               <Typography gutterBottom>Profile Picture</Typography>
-              <Button
-                fullWidth
-                component='label'
-                variant='outlined'
-                startIcon={<CloudUploadIcon />}
-              >
-                Upload
-                <VisuallyHiddenInput type='file' />
-              </Button>
+              <FileUpload onUpload={handleFileUpload('profilePictureUrl')}/>
 
               <Typography gutterBottom mt={2}>
                 Banner
               </Typography>
-              <Button
-                fullWidth
-                component='label'
-                variant='outlined'
-                startIcon={<CloudUploadIcon />}
-              >
-                Upload
-                <VisuallyHiddenInput type='file' />
-              </Button>
+              <FileUpload onUpload={handleFileUpload('bannerUrl')}/>
 
               <Box mt={4}>
                 <TextField
