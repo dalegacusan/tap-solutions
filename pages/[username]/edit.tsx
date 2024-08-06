@@ -203,7 +203,9 @@ export default function EditPage() {
     };
 
   useEffect(() => {
-    getUserDocument();
+    if(router.query.username){
+      getUserDocument();
+    }
   }, [router.query.username]);
 
   function onDragEnd(result) {

@@ -76,8 +76,10 @@ export default function Home() {
   }
 
   useEffect(() => {
-    getUserDocument();
-  }, []);
+    if(router.query.username){
+      getUserDocument();
+    }
+  }, [router.query.username]);
 
   if (isRetrievingUser) return <p>Loading...</p>;
   if (isErrorRetrievingUser) return <p>Error: {isErrorRetrievingUser}</p>;
