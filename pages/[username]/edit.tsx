@@ -3,7 +3,17 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { Grid, Box, Typography, TextField, Button, Modal, ImageList, ImageListItem } from '@mui/material';
+import {
+  Grid,
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Modal,
+  ImageList,
+  ImageListItem,
+  IconButton,
+} from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import AddIcon from '@mui/icons-material/Add';
 import { styled, useTheme } from '@mui/material/styles';
@@ -27,6 +37,7 @@ import WorkIcon from '@mui/icons-material/Work';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import { updateDocument } from '../../firestore/updateDocument';
 import FileUpload from '../../components/file-upload';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 // Define icons for widgets
 const widgetIcons = {
@@ -123,9 +134,16 @@ export default function EditPage() {
     {}
   );
 
+  const handleDeleteImage = (index: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      portfolioImages: prev.portfolioImages.filter((_, i) => i !== index),
+    }));
+  };
+
   const handlePortfolioImageUpload = (file: File) => {
     const reader = new FileReader();
-  
+
     reader.onloadend = () => {
       const url = reader.result as string;
       setFormData((prev) => ({
@@ -133,7 +151,7 @@ export default function EditPage() {
         portfolioImages: [...prev.portfolioImages, url], // Update formData with new image URL
       }));
     };
-  
+
     if (file) {
       reader.readAsDataURL(file);
     }
@@ -167,30 +185,31 @@ export default function EditPage() {
   };
 
   const handleSaveForm = async () => {
-    const { socialMediaLinks, profilePictureUrl, bannerUrl, portfolioImages } = formData;
+    const { socialMediaLinks, profilePictureUrl, bannerUrl, portfolioImages } =
+      formData;
     const hasDefinedSocialMedia = Object.values(socialMediaLinks).some(
       (link) => link.trim() !== ''
     );
-  
+
     if (!hasDefinedSocialMedia) {
       alert('At least one social media link must be defined.');
       return;
     }
-  
+
     const updatedFormData = {
       ...formData,
       profilePictureUrl: uploadedFiles.profilePictureUrl || profilePictureUrl,
       bannerUrl: uploadedFiles.bannerUrl || bannerUrl,
       portfolioImages, // Use formData portfolioImages directly
     };
-  
+
     // Save the form data to Firestore
     const { result, error } = await updateDocument(
       'users',
       router.query.username as string,
       updatedFormData
     );
-  
+
     if (error) {
       alert(`Error saving data: ${error}`);
     } else {
@@ -398,46 +417,65 @@ export default function EditPage() {
               </Grid>
 
               <Grid container spacing={2} mt={2}>
-              <Grid item xs={8}>
-                <Typography variant='h6'>Portfolio</Typography>
-              </Grid>
-              <Grid item xs={4}>
-                <input
-                  accept="image/*"
-                  id="upload-image"
-                  type="file"
-                  style={{ display: 'none' }}
-                  onChange={handleAddImageClick}
-                />
-                <label htmlFor="upload-image">
-                  <Button
-                    fullWidth
-                    variant='contained'
-                    startIcon={<AddIcon />}
-                    style={{ backgroundColor: '#FF914D' }}
-                    component="span"
-                  >
-                    Add Image
-                  </Button>
-                </label>
-              </Grid>
-              {formData.portfolioImages.length > 0 && (
-                <Grid item xs={12}>
-                  <ImageList cols={3} rowHeight={164}>
-                    {formData.portfolioImages.map((imageUrl, index) => (
-                      <ImageListItem key={index}>
-                        <img
-                          src={imageUrl}
-                          alt={`Portfolio Image ${index + 1}`}
-                          loading="lazy"
-                        />
-                      </ImageListItem>
-                    ))}
-                  </ImageList>
+                <Grid item xs={8}>
+                  <Typography variant='h6'>Portfolio</Typography>
                 </Grid>
-              )}
-            </Grid>
-
+                <Grid item xs={4}>
+                  <input
+                    accept='image/*'
+                    id='upload-image'
+                    type='file'
+                    style={{ display: 'none' }}
+                    onChange={handleAddImageClick}
+                  />
+                  <label htmlFor='upload-image'>
+                    <Button
+                      fullWidth
+                      variant='contained'
+                      startIcon={<AddIcon />}
+                      style={{ backgroundColor: '#FF914D' }}
+                      component='span'
+                    >
+                      Add Image
+                    </Button>
+                  </label>
+                </Grid>
+                
+                {formData.portfolioImages.length > 0 && (
+                  <Grid item xs={12}>
+                    <Grid item xs={12}>
+                      <ImageList cols={3} rowHeight={164} gap={8}>
+                        {formData.portfolioImages.map((imageUrl, index) => (
+                          <ImageListItem key={index}>
+                            <img
+                              src={imageUrl}
+                              alt={`Portfolio Image ${index + 1}`}
+                              loading='lazy'
+                              style={{
+                                objectFit: 'cover',
+                                width: '100%',
+                                height: '100%',
+                              }}
+                            />
+                            <IconButton
+                              onClick={() => handleDeleteImage(index)}
+                              style={{
+                                position: 'absolute',
+                                top: '8px',
+                                right: '8px',
+                                color: 'red',
+                                zIndex: 1,
+                              }}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </ImageListItem>
+                        ))}
+                      </ImageList>
+                    </Grid>
+                  </Grid>
+                )}
+              </Grid>
 
               <Box mt={6}>
                 <Button

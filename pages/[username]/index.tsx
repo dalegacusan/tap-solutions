@@ -59,7 +59,6 @@ export default function Home() {
     string | null
   >(null);
 
-
   async function getUserDocument() {
     const { result, error } = await getDocument(
       'users',
@@ -283,22 +282,31 @@ export default function Home() {
                   <Box>
                     <Typography mt={4}>Portfolio</Typography>
 
-                    {/* <ImageList sx={{ height: 450 }}>
-                      {user.photos.map((item) => (
-                        <ImageListItem key={item.img}>
-                          <img
-                            srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                            src={`${item.img}?w=248&fit=crop&auto=format`}
-                            alt={item.title}
-                            loading='lazy'
-                          />
-                          <ImageListItemBar
-                            title={item.title}
-                            subtitle={item.description}
-                          />
-                        </ImageListItem>
-                      ))}
-                    </ImageList> */}
+                    {user.portfolioImages && user.portfolioImages.length > 0 ? (
+                      <ImageList
+                        cols={3}
+                        rowHeight={164}
+                        gap={8}
+                        sx={{ width: '100%' }}
+                      >
+                        {user.portfolioImages.map((imageUrl, index) => (
+                          <ImageListItem key={index}>
+                            <img
+                              src={imageUrl}
+                              alt={`Portfolio Image ${index + 1}`}
+                              loading='lazy'
+                              style={{
+                                objectFit: 'cover',
+                                width: '100%',
+                                height: '100%',
+                              }}
+                            />
+                          </ImageListItem>
+                        ))}
+                      </ImageList>
+                    ) : (
+                      <Typography>No portfolio images available.</Typography>
+                    )}
                   </Box>
 
                   {/* Save to Contact Button */}
