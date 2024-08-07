@@ -80,17 +80,23 @@ export default function Home() {
     }
   }, [router.query.username]);
 
+  useEffect(() => {
+    if (isErrorRetrievingUser) {
+      router.push('/'); // Redirect to the homepage
+    }
+  }, [isErrorRetrievingUser, router]);
+
   if (isRetrievingUser || isErrorRetrievingUser) {
     return (
       <Grid
         container
-        justifyContent="center"
-        alignItems="center"
+        justifyContent='center'
+        alignItems='center'
         style={{ minHeight: '100vh', textAlign: 'center' }}
       >
         <Grid item>
-          <Typography variant="h6">
-            {isRetrievingUser ? 'Loading...' : `Error: ${isErrorRetrievingUser}`}
+          <Typography variant='h6'>
+            {isErrorRetrievingUser && `Error: ${isErrorRetrievingUser}`}
           </Typography>
         </Grid>
       </Grid>
@@ -103,7 +109,7 @@ export default function Home() {
         <title>
           {user.firstName} {user.lastName}
         </title>
-        <link rel='icon' href='/favicon.ico' />
+        <link rel='icon' href='/images/logo.png' />
       </Head>
 
       <main>

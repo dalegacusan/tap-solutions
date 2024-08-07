@@ -299,6 +299,12 @@ export default function EditPage() {
     }
   }, [router.query.username]);
 
+  useEffect(() => {
+    if (isErrorRetrievingUser) {
+      router.push('/'); // Redirect to the homepage
+    }
+  }, [isErrorRetrievingUser, router]);
+
   function onDragEnd(result) {
     if (!result.destination) {
       return;
@@ -324,22 +330,22 @@ export default function EditPage() {
       setUploadedFiles((prev) => ({ ...prev, [field]: url }));
     };
 
-    if (isRetrievingUser || isErrorRetrievingUser) {
-      return (
-        <Grid
-          container
-          justifyContent="center"
-          alignItems="center"
-          style={{ minHeight: '100vh', textAlign: 'center' }}
-        >
-          <Grid item>
-            <Typography variant="h6">
-              {isRetrievingUser ? 'Loading...' : `Error: ${isErrorRetrievingUser}`}
-            </Typography>
-          </Grid>
+  if (isRetrievingUser || isErrorRetrievingUser) {
+    return (
+      <Grid
+        container
+        justifyContent='center'
+        alignItems='center'
+        style={{ minHeight: '100vh', textAlign: 'center' }}
+      >
+        <Grid item>
+          <Typography variant='h6'>
+            {isErrorRetrievingUser && `Error: ${isErrorRetrievingUser}`}
+          </Typography>
         </Grid>
-      );
-    }
+      </Grid>
+    );
+  }
 
   return (
     <div>
@@ -347,7 +353,7 @@ export default function EditPage() {
         <title>
           {user?.firstName} {user?.lastName} - Edit
         </title>
-        <link rel='icon' href='/favicon.ico' />
+        <link rel='icon' href='/images/logo.png' />
       </Head>
 
       <Snackbar
