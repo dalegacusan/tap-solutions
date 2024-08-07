@@ -9,14 +9,13 @@ import {
   Typography,
   TextField,
   Button,
-  Modal,
   ImageList,
   ImageListItem,
   IconButton,
+  Snackbar,
+  Alert,
 } from '@mui/material';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import AddIcon from '@mui/icons-material/Add';
-import { styled, useTheme } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import getDocument from '../../firestore/getDocument';
@@ -40,7 +39,6 @@ import FileUpload from '../../components/file-upload';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PasswordModal from '../../components/password-modal'; // Import the PasswordModal component
 
-// Define icons for widgets
 const widgetIcons = {
   aboutMe: <InfoIcon />,
   emailAddress: <EmailIcon />,
@@ -137,6 +135,13 @@ export default function EditPage() {
   const [passwordModalIsOpen, setPasswordModalIsOpen] = useState(true); // Show password modal on load
   const [userPassword, setUserPassword] = useState<string>('');
 
+  // Snackbar state
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>(
+    'success'
+  );
+
   const handleDeleteImage = (index: number) => {
     setFormData((prev) => ({
       ...prev,
@@ -195,7 +200,9 @@ export default function EditPage() {
     );
 
     if (!hasDefinedSocialMedia) {
-      alert('At least one social media link must be defined.');
+      setSnackbarMessage('At least one social media link must be defined.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
       return;
     }
 
@@ -214,10 +221,13 @@ export default function EditPage() {
     );
 
     if (error) {
-      alert(`Error saving data: ${error}`);
+      setSnackbarMessage(`Error saving data: ${error}`);
+      setSnackbarSeverity('error');
     } else {
-      alert('Changes saved successfully!');
+      setSnackbarMessage('Changes saved successfully!');
+      setSnackbarSeverity('success');
     }
+    setSnackbarOpen(true);
   };
 
   const handlePasswordCorrect = () => {
@@ -295,6 +305,25 @@ export default function EditPage() {
         </title>
         <link rel='icon' href='/favicon.ico' />
       </Head>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert
+          onClose={() => setSnackbarOpen(false)}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+          style={{
+            backgroundColor:
+              snackbarSeverity === 'success' ? '#4caf50' : '#f44336',
+              color: '#ffffff'
+          }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
 
       <PasswordModal
         open={passwordModalIsOpen}
