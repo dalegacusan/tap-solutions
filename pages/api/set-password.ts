@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import argon2 from 'argon2';
+import bcrypt from 'bcrypt';
 import { updateDocument } from '../../firestore/updateDocument';
 
 export default async function handler(
@@ -19,8 +19,8 @@ export default async function handler(
   }
 
   try {
-    // Hash the password
-    const hashedPassword = await argon2.hash(password);
+    // Hash the password with bcrypt
+    const hashedPassword = await bcrypt.hash(password, 10); // 10 is the salt rounds
 
     // Update the user document in the database
     const { result, error } = await updateDocument('users', username, {
@@ -37,7 +37,6 @@ export default async function handler(
     // Return success response
     res.status(200).json({ success: true });
   } catch (error) {
-    console.log(error);
     // Handle any errors that occurred during the hashing or updating process
     res.status(500).json({ error: (error as Error).message || 'Server Error' });
   }

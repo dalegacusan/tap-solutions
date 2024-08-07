@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import argon2 from 'argon2';
+import bcrypt from 'bcrypt';
 
 export default async function handler(
   req: NextApiRequest,
@@ -17,9 +17,9 @@ export default async function handler(
 
   try {
     // Verify if the entered password matches the hashed password
-    const isPasswordCorrect = await argon2.verify(
-      accountPassword,
-      enteredPassword
+    const isPasswordCorrect = await bcrypt.compare(
+      enteredPassword,
+      accountPassword
     );
 
     if (isPasswordCorrect) {
@@ -28,7 +28,6 @@ export default async function handler(
       return res.status(400).json({ error: 'Incorrect password' });
     }
   } catch (error) {
-    console.log(error);
     // Return the actual error message if available
     return res
       .status(500)
