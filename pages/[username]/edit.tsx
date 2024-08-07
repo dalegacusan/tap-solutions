@@ -235,7 +235,7 @@ export default function EditPage() {
     } else {
       const user = result as User;
       setUser(user);
-      setUserPassword(user.password); // Store the user password
+      setUserPassword(user.password || ''); // Store the user password
       setFormData(user);
 
       // Update items based on the updated formData
@@ -309,6 +309,7 @@ export default function EditPage() {
         onClose={() => setPasswordModalIsOpen(false)}
         onPasswordCorrect={handlePasswordCorrect}
         userPassword={userPassword} // Pass the user password
+        username={router.query.username as string} // Pass the username
       />
 
       <SocialMediaEditButtonModal

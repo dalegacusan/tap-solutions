@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
+import axios from 'axios';
 
 const modalStyle = {
   position: 'absolute' as 'absolute',
@@ -21,10 +22,17 @@ interface PasswordModalProps {
   open: boolean;
   onClose: () => void;
   onPasswordCorrect: () => void;
-  userPassword: string; // Added to pass the user password
+  userPassword: string; // This should be the hashed password
+  username: string;
 }
 
-const PasswordModal: React.FC<PasswordModalProps> = ({ open, onClose, onPasswordCorrect, userPassword }) => {
+const PasswordModal: React.FC<PasswordModalProps> = ({
+  open,
+  onClose,
+  onPasswordCorrect,
+  userPassword,
+  username,
+}) => {
   const [password, setPassword] = React.useState('');
   const [error, setError] = React.useState<string | null>(null);
 
@@ -32,23 +40,36 @@ const PasswordModal: React.FC<PasswordModalProps> = ({ open, onClose, onPassword
     setPassword(event.target.value);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (userPassword === '') {
       // User hasn't set up a password yet
-      // Handle setting up a new password here if needed
       if (password) {
-        // Logic to save the new password
-        // Example: saveNewPassword(password);
-        onPasswordCorrect(); // Close the modal on success
+        try {
+          await axios.post('/api/set-password', {
+            username,
+            password,
+          });
+          onPasswordCorrect();
+        } catch (err) {
+          setError('Error setting up the password. Please try again.');
+        }
       } else {
         setError('Please enter a password to set up your account.');
       }
     } else {
-      // User already has a password
-      if (password === userPassword) {
-        onPasswordCorrect();
-      } else {
-        setError('Incorrect password. Please try again.');
+      // User has set up a password, verify it
+      try {
+        const { data } = await axios.post('/api/verify-password', {
+          enteredPassword: password,
+          accountPassword: userPassword,
+        });
+        if (data.success) {
+          onPasswordCorrect();
+        } else {
+          setError('Incorrect password. Please try again.');
+        }
+      } catch (err) {
+        setError('Error verifying password. Please try again.');
       }
     }
   };
@@ -57,26 +78,30 @@ const PasswordModal: React.FC<PasswordModalProps> = ({ open, onClose, onPassword
     <Modal
       open={open}
       onClose={onClose}
-      aria-labelledby="password-modal-title"
-      aria-describedby="password-modal-description"
+      aria-labelledby='password-modal-title'
+      aria-describedby='password-modal-description'
     >
       <Box sx={modalStyle}>
-        <Typography id="password-modal-title" variant="h6" component="h2">
+        <Typography id='password-modal-title' variant='h6' component='h2'>
           {userPassword === '' ? 'Set Up Your Password' : 'Enter Password'}
         </Typography>
         <TextField
           fullWidth
           label={userPassword === '' ? 'New Password' : 'Password'}
-          type="password"
-          variant="outlined"
+          type='password'
+          variant='outlined'
           value={password}
           onChange={handlePasswordChange}
-          margin="normal"
+          margin='normal'
         />
-        {error && <Typography color="error" sx={{ mt: 2 }}>{error}</Typography>}
+        {error && (
+          <Typography color='error' sx={{ mt: 2 }}>
+            {error}
+          </Typography>
+        )}
         <Button
-          variant="contained"
-          color="primary"
+          variant='contained'
+          color='primary'
           onClick={handleSubmit}
           sx={{ mt: 2 }}
         >
