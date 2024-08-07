@@ -28,6 +28,7 @@ export default async function handler(
       return res.status(400).json({ error: 'Incorrect password' });
     }
   } catch (error) {
+    console.log(error);
     // Return the actual error message if available
     return res
       .status(500)

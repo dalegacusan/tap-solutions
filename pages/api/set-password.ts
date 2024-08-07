@@ -37,6 +37,7 @@ export default async function handler(
     // Return success response
     res.status(200).json({ success: true });
   } catch (error) {
+    console.log(error);
     // Handle any errors that occurred during the hashing or updating process
     res.status(500).json({ error: (error as Error).message || 'Server Error' });
   }
