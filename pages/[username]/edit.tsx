@@ -239,15 +239,7 @@ export default function EditPage() {
       setFormData(user);
 
       // Update items based on the updated formData
-      setItems(
-        getWidgetContent({
-          aboutMe: formData.aboutMe,
-          emailAddress: formData.emailAddress,
-          address: formData.address,
-          jobTitle: formData.jobTitle,
-          company: formData.company,
-        })
-      );
+      setItems(getWidgetContent(user));
     }
 
     setIsRetrievingUser(false);
@@ -352,7 +344,7 @@ export default function EditPage() {
               <Typography gutterBottom>Profile Picture</Typography>
               <FileUpload onUpload={handleFileUpload('profilePictureUrl')} />
 
-{/* 
+              {/* 
               <Typography gutterBottom mt={2}>
                 Banner
               </Typography>
