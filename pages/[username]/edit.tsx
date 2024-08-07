@@ -14,6 +14,7 @@ import {
   IconButton,
   Snackbar,
   Alert,
+  Avatar,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useEffect, useState } from 'react';
@@ -318,7 +319,7 @@ export default function EditPage() {
           style={{
             backgroundColor:
               snackbarSeverity === 'success' ? '#4caf50' : '#f44336',
-              color: '#ffffff'
+            color: '#ffffff',
           }}
         >
           {snackbarMessage}
@@ -364,7 +365,7 @@ export default function EditPage() {
           mt={8}
           mb={8}
         >
-          <Grid item lg={4} md={6} xs={12}>
+          <Grid item lg={4} md={6} xs={12} px={4}>
             <Box>
               <Typography variant='h5' mb={4} style={{ fontWeight: 'bold' }}>
                 Hello @{user?.username}!
@@ -380,13 +381,13 @@ export default function EditPage() {
                 <Grid item xs={4}>
                   {formData.profilePictureUrl ||
                   uploadedFiles.profilePictureUrl ? (
-                    <img
+                    <Avatar
                       src={
                         uploadedFiles.profilePictureUrl ||
-                        formData.profilePictureUrl
+                        formData.profilePictureUrl || '/images/logo.png'
                       }
                       alt='Profile Picture'
-                      style={{ width: '100%', height: 'auto' }}
+                      style={{ width: 120, height: 120, marginLeft: '40px' }}
                     />
                   ) : (
                     <Typography>No profile picture uploaded.</Typography>
