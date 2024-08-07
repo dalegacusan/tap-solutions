@@ -71,7 +71,6 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
           setError('Incorrect password. Please try again.');
         }
       } catch (err) {
-        console.log(err);
         // Extract error message if available, else use default message
         const errorMessage = (err as any).response?.data?.error || 'Error verifying password. Please try again.';
         setError(errorMessage);
