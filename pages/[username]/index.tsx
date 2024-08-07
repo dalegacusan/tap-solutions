@@ -181,7 +181,7 @@ export default function Home() {
                         <>
                           <Typography mt={4}>About Me</Typography>
 
-                          <ListItemButton
+                          <ListItem
                             sx={{
                               margin: '8px 0px',
                               boxShadow: 1,
@@ -193,7 +193,7 @@ export default function Home() {
                               <InfoIcon />
                             </ListItemIcon>
                             <ListItemText primary={user.aboutMe} />
-                          </ListItemButton>
+                          </ListItem>
                         </>
                       )}
 
