@@ -321,6 +321,7 @@ export default function EditPage() {
       result.source.index,
       result.destination.index
     );
+    // @ts-ignore
     setItems(reorderedItems);
   }
 
