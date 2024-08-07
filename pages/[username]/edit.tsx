@@ -340,10 +340,12 @@ export default function EditPage() {
           alignItems='center'
           justifyContent='center'
           sx={{ minHeight: '100vh' }}
+          mt={8}
+          mb={8}
         >
           <Grid item lg={4} md={6} xs={12}>
             <Box>
-              <Typography variant='h4' mb={4} style={{ fontWeight: 'bold' }}>
+              <Typography variant='h5' mb={4} style={{ fontWeight: 'bold' }}>
                 Hello @{user?.username}!
               </Typography>
 
