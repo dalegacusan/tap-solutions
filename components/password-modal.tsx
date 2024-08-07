@@ -13,7 +13,7 @@ const modalStyle = {
   transform: 'translate(-50%, -50%)',
   width: 400,
   bgcolor: 'background.paper',
-  border: '2px solid #000',
+  border: '1px solid #ccc',
   boxShadow: 24,
   p: 4,
 };
@@ -74,14 +74,25 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
     }
   };
 
+  // Prevent closing the modal by clicking outside or pressing ESC
+  const handleClose = (event: React.MouseEvent | React.KeyboardEvent) => {
+    event.stopPropagation(); // Prevents closing on click outside
+  };
+
   return (
     <Modal
       open={open}
-      onClose={onClose}
+      onClose={() => {}}
       aria-labelledby='password-modal-title'
       aria-describedby='password-modal-description'
+      disableAutoFocus
+      disableEnforceFocus
     >
-      <Box sx={modalStyle}>
+      <Box
+        sx={modalStyle}
+        onClick={handleClose}
+        onKeyDown={(e) => e.key === 'Escape' && e.preventDefault()}
+      >
         <Typography id='password-modal-title' variant='h6' component='h2'>
           {userPassword === '' ? 'Set Up Your Password' : 'Enter Password'}
         </Typography>
@@ -104,6 +115,7 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
           color='primary'
           onClick={handleSubmit}
           sx={{ mt: 2 }}
+          style={{ backgroundColor: '#FF914D' }}
         >
           {userPassword === '' ? 'Set Password' : 'Submit'}
         </Button>
