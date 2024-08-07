@@ -51,7 +51,9 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
           });
           onPasswordCorrect();
         } catch (err) {
-          setError('Error setting up the password. Please try again.');
+          // Extract error message if available, else use default message
+          const errorMessage = (err as any).response?.data?.error || 'Error setting up the password. Please try again.';
+          setError(errorMessage);
         }
       } else {
         setError('Please enter a password to set up your account.');
@@ -69,7 +71,9 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
           setError('Incorrect password. Please try again.');
         }
       } catch (err) {
-        setError('Error verifying password. Please try again.');
+        // Extract error message if available, else use default message
+        const errorMessage = (err as any).response?.data?.error || 'Error verifying password. Please try again.';
+        setError(errorMessage);
       }
     }
   };

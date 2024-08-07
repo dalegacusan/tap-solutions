@@ -19,18 +19,25 @@ export default async function handler(
   }
 
   try {
+    // Hash the password
     const hashedPassword = await argon2.hash(password);
 
+    // Update the user document in the database
     const { result, error } = await updateDocument('users', username, {
       password: hashedPassword,
     });
 
+    // Check if there was an error during the update
     if (error) {
-      return res.status(500).json({ error: 'Error updating user document' });
+      return res
+        .status(500)
+        .json({ error: error || 'Error updating user document' });
     }
 
+    // Return success response
     res.status(200).json({ success: true });
   } catch (error) {
-    res.status(500).json({ error: 'Server Error' });
+    // Handle any errors that occurred during the hashing or updating process
+    res.status(500).json({ error: (error as Error).message || 'Server Error' });
   }
 }
