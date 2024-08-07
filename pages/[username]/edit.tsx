@@ -207,6 +207,12 @@ export default function EditPage() {
       (link) => link.trim() !== ''
     );
 
+    if (!userPassword) {
+      setPasswordModalIsOpen(true); // Open the password modal if password is not yet verified
+      
+      return;
+    }
+
     // Validation check
     if (!firstName.trim()) {
       setSnackbarMessage('First Name is required.');
