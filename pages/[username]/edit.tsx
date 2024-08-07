@@ -194,11 +194,40 @@ export default function EditPage() {
   };
 
   const handleSaveForm = async () => {
-    const { socialMediaLinks, profilePictureUrl, bannerUrl, portfolioImages } =
-      formData;
+    const {
+      firstName,
+      lastName,
+      phoneNumber,
+      socialMediaLinks,
+      profilePictureUrl,
+      bannerUrl,
+      portfolioImages,
+    } = formData;
     const hasDefinedSocialMedia = Object.values(socialMediaLinks).some(
       (link) => link.trim() !== ''
     );
+
+    // Validation check
+    if (!firstName.trim()) {
+      setSnackbarMessage('First Name is required.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+      return;
+    }
+
+    if (!lastName.trim()) {
+      setSnackbarMessage('Last Name is required.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+      return;
+    }
+
+    if (!phoneNumber.trim()) {
+      setSnackbarMessage('Phone Number is required.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+      return;
+    }
 
     if (!hasDefinedSocialMedia) {
       setSnackbarMessage('At least one social media link must be defined.');
@@ -384,7 +413,8 @@ export default function EditPage() {
                     <Avatar
                       src={
                         uploadedFiles.profilePictureUrl ||
-                        formData.profilePictureUrl || '/images/logo.png'
+                        formData.profilePictureUrl ||
+                        '/images/logo.png'
                       }
                       alt='Profile Picture'
                       style={{ width: 120, height: 120, marginLeft: '40px' }}
