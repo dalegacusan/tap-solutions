@@ -324,8 +324,22 @@ export default function EditPage() {
       setUploadedFiles((prev) => ({ ...prev, [field]: url }));
     };
 
-  if (isRetrievingUser) return <p>Loading...</p>;
-  if (isErrorRetrievingUser) return <p>Error: {isErrorRetrievingUser}</p>;
+    if (isRetrievingUser || isErrorRetrievingUser) {
+      return (
+        <Grid
+          container
+          justifyContent="center"
+          alignItems="center"
+          style={{ minHeight: '100vh', textAlign: 'center' }}
+        >
+          <Grid item>
+            <Typography variant="h6">
+              {isRetrievingUser ? 'Loading...' : `Error: ${isErrorRetrievingUser}`}
+            </Typography>
+          </Grid>
+        </Grid>
+      );
+    }
 
   return (
     <div>

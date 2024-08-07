@@ -80,8 +80,22 @@ export default function Home() {
     }
   }, [router.query.username]);
 
-  if (isRetrievingUser) return <p>Loading...</p>;
-  if (isErrorRetrievingUser) return <p>Error: {isErrorRetrievingUser}</p>;
+  if (isRetrievingUser || isErrorRetrievingUser) {
+    return (
+      <Grid
+        container
+        justifyContent="center"
+        alignItems="center"
+        style={{ minHeight: '100vh', textAlign: 'center' }}
+      >
+        <Grid item>
+          <Typography variant="h6">
+            {isRetrievingUser ? 'Loading...' : `Error: ${isErrorRetrievingUser}`}
+          </Typography>
+        </Grid>
+      </Grid>
+    );
+  }
 
   return (
     <div>
