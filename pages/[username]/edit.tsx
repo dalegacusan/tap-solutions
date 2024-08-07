@@ -341,8 +341,29 @@ export default function EditPage() {
                 Hello @{user?.username}!
               </Typography>
 
-              <Typography gutterBottom>Profile Picture</Typography>
-              <FileUpload onUpload={handleFileUpload('profilePictureUrl')} />
+              <Grid container spacing={2}>
+                <Grid item xs={8}>
+                  <Typography gutterBottom>Profile Picture</Typography>
+                  <FileUpload
+                    onUpload={handleFileUpload('profilePictureUrl')}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  {formData.profilePictureUrl ||
+                  uploadedFiles.profilePictureUrl ? (
+                    <img
+                      src={
+                        uploadedFiles.profilePictureUrl ||
+                        formData.profilePictureUrl
+                      }
+                      alt='Profile Picture'
+                      style={{ width: '100%', height: 'auto' }}
+                    />
+                  ) : (
+                    <Typography>No profile picture uploaded.</Typography>
+                  )}
+                </Grid>
+              </Grid>
 
               {/* 
               <Typography gutterBottom mt={2}>

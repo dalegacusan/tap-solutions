@@ -147,13 +147,36 @@ export default function Home() {
                   </Typography>
 
                   <Typography variant='body2' style={{ textAlign: 'center' }}>
-                    {user.jobTitle}, {user.company}
+                    {user.jobTitle && user.company
+                      ? `${user.jobTitle}, ${user.company}`
+                      : user.jobTitle || user.company}
                   </Typography>
 
                   <Box style={{ marginTop: '160px' }}>
                     {/* Contact Information */}
 
                     <nav>
+                      {/* About Me */}
+                      {user.aboutMe && (
+                        <>
+                          <Typography mt={4}>About Me</Typography>
+
+                          <ListItemButton
+                            sx={{
+                              margin: '8px 0px',
+                              boxShadow: 1,
+                              borderRadius: '6px',
+                            }}
+                            className='card-socials'
+                          >
+                            <ListItemIcon>
+                              <InfoIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={user.aboutMe} />
+                          </ListItemButton>
+                        </>
+                      )}
+
                       {/* Email Address */}
                       {user.emailAddress && (
                         <>
@@ -249,34 +272,38 @@ export default function Home() {
                   </Box>
 
                   {/* Address */}
-                  <Box>
-                    <Typography mt={4}>Address</Typography>
+                  {user.address && (
+                    <>
+                      <Box>
+                        <Typography mt={4}>Address</Typography>
 
-                    <a
-                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                        user.address
-                      )}`}
-                      style={{
-                        textDecoration: 'none',
-                        color: 'inherit',
-                      }}
-                      target='_blank'
-                    >
-                      <StyledListItemButtonWithHover
-                        sx={{
-                          margin: '8px 0px',
-                          boxShadow: 1,
-                          borderRadius: '6px',
-                        }}
-                        className='card-socials'
-                      >
-                        <ListItemIcon>
-                          <BusinessIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={user.address} />
-                      </StyledListItemButtonWithHover>
-                    </a>
-                  </Box>
+                        <a
+                          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                            user.address
+                          )}`}
+                          style={{
+                            textDecoration: 'none',
+                            color: 'inherit',
+                          }}
+                          target='_blank'
+                        >
+                          <StyledListItemButtonWithHover
+                            sx={{
+                              margin: '8px 0px',
+                              boxShadow: 1,
+                              borderRadius: '6px',
+                            }}
+                            className='card-socials'
+                          >
+                            <ListItemIcon>
+                              <BusinessIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={user.address} />
+                          </StyledListItemButtonWithHover>
+                        </a>
+                      </Box>
+                    </>
+                  )}
 
                   {/* Portfolio */}
                   <Box>
