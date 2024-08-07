@@ -125,7 +125,7 @@ export default function Home() {
                   <Grid item xs={3}>
                     <Avatar
                       alt={`${user.firstName} ${user.lastName}`}
-                      src='https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg'
+                      src={user.profilePictureUrl || '/images/logo.png'}
                       sx={{ width: 120, height: 120, marginBottom: '-50px' }}
                     />
                   </Grid>
@@ -280,33 +280,33 @@ export default function Home() {
 
                   {/* Portfolio */}
                   <Box>
-                    <Typography mt={4}>Portfolio</Typography>
-
-                    {user.portfolioImages && user.portfolioImages.length > 0 ? (
-                      <ImageList
-                        cols={3}
-                        rowHeight={164}
-                        gap={8}
-                        sx={{ width: '100%' }}
-                      >
-                        {user.portfolioImages.map((imageUrl, index) => (
-                          <ImageListItem key={index}>
-                            <img
-                              src={imageUrl}
-                              alt={`Portfolio Image ${index + 1}`}
-                              loading='lazy'
-                              style={{
-                                objectFit: 'cover',
-                                width: '100%',
-                                height: '100%',
-                              }}
-                            />
-                          </ImageListItem>
-                        ))}
-                      </ImageList>
-                    ) : (
-                      <Typography>No portfolio images available.</Typography>
-                    )}
+                    {user.portfolioImages &&
+                      user.portfolioImages.length > 0 && (
+                        <>
+                          <Typography mt={4}>Portfolio</Typography>
+                          <ImageList
+                            cols={3}
+                            rowHeight={164}
+                            gap={8}
+                            sx={{ width: '100%' }}
+                          >
+                            {user.portfolioImages.map((imageUrl, index) => (
+                              <ImageListItem key={index}>
+                                <img
+                                  src={imageUrl}
+                                  alt={`Portfolio Image ${index + 1}`}
+                                  loading='lazy'
+                                  style={{
+                                    objectFit: 'cover',
+                                    width: '100%',
+                                    height: '100%',
+                                  }}
+                                />
+                              </ImageListItem>
+                            ))}
+                          </ImageList>
+                        </>
+                      )}
                   </Box>
 
                   {/* Save to Contact Button */}

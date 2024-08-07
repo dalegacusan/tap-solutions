@@ -38,6 +38,7 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import { updateDocument } from '../../firestore/updateDocument';
 import FileUpload from '../../components/file-upload';
 import DeleteIcon from '@mui/icons-material/Delete';
+import PasswordModal from '../../components/password-modal'; // Import the PasswordModal component
 
 // Define icons for widgets
 const widgetIcons = {
@@ -133,6 +134,8 @@ export default function EditPage() {
   const [uploadedFiles, setUploadedFiles] = useState<{ [key: string]: string }>(
     {}
   );
+  const [passwordModalIsOpen, setPasswordModalIsOpen] = useState(true); // Show password modal on load
+  const [userPassword, setUserPassword] = useState<string>('');
 
   const handleDeleteImage = (index: number) => {
     setFormData((prev) => ({
@@ -217,6 +220,10 @@ export default function EditPage() {
     }
   };
 
+  const handlePasswordCorrect = () => {
+    setPasswordModalIsOpen(false);
+  };
+
   async function getUserDocument() {
     const { result, error } = await getDocument(
       'users',
@@ -228,7 +235,7 @@ export default function EditPage() {
     } else {
       const user = result as User;
       setUser(user);
-
+      setUserPassword(user.password); // Store the user password
       setFormData(user);
 
       // Update items based on the updated formData
@@ -297,6 +304,13 @@ export default function EditPage() {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
+      <PasswordModal
+        open={passwordModalIsOpen}
+        onClose={() => setPasswordModalIsOpen(false)}
+        onPasswordCorrect={handlePasswordCorrect}
+        userPassword={userPassword} // Pass the user password
+      />
+
       <SocialMediaEditButtonModal
         open={editSocialMediaModalIsOpen}
         onClose={() => setEditSocialMediaModalIsOpen(false)}
@@ -335,10 +349,11 @@ export default function EditPage() {
               <Typography gutterBottom>Profile Picture</Typography>
               <FileUpload onUpload={handleFileUpload('profilePictureUrl')} />
 
+{/* 
               <Typography gutterBottom mt={2}>
                 Banner
               </Typography>
-              <FileUpload onUpload={handleFileUpload('bannerUrl')} />
+              <FileUpload onUpload={handleFileUpload('bannerUrl')} /> */}
 
               <Box mt={4}>
                 <TextField
@@ -440,7 +455,7 @@ export default function EditPage() {
                     </Button>
                   </label>
                 </Grid>
-                
+
                 {formData.portfolioImages.length > 0 && (
                   <Grid item xs={12}>
                     <Grid item xs={12}>
