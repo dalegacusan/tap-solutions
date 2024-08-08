@@ -35,6 +35,7 @@ import Image from 'next/image';
 import { User } from '../../interfaces/user.interface';
 import getDocument from '../../firestore/getDocument';
 import CloseIcon from '@mui/icons-material/Close';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 
 const iconMapping = {
   twitter: <XIcon />,
@@ -86,7 +87,11 @@ export default function Home() {
       `TEL;TYPE=WORK:${user.phoneNumber || ''}\n` +
       `ORG:${user.company || ''}\n` +
       `TITLE:${user.jobTitle || ''}\n` +
-      `${user.socialMediaLinks.facebook ? `URL;TYPE=FACEBOOK:${user.socialMediaLinks.facebook}\n` : ''}` +
+      `${
+        user.socialMediaLinks.facebook
+          ? `URL;TYPE=FACEBOOK:${user.socialMediaLinks.facebook}\n`
+          : ''
+      }` +
       `END:VCARD`;
 
     // Create a Blob with the vCard data
@@ -285,6 +290,9 @@ export default function Home() {
                                 margin: '8px 0px',
                                 boxShadow: 1,
                                 borderRadius: '6px',
+                                display: 'flex',
+                                justifyContent: 'space-between', // Ensure content is spaced out
+                                alignItems: 'center', // Center items vertically
                               }}
                               className='card-socials'
                             >
@@ -292,6 +300,14 @@ export default function Home() {
                                 <CallIcon />
                               </ListItemIcon>
                               <ListItemText primary={user.phoneNumber} />
+                              {/* Add the save icon button */}
+                              <IconButton
+                                edge='end'
+                                onClick={handleSaveToContact}
+                                sx={{ color: '#FF914D' }} // Adjust color as needed
+                              >
+                                <BookmarkIcon />
+                              </IconButton>
                             </StyledListItemButtonWithHover>
                           </a>
                         </>
