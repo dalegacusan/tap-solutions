@@ -77,16 +77,8 @@ export default function Home() {
   const handleSaveToContact = () => {
     if (!user) return;
   
-    // Construct vCard data
-    const vCardData = `
-  BEGIN:VCARD
-  VERSION:4.0
-  FN:${user.firstName} ${user.lastName}
-  TEL;TYPE=work,voice:${user.phoneNumber || ''}
-  EMAIL:${user.emailAddress || ''}
-  ADR:${user.address || ''}
-  END:VCARD
-    `.trim();
+    // Construct vCard data in a single line
+    const vCardData = `BEGIN:VCARD\nVERSION:3.0\nFN:${user.firstName} ${user.lastName}\nTEL:${user.phoneNumber || ''}\nEMAIL:${user.emailAddress || ''}\nADR;;${user.address || ''}\nEND:VCARD`;
   
     // Create a Blob with the vCard data
     const blob = new Blob([vCardData], { type: 'text/vcard' });
@@ -107,6 +99,7 @@ export default function Home() {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };
+  
 
   async function getUserDocument() {
     const { result, error } = await getDocument(
