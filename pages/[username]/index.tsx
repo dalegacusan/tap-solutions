@@ -87,7 +87,7 @@ export default function Home() {
     END:VCARD
     `.trim();
 
-    c; // Create a Blob with the VCard data
+    // Create a Blob with the VCard data
     const blob = new Blob([vCardData], { type: 'text/vcard' });
 
     // Create a URL for the Blob
