@@ -74,6 +74,32 @@ export default function Home() {
     setCurrentImage(null);
   };
 
+  const handleSaveToContact = () => {
+    if (!user) return;
+
+    const vCardData = `
+  BEGIN:VCARD
+  VERSION:3.0
+  FN:${user.firstName} ${user.lastName}
+  TEL:${user.phoneNumber}
+  EMAIL:${user.emailAddress}
+  ADR:${user.address}
+  END:VCARD
+    `.trim();
+
+    const blob = new Blob([vCardData], { type: 'text/vcard' });
+    const url = URL.createObjectURL(blob);
+
+    // Create a temporary link element
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${user.firstName}_${user.lastName}.vcf`;
+    link.click();
+
+    // Clean up
+    URL.revokeObjectURL(url);
+  };
+
   async function getUserDocument() {
     const { result, error } = await getDocument(
       'users',
@@ -380,6 +406,7 @@ export default function Home() {
                       size='small'
                       variant='contained'
                       style={{ backgroundColor: '#FF914D' }}
+                      onClick={handleSaveToContact}
                     >
                       Save to Contact
                     </Button>
