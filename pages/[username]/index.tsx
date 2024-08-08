@@ -76,30 +76,38 @@ export default function Home() {
 
   const handleSaveToContact = () => {
     if (!user) return;
-  
-    // Construct vCard data in a single line
-    const vCardData = `BEGIN:VCARD\nVERSION:3.0\nFN:${user.firstName} ${user.lastName}\nTEL:${user.phoneNumber || ''}\nEMAIL:${user.emailAddress || ''}\nADR;;${user.address || ''}\nEND:VCARD`;
-  
+
+    // Construct the vCard data with the specified fields
+    const vCardData =
+      `BEGIN:VCARD\n` +
+      `VERSION:3.0\n` +
+      `FN:${user.firstName} ${user.lastName}\n` +
+      `EMAIL:${user.emailAddress || ''}\n` +
+      `TEL;TYPE=WORK:${user.phoneNumber || ''}\n` +
+      `ORG:${user.company || ''}\n` +
+      `TITLE:${user.jobTitle || ''}\n` +
+      `${user.socialMediaLinks.facebook ? `URL;TYPE=FACEBOOK:${user.socialMediaLinks.facebook}\n` : ''}` +
+      `END:VCARD`;
+
     // Create a Blob with the vCard data
     const blob = new Blob([vCardData], { type: 'text/vcard' });
-  
+
     // Create a URL for the Blob
     const url = URL.createObjectURL(blob);
-  
+
     // Create a temporary link element and trigger a click
     const link = document.createElement('a');
     link.href = url;
     link.download = `${user.firstName}_${user.lastName}.vcf`;
-  
+
     // Append to the body to ensure it works in all browsers
     document.body.appendChild(link);
     link.click();
-  
+
     // Cleanup
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };
-  
 
   async function getUserDocument() {
     const { result, error } = await getDocument(
