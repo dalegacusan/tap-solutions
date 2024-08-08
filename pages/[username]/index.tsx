@@ -76,32 +76,33 @@ export default function Home() {
 
   const handleSaveToContact = () => {
     if (!user) return;
-
+  
+    // Construct vCard data
     const vCardData = `
-    BEGIN:VCARD
-    VERSION:3.0
-    FN:${user.firstName} ${user.lastName}
-    TEL:${user.phoneNumber}
-    EMAIL:${user.emailAddress}
-    ADR:${user.address}
-    END:VCARD
+  BEGIN:VCARD
+  VERSION:4.0
+  FN:${user.firstName} ${user.lastName}
+  TEL;TYPE=work,voice:${user.phoneNumber || ''}
+  EMAIL:${user.emailAddress || ''}
+  ADR:${user.address || ''}
+  END:VCARD
     `.trim();
-
-    // Create a Blob with the VCard data
+  
+    // Create a Blob with the vCard data
     const blob = new Blob([vCardData], { type: 'text/vcard' });
-
+  
     // Create a URL for the Blob
     const url = URL.createObjectURL(blob);
-
+  
     // Create a temporary link element and trigger a click
     const link = document.createElement('a');
     link.href = url;
     link.download = `${user.firstName}_${user.lastName}.vcf`;
-
-    // Append to the body to work in all browsers
+  
+    // Append to the body to ensure it works in all browsers
     document.body.appendChild(link);
     link.click();
-
+  
     // Cleanup
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
