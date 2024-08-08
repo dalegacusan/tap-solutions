@@ -17,6 +17,8 @@ import {
   ListItemButton,
   Typography,
   Button,
+  Dialog,
+  IconButton,
 } from '@mui/material';
 import CallIcon from '@mui/icons-material/Call';
 import EmailIcon from '@mui/icons-material/Email';
@@ -32,6 +34,7 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { User } from '../../interfaces/user.interface';
 import getDocument from '../../firestore/getDocument';
+import CloseIcon from '@mui/icons-material/Close';
 
 const iconMapping = {
   twitter: <XIcon />,
@@ -58,6 +61,18 @@ export default function Home() {
   const [isErrorRetrievingUser, setIsErrorRetrievingUser] = useState<
     string | null
   >(null);
+  const [openLightbox, setOpenLightbox] = useState(false);
+  const [currentImage, setCurrentImage] = useState<string | null>(null);
+
+  const handleImageClick = (imageUrl: string) => {
+    setCurrentImage(imageUrl);
+    setOpenLightbox(true);
+  };
+
+  const handleCloseLightbox = () => {
+    setOpenLightbox(false);
+    setCurrentImage(null);
+  };
 
   async function getUserDocument() {
     const { result, error } = await getDocument(
@@ -347,7 +362,9 @@ export default function Home() {
                                     objectFit: 'cover',
                                     width: '100%',
                                     height: '100%',
+                                    cursor: 'pointer',
                                   }}
+                                  onClick={() => handleImageClick(imageUrl)}
                                 />
                               </ImageListItem>
                             ))}
@@ -426,6 +443,32 @@ export default function Home() {
             </Box>
           </Grid>
         </Grid>
+
+        {/* Lightbox Dialog */}
+        <Dialog
+          open={openLightbox}
+          onClose={handleCloseLightbox}
+          maxWidth='md'
+          fullWidth
+        >
+          <Box sx={{ position: 'relative' }}>
+            <IconButton
+              onClick={handleCloseLightbox}
+              sx={{ position: 'absolute', top: 8, right: 8 }}
+            >
+              <CloseIcon />
+            </IconButton>
+            {currentImage && (
+              <Image
+                src={currentImage}
+                alt='Full Size'
+                width={1200}
+                height={800}
+                style={{ width: '100%', height: 'auto' }}
+              />
+            )}
+          </Box>
+        </Dialog>
       </main>
     </div>
   );
