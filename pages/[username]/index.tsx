@@ -425,8 +425,9 @@ export default function Home() {
                       }}
                     >
                       <a
-                        href=''
+                        href='https://www.facebook.com/people/Tap-Solutions-PH/61562222303031'
                         style={{ color: 'red', textDecoration: 'none' }}
+                        target='_blank'
                       >
                         <ListItemText
                           primary='Apply for a card today!'
