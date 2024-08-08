@@ -15,6 +15,7 @@ import {
   Snackbar,
   Alert,
   Avatar,
+  Dialog,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useEffect, useState } from 'react';
@@ -39,6 +40,8 @@ import { updateDocument } from '../../firestore/updateDocument';
 import FileUpload from '../../components/file-upload';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PasswordModal from '../../components/password-modal'; // Import the PasswordModal component
+import Image from 'next/image';
+import CloseIcon from '@mui/icons-material/Close';
 
 const widgetIcons = {
   aboutMe: <InfoIcon />,
@@ -143,6 +146,19 @@ export default function EditPage() {
     'success'
   );
 
+  const [openLightbox, setOpenLightbox] = useState(false);
+  const [currentImage, setCurrentImage] = useState<string | null>(null);
+
+  const handleImageClick = (imageUrl: string) => {
+    setCurrentImage(imageUrl);
+    setOpenLightbox(true);
+  };
+
+  const handleCloseLightbox = () => {
+    setOpenLightbox(false);
+    setCurrentImage(null);
+  };
+
   const handleDeleteImage = (index: number) => {
     setFormData((prev) => ({
       ...prev,
@@ -209,7 +225,7 @@ export default function EditPage() {
 
     if (!userPassword) {
       setPasswordModalIsOpen(true); // Open the password modal if password is not yet verified
-      
+
       return;
     }
 
@@ -573,7 +589,9 @@ export default function EditPage() {
                                 objectFit: 'cover',
                                 width: '100%',
                                 height: '100%',
+                                cursor: 'pointer',
                               }}
+                              onClick={() => handleImageClick(imageUrl)}
                             />
                             <IconButton
                               onClick={() => handleDeleteImage(index)}
@@ -609,6 +627,32 @@ export default function EditPage() {
             </Box>
           </Grid>
         </Grid>
+
+        {/* Lightbox Dialog */}
+        <Dialog
+          open={openLightbox}
+          onClose={handleCloseLightbox}
+          maxWidth='md'
+          fullWidth
+        >
+          <Box sx={{ position: 'relative' }}>
+            <IconButton
+              onClick={handleCloseLightbox}
+              sx={{ position: 'absolute', top: 8, right: 8 }}
+            >
+              <CloseIcon />
+            </IconButton>
+            {currentImage && (
+              <Image
+                src={currentImage}
+                alt='Full Size'
+                width={1200}
+                height={800}
+                style={{ width: '100%', height: 'auto' }}
+              />
+            )}
+          </Box>
+        </Dialog>
       </main>
     </div>
   );
