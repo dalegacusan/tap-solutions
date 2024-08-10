@@ -26,6 +26,7 @@ interface PasswordModalProps {
   userPassword?: string; // Optional prop
   setUserPassword?: (password: string) => void; // Optional prop
   username: string;
+  setIsLoggedIn?: (isLoggedIn: boolean) => void;
 }
 
 const PasswordModal: React.FC<PasswordModalProps> = ({
@@ -33,6 +34,7 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
   onClose,
   setUserPassword,
   onPasswordCorrect,
+  setIsLoggedIn,
   userPassword,
   username,
 }) => {
@@ -69,6 +71,10 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
         });
 
         if (data.success) {
+          if (setIsLoggedIn) {
+            setIsLoggedIn(true);
+          }
+
           onPasswordCorrect();
         } else {
           setError('Incorrect password. Please try again.');
@@ -106,6 +112,10 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
             accountPassword: userPassword,
           });
           if (data.success) {
+            if (setIsLoggedIn) {
+              setIsLoggedIn(true);
+            }
+
             onPasswordCorrect();
           } else {
             setError('Incorrect password. Please try again.');

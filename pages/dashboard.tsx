@@ -139,6 +139,7 @@ export default function DashboardPage() {
   );
   const [passwordModalIsOpen, setPasswordModalIsOpen] = useState(true); // Show password modal on load
   const [userPassword, setUserPassword] = useState<string>('');
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   // Snackbar state
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -237,10 +238,10 @@ export default function DashboardPage() {
       (link) => link.trim() !== ''
     );
 
-    // if (!userPassword) {
-    //   setPasswordModalIsOpen(true); // Open the password modal if password is not yet verified
-    //   return;
-    // }
+    if (!isLoggedIn) {
+      setPasswordModalIsOpen(true); // Open the password modal if password is not yet verified
+      return;
+    }
 
     // Validation check
     if (!username.trim()) {
@@ -398,6 +399,7 @@ export default function DashboardPage() {
         userPassword={userPassword} // Pass the user password
         setUserPassword={setUserPassword}
         username={formData.username as string} // Pass the username
+        setIsLoggedIn={setIsLoggedIn}
       />
 
       <SocialMediaEditButtonModal
