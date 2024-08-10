@@ -6,6 +6,15 @@ import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import getDocument from '../firestore/getDocument';
+import {
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+} from '@mui/material';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const modalStyle = {
   position: 'absolute' as 'absolute',
@@ -48,6 +57,16 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEnteredUsername(event.target.value);
+  };
+
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
   };
 
   const handleSubmit = async () => {
@@ -164,17 +183,35 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
             value={enteredUsername}
             onChange={handleUsernameChange}
             margin='normal'
+            required
           />
         )}
-        <TextField
-          fullWidth
-          label={userPassword === '' ? 'New Password' : 'Password'}
-          type='password'
-          variant='outlined'
-          value={password}
-          onChange={handlePasswordChange}
-          margin='normal'
-        />
+
+        <FormControl variant='outlined' fullWidth required margin='normal'>
+          <InputLabel htmlFor='outlined-adornment-password'>
+            {userPassword === '' ? 'New Password' : 'Password'}
+          </InputLabel>
+          <OutlinedInput
+            id='outlined-adornment-password'
+            type={showPassword ? 'text' : 'password'}
+            value={password}
+            onChange={handlePasswordChange}
+            endAdornment={
+              <InputAdornment position='end'>
+                <IconButton
+                  aria-label='toggle password visibility'
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge='end'
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+            label={userPassword === '' ? 'New Password' : 'Password'}
+          />
+        </FormControl>
+
         {error && (
           <Typography color='error' sx={{ mt: 2 }}>
             {error}
