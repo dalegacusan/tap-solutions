@@ -175,7 +175,11 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
           sx={{ mt: 2 }}
           style={{ backgroundColor: '#FF914D' }}
         >
-          {userPassword === '' ? 'Set Password' : 'Submit'}
+          {
+            username === '' && userPassword === ''
+            ? 'Submit'
+            : userPassword === '' ? 'Set Password' : 'Submit'
+          }
         </Button>
       </Box>
     </Modal>

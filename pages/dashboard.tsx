@@ -16,6 +16,11 @@ import {
   Alert,
   Avatar,
   Dialog,
+  FormControl,
+  InputLabel,
+  FilledInput,
+  InputAdornment,
+  OutlinedInput,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useEffect, useState } from 'react';
@@ -38,9 +43,10 @@ import SocialMediaEditButtonModal from '../components/social-media-edit-button-m
 import PasswordModal from '../components/password-modal';
 import SocialMediaEditButton from '../components/social-media-edit-button';
 import DraggableWidgets from '../components/draggable-widgets';
-import { updateDocument } from '../firestore/updateDocument';
 import FileUpload from '../components/file-upload';
-import getDocument from '../firestore/getDocument';
+import addDocument from '../firestore/addDocument';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const widgetIcons = {
   aboutMe: <InfoIcon />,
@@ -98,6 +104,7 @@ const reorder = (list, startIndex, endIndex) => {
 export default function DashboardPage() {
   const [formData, setFormData] = useState({
     username: '',
+    password: '',
     firstName: '',
     lastName: '',
     phoneNumber: '',
@@ -141,6 +148,16 @@ export default function DashboardPage() {
 
   const [openLightbox, setOpenLightbox] = useState(false);
   const [currentImage, setCurrentImage] = useState<string | null>(null);
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
 
   const handleImageClick = (imageUrl: string) => {
     setCurrentImage(imageUrl);
@@ -219,7 +236,6 @@ export default function DashboardPage() {
 
     if (!userPassword) {
       setPasswordModalIsOpen(true); // Open the password modal if password is not yet verified
-
       return;
     }
 
@@ -267,17 +283,17 @@ export default function DashboardPage() {
     };
 
     // Save the form data to Firestore
-    const { result, error } = await updateDocument(
+    const { result, error } = await addDocument(
       'users',
-      formData.username as string,
+      updatedFormData.username,
       updatedFormData
     );
 
     if (error) {
-      setSnackbarMessage(`Error saving data: ${error}`);
+      setSnackbarMessage(`Error adding data: ${error}`);
       setSnackbarSeverity('error');
     } else {
-      setSnackbarMessage('Changes saved successfully!');
+      setSnackbarMessage('Document added successfully!');
       setSnackbarSeverity('success');
     }
     setSnackbarOpen(true);
@@ -292,7 +308,7 @@ export default function DashboardPage() {
 
     // Update items based on the updated formData
     setItems(getWidgetContent(formData));
-  }, [])
+  }, []);
 
   const handleTextFieldChange =
     (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -331,9 +347,7 @@ export default function DashboardPage() {
   return (
     <div>
       <Head>
-        <title>
-          Tap Solutions PH - Dashboard
-        </title>
+        <title>Tap Solutions PH - Dashboard</title>
         <link rel='icon' href='/images/logo.png' />
       </Head>
 
@@ -398,7 +412,7 @@ export default function DashboardPage() {
           <Grid item lg={4} md={6} xs={12} px={4}>
             <Box>
               <Typography variant='h5' mb={4} style={{ fontWeight: 'bold' }}>
-                Hello @{user?.username}!
+                Add User
               </Typography>
 
               <Grid container spacing={2}>
@@ -440,6 +454,33 @@ export default function DashboardPage() {
                   value={formData.username}
                   onChange={handleTextFieldChange('username')}
                 />
+              </Box>
+
+              <Box mt={4}>
+                <FormControl variant='outlined' fullWidth required>
+                  <InputLabel htmlFor='outlined-adornment-password'>
+                    Password
+                  </InputLabel>
+                  <OutlinedInput
+                    id='outlined-adornment-password'
+                    type={showPassword ? 'text' : 'password'}
+                    value={formData.password}
+                    onChange={handleTextFieldChange('password')}
+                    endAdornment={
+                      <InputAdornment position='end'>
+                        <IconButton
+                          aria-label='toggle password visibility'
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge='end'
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                    label='Password'
+                  />
+                </FormControl>
               </Box>
 
               <Box mt={4}>
