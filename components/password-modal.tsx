@@ -23,7 +23,7 @@ interface PasswordModalProps {
   onClose: () => void;
   onPasswordCorrect: () => void;
   userPassword: string; // This should be the hashed password
-  username: string;
+  username?: string; // Optional username for the setup process
 }
 
 const PasswordModal: React.FC<PasswordModalProps> = ({
@@ -34,26 +34,34 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
   username,
 }) => {
   const [password, setPassword] = React.useState('');
+  const [enteredUsername, setEnteredUsername] = React.useState(username || '');
   const [error, setError] = React.useState<string | null>(null);
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
   };
 
+  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEnteredUsername(event.target.value);
+  };
+
   const handleSubmit = async () => {
     if (userPassword === '') {
       // User hasn't set up a password yet
       if (password) {
-        try {
-          await axios.post('/api/set-password', {
-            username,
-            password,
-          });
-          onPasswordCorrect();
-        } catch (err) {
-          // Extract error message if available, else use default message
-          const errorMessage = (err as any).response?.data?.error || 'Error setting up the password. Please try again.';
-          setError(errorMessage);
+        if (username) {
+          try {
+            await axios.post('/api/set-password', {
+              username: enteredUsername,
+              password,
+            });
+            onPasswordCorrect();
+          } catch (err) {
+            const errorMessage = (err as any).response?.data?.error || 'Error setting up the password. Please try again.';
+            setError(errorMessage);
+          }
+        } else {
+          setError('Username is required to set up your password.');
         }
       } else {
         setError('Please enter a password to set up your account.');
@@ -71,7 +79,6 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
           setError('Incorrect password. Please try again.');
         }
       } catch (err) {
-        // Extract error message if available, else use default message
         const errorMessage = (err as any).response?.data?.error || 'Error verifying password. Please try again.';
         setError(errorMessage);
       }
@@ -98,8 +105,20 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
         onKeyDown={(e) => e.key === 'Escape' && e.preventDefault()}
       >
         <Typography id='password-modal-title' variant='h6' component='h2'>
-          {userPassword === '' ? 'Set Up Your Password' : 'Enter Password'}
+          {username === '' && userPassword === '' ? 'Enter Credentials' :  (
+            userPassword === '' ? 'Set Up Your Password' : 'Enter Password'
+          )}
         </Typography>
+        {userPassword === '' && !username && (
+          <TextField
+            fullWidth
+            label='Username'
+            variant='outlined'
+            value={enteredUsername}
+            onChange={handleUsernameChange}
+            margin='normal'
+          />
+        )}
         <TextField
           fullWidth
           label={userPassword === '' ? 'New Password' : 'Password'}
