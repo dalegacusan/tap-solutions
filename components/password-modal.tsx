@@ -23,13 +23,15 @@ interface PasswordModalProps {
   open: boolean;
   onClose: () => void;
   onPasswordCorrect: () => void;
-  userPassword: string; // This should be the hashed password
-  username?: string; // Optional username for the setup process
+  userPassword?: string; // Optional prop
+  setUserPassword?: (password: string) => void; // Optional prop
+  username: string;
 }
 
 const PasswordModal: React.FC<PasswordModalProps> = ({
   open,
   onClose,
+  setUserPassword,
   onPasswordCorrect,
   userPassword,
   username,
@@ -175,11 +177,11 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
           sx={{ mt: 2 }}
           style={{ backgroundColor: '#FF914D' }}
         >
-          {
-            username === '' && userPassword === ''
+          {username === '' && userPassword === ''
             ? 'Submit'
-            : userPassword === '' ? 'Set Password' : 'Submit'
-          }
+            : userPassword === ''
+            ? 'Set Password'
+            : 'Submit'}
         </Button>
       </Box>
     </Modal>

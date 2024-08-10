@@ -47,6 +47,7 @@ import FileUpload from '../components/file-upload';
 import addDocument from '../firestore/addDocument';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import axios from 'axios';
 
 const widgetIcons = {
   aboutMe: <InfoIcon />,
@@ -229,19 +230,28 @@ export default function DashboardPage() {
       profilePictureUrl,
       bannerUrl,
       portfolioImages,
+      password, // Include password from formData
     } = formData;
+
     const hasDefinedSocialMedia = Object.values(socialMediaLinks).some(
       (link) => link.trim() !== ''
     );
 
-    if (!userPassword) {
-      setPasswordModalIsOpen(true); // Open the password modal if password is not yet verified
-      return;
-    }
+    // if (!userPassword) {
+    //   setPasswordModalIsOpen(true); // Open the password modal if password is not yet verified
+    //   return;
+    // }
 
     // Validation check
     if (!username.trim()) {
       setSnackbarMessage('Username is required.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+      return;
+    }
+
+    if (!password.trim()) {
+      setSnackbarMessage('Password is required.');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
       return;
@@ -275,28 +285,39 @@ export default function DashboardPage() {
       return;
     }
 
-    const updatedFormData = {
-      ...formData,
-      profilePictureUrl: uploadedFiles.profilePictureUrl || profilePictureUrl,
-      bannerUrl: uploadedFiles.bannerUrl || bannerUrl,
-      portfolioImages, // Use formData portfolioImages directly
-    };
+    try {
+      // Hash the password using the API route
+      const { data } = await axios.post('/api/hash-password', { password });
+      const hashedPassword = data.hashedPassword;
 
-    // Save the form data to Firestore
-    const { result, error } = await addDocument(
-      'users',
-      updatedFormData.username,
-      updatedFormData
-    );
+      const updatedFormData = {
+        ...formData,
+        password: hashedPassword, // Save the hashed password
+        profilePictureUrl: uploadedFiles.profilePictureUrl || profilePictureUrl,
+        bannerUrl: uploadedFiles.bannerUrl || bannerUrl,
+        portfolioImages, // Use formData portfolioImages directly
+      };
 
-    if (error) {
-      setSnackbarMessage(`Error adding data: ${error}`);
+      // Save the form data to Firestore
+      const { result, error } = await addDocument(
+        'users',
+        updatedFormData.username,
+        updatedFormData
+      );
+
+      if (error) {
+        setSnackbarMessage(`Error adding data: ${error}`);
+        setSnackbarSeverity('error');
+      } else {
+        setSnackbarMessage('Document added successfully!');
+        setSnackbarSeverity('success');
+      }
+      setSnackbarOpen(true);
+    } catch (error) {
+      setSnackbarMessage('Error hashing password');
       setSnackbarSeverity('error');
-    } else {
-      setSnackbarMessage('Document added successfully!');
-      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
     }
-    setSnackbarOpen(true);
   };
 
   const handlePasswordCorrect = () => {
@@ -375,6 +396,7 @@ export default function DashboardPage() {
         onClose={() => setPasswordModalIsOpen(false)}
         onPasswordCorrect={handlePasswordCorrect}
         userPassword={userPassword} // Pass the user password
+        setUserPassword={setUserPassword}
         username={formData.username as string} // Pass the username
       />
 
