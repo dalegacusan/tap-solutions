@@ -654,7 +654,7 @@ export default function DashboardPage() {
                   onClick={handleSaveForm}
                   style={{ backgroundColor: '#FF914D' }}
                 >
-                  Save Changes
+                  Add User
                 </Button>
               </Box>
             </Box>
