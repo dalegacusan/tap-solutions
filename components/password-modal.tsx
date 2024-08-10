@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
+import getDocument from '../firestore/getDocument';
 
 const modalStyle = {
   position: 'absolute' as 'absolute',
@@ -46,10 +47,40 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
   };
 
   const handleSubmit = async () => {
-    if (userPassword === '') {
-      // User hasn't set up a password yet
-      if (password) {
-        if (username) {
+    if (username === '' && userPassword === '') {
+      // Check the document in the 'administrators' collection and verify the password
+      try {
+        const { result: user, error: fetchError } = await getDocument(
+          'administrators',
+          enteredUsername
+        );
+
+        if (fetchError) {
+          setError(fetchError);
+          return;
+        }
+
+        // Verify password
+        const { data } = await axios.post('/api/verify-password', {
+          enteredPassword: password,
+          accountPassword: user.password,
+        });
+
+        if (data.success) {
+          onPasswordCorrect();
+        } else {
+          setError('Incorrect password. Please try again.');
+        }
+      } catch (err) {
+        const errorMessage =
+          (err as any).response?.data?.error ||
+          'Error verifying password. Please try again.';
+        setError(errorMessage);
+      }
+    } else {
+      if (userPassword === '') {
+        // User hasn't set up a password yet
+        if (password) {
           try {
             await axios.post('/api/set-password', {
               username: enteredUsername,
@@ -57,30 +88,32 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
             });
             onPasswordCorrect();
           } catch (err) {
-            const errorMessage = (err as any).response?.data?.error || 'Error setting up the password. Please try again.';
+            const errorMessage =
+              (err as any).response?.data?.error ||
+              'Error setting up the password. Please try again.';
             setError(errorMessage);
           }
         } else {
-          setError('Username is required to set up your password.');
+          setError('Please enter a password to set up your account.');
         }
       } else {
-        setError('Please enter a password to set up your account.');
-      }
-    } else {
-      // User has set up a password, verify it
-      try {
-        const { data } = await axios.post('/api/verify-password', {
-          enteredPassword: password,
-          accountPassword: userPassword,
-        });
-        if (data.success) {
-          onPasswordCorrect();
-        } else {
-          setError('Incorrect password. Please try again.');
+        // User has set up a password, verify it
+        try {
+          const { data } = await axios.post('/api/verify-password', {
+            enteredPassword: password,
+            accountPassword: userPassword,
+          });
+          if (data.success) {
+            onPasswordCorrect();
+          } else {
+            setError('Incorrect password. Please try again.');
+          }
+        } catch (err) {
+          const errorMessage =
+            (err as any).response?.data?.error ||
+            'Error verifying password. Please try again.';
+          setError(errorMessage);
         }
-      } catch (err) {
-        const errorMessage = (err as any).response?.data?.error || 'Error verifying password. Please try again.';
-        setError(errorMessage);
       }
     }
   };
@@ -105,9 +138,11 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
         onKeyDown={(e) => e.key === 'Escape' && e.preventDefault()}
       >
         <Typography id='password-modal-title' variant='h6' component='h2'>
-          {username === '' && userPassword === '' ? 'Enter Credentials' :  (
-            userPassword === '' ? 'Set Up Your Password' : 'Enter Password'
-          )}
+          {username === '' && userPassword === ''
+            ? 'Enter Credentials'
+            : userPassword === ''
+            ? 'Set Up Your Password'
+            : 'Enter Password'}
         </Typography>
         {userPassword === '' && !username && (
           <TextField
