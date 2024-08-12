@@ -1,16 +1,6 @@
 html, body {
   margin: 0;
   padding: 0;
-  background: rgb(255, 238, 218);
-  background: linear-gradient(
-    0deg,
-    rgba(255, 238, 218, 1) 0%,
-    rgba(255, 255, 255, 1) 38%,
-    rgba(255, 255, 255, 1) 61%,
-    rgba(203, 242, 238, 1) 100%
-  );
-  background-repeat: no-repeat;
-  background-size: cover; /* Ensure background covers entire viewport */
 }
 
 .header-banner {
