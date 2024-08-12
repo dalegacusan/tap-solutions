@@ -99,8 +99,8 @@ const reorder = (list, startIndex, endIndex) => {
 export default function EditPage() {
   const router = useRouter();
 
-  const [formData, setFormData] = useState({
-    username: router.query.username,
+  const [formData, setFormData] = useState<User>({
+    username: router.query.username as string,
     firstName: '',
     lastName: '',
     phoneNumber: '',
@@ -117,6 +117,7 @@ export default function EditPage() {
     company: '',
     profilePictureUrl: '',
     bannerUrl: '',
+    backgroundUrl: '',
     portfolioImages: [],
   });
 
@@ -217,6 +218,7 @@ export default function EditPage() {
       socialMediaLinks,
       profilePictureUrl,
       bannerUrl,
+      backgroundUrl,
       portfolioImages,
     } = formData;
     const hasDefinedSocialMedia = Object.values(socialMediaLinks).some(
@@ -262,6 +264,7 @@ export default function EditPage() {
       ...formData,
       profilePictureUrl: uploadedFiles.profilePictureUrl || profilePictureUrl,
       bannerUrl: uploadedFiles.bannerUrl || bannerUrl,
+      backgroundUrl: uploadedFiles.backgroundUrl || backgroundUrl,
       portfolioImages, // Use formData portfolioImages directly
     };
 
@@ -349,7 +352,7 @@ export default function EditPage() {
   };
 
   const handleFileUpload =
-    (field: 'profilePictureUrl' | 'bannerUrl') => (url: string) => {
+    (field: 'profilePictureUrl' | 'bannerUrl' | 'backgroundUrl') => (url: string) => {
       setUploadedFiles((prev) => ({ ...prev, [field]: url }));
     };
 
@@ -468,11 +471,56 @@ export default function EditPage() {
                 </Grid>
               </Grid>
 
-              {/* 
-              <Typography gutterBottom mt={2}>
-                Banner
-              </Typography>
-              <FileUpload onUpload={handleFileUpload('bannerUrl')} /> */}
+              <Grid container spacing={2} mt={3}>
+                <Grid item xs={8}>
+                  <Typography gutterBottom>Banner</Typography>
+                  <FileUpload
+                    onUpload={handleFileUpload('bannerUrl')}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  {formData.bannerUrl ||
+                  uploadedFiles.bannerUrl ? (
+                    <Avatar
+                      src={
+                        uploadedFiles.bannerUrl ||
+                        formData.bannerUrl ||
+                        '/images/banner.png' ||
+                        '/images/logo.png'
+                      }
+                      alt='Banner'
+                      style={{ width: 120, height: 120, marginLeft: '40px' }}
+                    />
+                  ) : (
+                    <Typography>No banner picture uploaded.</Typography>
+                  )}
+                </Grid>
+              </Grid>
+
+              <Grid container spacing={2} mt={3}>
+                <Grid item xs={8}>
+                  <Typography gutterBottom>Background</Typography>
+                  <FileUpload
+                    onUpload={handleFileUpload('backgroundUrl')}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  {formData.backgroundUrl ||
+                  uploadedFiles.backgroundUrl ? (
+                    <Avatar
+                      src={
+                        uploadedFiles.backgroundUrl ||
+                        formData.backgroundUrl ||
+                        '/images/logo.png'
+                      }
+                      alt='Background'
+                      style={{ width: 120, height: 120, marginLeft: '40px' }}
+                    />
+                  ) : (
+                    <Typography>No background picture uploaded.</Typography>
+                  )}
+                </Grid>
+              </Grid>
 
               <Box mt={4}>
                 <TextField

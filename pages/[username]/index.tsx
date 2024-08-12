@@ -170,9 +170,11 @@ export default function Home() {
       <main>
         <div
           style={{
+            backgroundImage: user?.bannerUrl
+              ? `url('${user.bannerUrl}')`
+              : `url('/images/banner.png')`,
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
-            backgroundImage: "url('/images/banner.png')",
           }}
           className='header-banner'
         ></div>

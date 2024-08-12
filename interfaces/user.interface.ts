@@ -16,6 +16,7 @@ export interface User {
   company: string;
   profilePictureUrl: string;
   bannerUrl: string;
+  backgroundUrl: string;
   portfolioImages: string[];
-  password: string;
+  password?: string;
 }
