@@ -83,6 +83,7 @@ export default function Home() {
       `BEGIN:VCARD\n` +
       `VERSION:3.0\n` +
       `FN:${user.firstName} ${user.lastName}\n` +
+      `N:${user.lastName};${user.firstName};;;;\n` +
       `EMAIL:${user.emailAddress || ''}\n` +
       `TEL;TYPE=WORK:${user.phoneNumber || ''}\n` +
       `ORG:${user.company || ''}\n` +
@@ -107,6 +108,7 @@ export default function Home() {
           ? `URL;TYPE=LINKEDIN:${user.socialMediaLinks.linkedIn}\n`
           : ''
       }` +
+      `NOTE:Created with tapsolutionsph.com\n` +
       `END:VCARD`;
 
     // Create a Blob with the vCard data
