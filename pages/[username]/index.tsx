@@ -141,6 +141,20 @@ export default function Home() {
     }
   }, [isErrorRetrievingUser, router]);
 
+  // Dynamically set the background style
+  const backgroundStyle = user?.backgroundUrl
+    ? {
+        backgroundImage: `url('${user.backgroundUrl}')`,
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+      }
+    : {
+        background:
+          'linear-gradient(0deg, rgba(255, 238, 218, 1) 0%, rgba(255, 255, 255, 1) 38%, rgba(255, 255, 255, 1) 61%, rgba(203, 242, 238, 1) 100%)',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+      };
+
   if (isRetrievingUser || isErrorRetrievingUser) {
     return (
       <Grid
@@ -167,7 +181,7 @@ export default function Home() {
         <link rel='icon' href='/images/logo.png' />
       </Head>
 
-      <main>
+      <main style={backgroundStyle}>
         <div
           style={{
             backgroundImage: user?.bannerUrl
