@@ -198,6 +198,17 @@ export default function DashboardPage() {
   const handleAddImageClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      // Check if the file type is allowed
+      const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+      if (!allowedTypes.includes(file.type)) {
+        setSnackbarMessage(
+          'Invalid file type. Please upload PNG, JPEG, or JPG images.'
+        );
+        setSnackbarSeverity('error');
+        setSnackbarOpen(true);
+        return;
+      }
+
       handlePortfolioImageUpload(file);
     }
   };
@@ -365,7 +376,8 @@ export default function DashboardPage() {
   };
 
   const handleFileUpload =
-    (field: 'profilePictureUrl' | 'bannerUrl' | 'backgroundUrl') => (url: string) => {
+    (field: 'profilePictureUrl' | 'bannerUrl' | 'backgroundUrl') =>
+    (url: string) => {
       setUploadedFiles((prev) => ({ ...prev, [field]: url }));
     };
 
@@ -470,13 +482,10 @@ export default function DashboardPage() {
               <Grid container spacing={2} mt={3}>
                 <Grid item xs={8}>
                   <Typography gutterBottom>Banner</Typography>
-                  <FileUpload
-                    onUpload={handleFileUpload('bannerUrl')}
-                  />
+                  <FileUpload onUpload={handleFileUpload('bannerUrl')} />
                 </Grid>
                 <Grid item xs={4}>
-                  {formData.bannerUrl ||
-                  uploadedFiles.bannerUrl ? (
+                  {formData.bannerUrl || uploadedFiles.bannerUrl ? (
                     <Avatar
                       src={
                         uploadedFiles.bannerUrl ||
@@ -496,13 +505,10 @@ export default function DashboardPage() {
               <Grid container spacing={2} mt={3}>
                 <Grid item xs={8}>
                   <Typography gutterBottom>Background</Typography>
-                  <FileUpload
-                    onUpload={handleFileUpload('backgroundUrl')}
-                  />
+                  <FileUpload onUpload={handleFileUpload('backgroundUrl')} />
                 </Grid>
                 <Grid item xs={4}>
-                  {formData.backgroundUrl ||
-                  uploadedFiles.backgroundUrl ? (
+                  {formData.backgroundUrl || uploadedFiles.backgroundUrl ? (
                     <Avatar
                       src={
                         uploadedFiles.backgroundUrl ||
@@ -517,7 +523,7 @@ export default function DashboardPage() {
                   )}
                 </Grid>
               </Grid>
-              
+
               <Box mt={4}>
                 <TextField
                   fullWidth
@@ -637,7 +643,7 @@ export default function DashboardPage() {
                 </Grid>
                 <Grid item xs={4}>
                   <input
-                    accept='image/*'
+                    accept='image/png, image/jpeg, image/jpg'
                     id='upload-image'
                     type='file'
                     style={{ display: 'none' }}

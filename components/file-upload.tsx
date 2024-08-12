@@ -18,10 +18,19 @@ const VisuallyHiddenInput = styled('input')({
 
 const FileUpload = ({ onUpload }) => {
   const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      // Check if the file type is allowed
+      const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+      if (!allowedTypes.includes(file.type)) {
+        setError('Invalid file type. Please upload PNG, JPEG, or JPG images.');
+        return;
+      }
+
+      setError(''); // Clear previous errors
       handleUpload(file);
     }
   };
@@ -31,19 +40,17 @@ const FileUpload = ({ onUpload }) => {
     const fileRef = ref(storage, `files/${file.name}`); // Create a reference to the file
     uploadBytes(fileRef, file)
       .then((snapshot) => {
-        console.log('Uploaded a blob or file!', snapshot);
         return getDownloadURL(fileRef);
       })
       .then((downloadURL) => {
         setUploading(false);
-        console.log('File available at', downloadURL);
         if (onUpload) {
           onUpload(downloadURL); // Call the callback with the URL
         }
       })
       .catch((error) => {
-        console.error('Upload failed:', error);
         setUploading(false);
+        setError('Upload failed. Please try again.');
       });
   };
 
@@ -56,9 +63,14 @@ const FileUpload = ({ onUpload }) => {
         startIcon={<CloudUploadIcon />}
       >
         Upload
-        <VisuallyHiddenInput type='file' onChange={handleFileChange} />
+        <VisuallyHiddenInput
+          type='file'
+          accept='image/png, image/jpeg, image/jpg'
+          onChange={handleFileChange}
+        />
       </Button>
       {uploading && <p>Uploading...</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );
 };
