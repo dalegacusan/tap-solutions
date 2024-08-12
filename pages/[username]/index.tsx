@@ -92,6 +92,21 @@ export default function Home() {
           ? `URL;TYPE=FACEBOOK:${user.socialMediaLinks.facebook}\n`
           : ''
       }` +
+      `${
+        user.socialMediaLinks.twitter
+          ? `URL;TYPE=TWITTER:${user.socialMediaLinks.twitter}\n`
+          : ''
+      }` +
+      `${
+        user.socialMediaLinks.instagram
+          ? `URL;TYPE=INSTAGRAM:${user.socialMediaLinks.instagram}\n`
+          : ''
+      }` +
+      `${
+        user.socialMediaLinks.linkedIn
+          ? `URL;TYPE=LINKEDIN:${user.socialMediaLinks.linkedIn}\n`
+          : ''
+      }` +
       `END:VCARD`;
 
     // Create a Blob with the vCard data
