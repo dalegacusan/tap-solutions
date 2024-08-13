@@ -88,9 +88,9 @@ const AddWidgetModal = ({ open, onClose, formData, setFormData }) => {
     { type: 'address', icon: <BusinessIcon />, label: 'Address' },
     { type: 'jobTitle', icon: <WorkIcon />, label: 'Job Title' },
     { type: 'company', icon: <AssignmentIcon />, label: 'Company' },
-    { type: 'whatsApp', icon: <WhatsAppIcon />, label: 'WhatsApp' },
-    { type: 'viber', icon: <ViberIcon />, label: 'Viber' },
-    { type: 'telegram', icon: <TelegramIcon />, label: 'Telegram' },
+    { type: 'whatsApp', icon: <WhatsAppIcon />, label: 'WhatsApp (Phone Number)' },
+    { type: 'viber', icon: <ViberIcon />, label: 'Viber (Phone Number)' },
+    { type: 'telegram', icon: <TelegramIcon />, label: 'Telegram (Username)' },
   ];
 
   // Function to check if a widget is used

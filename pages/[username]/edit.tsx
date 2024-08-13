@@ -99,19 +99,19 @@ const getWidgetContent = (formData) => {
     },
     {
       id: 'whatsApp',
-      label: 'WhatsApp',
+      label: 'WhatsApp (Phone Number)',
       content: formData.communication?.whatsApp || '',
       icon: <WhatsAppIcon />,
     },
     {
       id: 'viber',
-      label: 'Viber',
+      label: 'Viber (Phone Number)',
       content: formData.communication?.viber || '',
       icon: <ViberIcon />,
     },
     {
       id: 'telegram',
-      label: 'Telegram',
+      label: 'Telegram (Username)',
       content: formData.communication?.telegram || '',
       icon: <TelegramIcon />,
     },
