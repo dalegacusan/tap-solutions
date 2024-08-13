@@ -461,7 +461,7 @@ export default function Home() {
                           {user.communication.viber && (
                             <Grid item xs={6} key='viber'>
                               <a
-                                href={`viber://contact?number=%2B${user.communication.viber}`}
+                                href={`viber://contact?number=${user.communication.viber}`}
                                 style={{
                                   textDecoration: 'none',
                                   color: 'inherit',
