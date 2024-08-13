@@ -18,6 +18,10 @@ import TelegramIcon from '@mui/icons-material/Telegram';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import ViberIcon from '@mui/icons-material/Call'; // Use appropriate icon for Viber
 
+export const capitalizeFirstLetter = (text: string) => {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
 const modalStyle = {
   position: 'absolute',
   top: '50%',
@@ -104,6 +108,15 @@ const AddWidgetModal = ({ open, onClose, formData, setFormData }) => {
     (widget) => !isWidgetUsed(widget.type)
   );
 
+  // Separate widgets into communication and non-communication
+  const communicationWidgets = availableWidgets.filter((widget) =>
+    ['whatsApp', 'viber', 'telegram'].includes(widget.type)
+  );
+
+  const nonCommunicationWidgets = availableWidgets.filter(
+    (widget) => !['whatsApp', 'viber', 'telegram'].includes(widget.type)
+  );
+
   // Check if all widgets are used
   const allWidgetsUsed = availableWidgets.length === 0;
 
@@ -125,20 +138,46 @@ const AddWidgetModal = ({ open, onClose, formData, setFormData }) => {
               All widgets are used.
             </Typography>
           ) : (
-            availableWidgets.map((widget) => (
-              <ListItemButton
-                key={widget.type}
-                onClick={() => handleOpenSubModal(widget.type)}
-                sx={{
-                  margin: '8px 0px',
-                  boxShadow: 1,
-                  borderRadius: '6px',
-                }}
-              >
-                <ListItemIcon>{widget.icon}</ListItemIcon>
-                <ListItemText primary={widget.label} />
-              </ListItemButton>
-            ))
+            <>
+              {/* Non-communication Widgets */}
+              {nonCommunicationWidgets.map((widget) => (
+                <ListItemButton
+                  key={widget.type}
+                  onClick={() => handleOpenSubModal(widget.type)}
+                  sx={{
+                    margin: '8px 0px',
+                    boxShadow: 1,
+                    borderRadius: '6px',
+                  }}
+                >
+                  <ListItemIcon>{widget.icon}</ListItemIcon>
+                  <ListItemText primary={widget.label} />
+                </ListItemButton>
+              ))}
+
+              {/* Communication Widgets */}
+              {communicationWidgets.length > 0 && (
+                <>
+                  <Typography variant='body1' sx={{ marginTop: 3 }}>
+                    Communication
+                  </Typography>
+                  {communicationWidgets.map((widget) => (
+                    <ListItemButton
+                      key={widget.type}
+                      onClick={() => handleOpenSubModal(widget.type)}
+                      sx={{
+                        margin: '8px 0px',
+                        boxShadow: 1,
+                        borderRadius: '6px',
+                      }}
+                    >
+                      <ListItemIcon>{widget.icon}</ListItemIcon>
+                      <ListItemText primary={`${widget.label}`} />
+                    </ListItemButton>
+                  ))}
+                </>
+              )}
+            </>
           )}
         </Box>
       </Modal>
@@ -152,11 +191,11 @@ const AddWidgetModal = ({ open, onClose, formData, setFormData }) => {
       >
         <Box sx={nestedModalStyle}>
           <Typography id='sub-modal-title' variant='h6' component='h2' mb={3}>
-            Enter {currentWidget.replace(/([A-Z])/g, ' $1').trim()}
+            Enter {capitalizeFirstLetter(currentWidget)}
           </Typography>
           <TextField
             fullWidth
-            label={currentWidget.replace(/([A-Z])/g, ' $1').trim()}
+            label={capitalizeFirstLetter(currentWidget)}
             value={currentValue}
             onChange={(e) => setCurrentValue(e.target.value)}
             sx={{ mb: 2 }}

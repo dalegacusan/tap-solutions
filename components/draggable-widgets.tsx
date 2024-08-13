@@ -12,6 +12,7 @@ import {
   Button,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete'; // Import Delete Icon
+import { capitalizeFirstLetter } from './add-widget-modal';
 
 const modalStyle = {
   position: 'absolute',
@@ -130,11 +131,11 @@ const DraggableWidgets = ({ items, onDragEnd, setItems, setFormData }) => {
       >
         <Box sx={modalStyle}>
           <Typography id='sub-modal-title' variant='h6' component='h2' mb={3}>
-            Edit {currentWidget.replace(/([A-Z])/g, ' $1').trim()}
+            Edit {capitalizeFirstLetter(currentWidget)}
           </Typography>
           <TextField
             fullWidth
-            label={currentWidget.replace(/([A-Z])/g, ' $1').trim()}
+            label={capitalizeFirstLetter(currentWidget)}
             value={currentValue}
             onChange={(e) => setCurrentValue(e.target.value)}
             sx={{ mb: 2 }}
