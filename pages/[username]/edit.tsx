@@ -100,12 +100,14 @@ const getWidgetContent = (formData) => {
     {
       id: 'whatsApp',
       label: 'WhatsApp (Phone Number)',
+      note: '+63 is already added, no need to enter this value.',
       content: formData.communication?.whatsApp || '',
       icon: <WhatsAppIcon />,
     },
     {
       id: 'viber',
       label: 'Viber (Phone Number)',
+      note: '+63 is already added, no need to enter this value.',
       content: formData.communication?.viber || '',
       icon: <ViberIcon />,
     },
@@ -113,7 +115,7 @@ const getWidgetContent = (formData) => {
       id: 'telegram',
       label: 'Telegram',
       content: formData.communication?.telegram || '',
-      note: 'Please use phone number (starting with +63) or username',
+      note: 'Please use phone number (starting with +63) or username.',
       icon: <TelegramIcon />,
     },
   ].filter((widget) => widget.content); // Only include widgets with content

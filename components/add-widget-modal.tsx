@@ -94,9 +94,20 @@ const AddWidgetModal = ({ open, onClose, formData, setFormData }) => {
       type: 'whatsApp',
       icon: <WhatsAppIcon />,
       label: 'WhatsApp (Phone Number)',
+      note: '+63 is already added, no need to enter this value.',
     },
-    { type: 'viber', icon: <ViberIcon />, label: 'Viber (Phone Number)' },
-    { type: 'telegram', icon: <TelegramIcon />, label: 'Telegram', note: 'Please use phone number (starting with +63) or username' },
+    {
+      type: 'viber',
+      icon: <ViberIcon />,
+      label: 'Viber (Phone Number)',
+      note: '+63 is already added, no need to enter this value.',
+    },
+    {
+      type: 'telegram',
+      icon: <TelegramIcon />,
+      label: 'Telegram',
+      note: 'Please use phone number (starting with +63) or username.',
+    },
   ];
 
   // Function to check if a widget is used
