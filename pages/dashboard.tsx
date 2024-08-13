@@ -53,6 +53,7 @@ import TikTokIcon from '../components/icons/tiktok-icon';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import ViberIcon from '../components/icons/viber-icon';
+import { normalizePhoneNumber } from './[username]/edit';
 
 const widgetIcons = {
   aboutMe: <InfoIcon />,
@@ -276,6 +277,7 @@ export default function DashboardPage() {
       backgroundUrl,
       portfolioImages,
       password, // Include password from formData
+      communication,
     } = formData;
 
     const hasDefinedSocialMedia = Object.values(socialMediaLinks).some(
@@ -336,6 +338,12 @@ export default function DashboardPage() {
       const hashedPassword = data.hashedPassword;
 
       const dateCreated = new Date();
+      // Normalize phone numbers before saving
+      const normalizedCommunication = {
+        whatsApp: normalizePhoneNumber(communication.whatsApp || ''),
+        viber: normalizePhoneNumber(communication.viber || ''),
+        telegram: communication.telegram || '',
+      };
 
       const updatedFormData: User = {
         ...formData,
@@ -346,6 +354,7 @@ export default function DashboardPage() {
         portfolioImages, // Use formData portfolioImages directly
         dateCreated,
         dateUpdated: dateCreated,
+        communication: normalizedCommunication,
       };
 
       // Save the form data to Firestore

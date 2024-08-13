@@ -94,13 +94,11 @@ const AddWidgetModal = ({ open, onClose, formData, setFormData }) => {
       type: 'whatsApp',
       icon: <WhatsAppIcon />,
       label: 'WhatsApp (Phone Number)',
-      note: '+63 is already added, no need to enter this value.',
     },
     {
       type: 'viber',
       icon: <ViberIcon />,
       label: 'Viber (Phone Number)',
-      note: '+63 is already added, no need to enter this value.',
     },
     {
       type: 'telegram',

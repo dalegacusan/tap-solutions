@@ -48,6 +48,36 @@ import TelegramIcon from '@mui/icons-material/Telegram';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import ViberIcon from '../../components/icons/viber-icon';
 
+/*
+
+console.log(normalizePhoneNumber('09123456789')); // Output: +639123456789
+console.log(normalizePhoneNumber('123456789'));   // Output: +63123456789
+console.log(normalizePhoneNumber('+639123456789'));// Output: +639123456789
+
+*/
+export const normalizePhoneNumber = (phoneNumber: string): string => {
+  // Trim any leading or trailing whitespace
+  phoneNumber = phoneNumber.trim();
+
+  // Check if the phone number starts with "+63"
+  if (phoneNumber.startsWith('+63')) {
+    return phoneNumber;
+  }
+
+  // Check if the phone number starts with "63" and not "+63"
+  if (phoneNumber.startsWith('63')) {
+    return '+63' + phoneNumber.slice(2);
+  }
+
+  // Check if the phone number starts with "0"
+  if (phoneNumber.startsWith('0')) {
+    return '+63' + phoneNumber.slice(1);
+  }
+
+  // If the phone number does not start with "0", "63", or "+63", prepend "+63"
+  return '+63' + phoneNumber;
+};
+
 const widgetIcons = {
   aboutMe: <InfoIcon />,
   emailAddress: <EmailIcon />,
@@ -100,14 +130,12 @@ const getWidgetContent = (formData) => {
     {
       id: 'whatsApp',
       label: 'WhatsApp (Phone Number)',
-      note: '+63 is already added, no need to enter this value.',
       content: formData.communication?.whatsApp || '',
       icon: <WhatsAppIcon />,
     },
     {
       id: 'viber',
       label: 'Viber (Phone Number)',
-      note: '+63 is already added, no need to enter this value.',
       content: formData.communication?.viber || '',
       icon: <ViberIcon />,
     },
@@ -273,6 +301,7 @@ export default function EditPage() {
       bannerUrl,
       backgroundUrl,
       portfolioImages,
+      communication,
     } = formData;
     const hasDefinedSocialMedia = Object.values(socialMediaLinks).some(
       (link) => link.trim() !== ''
@@ -280,7 +309,6 @@ export default function EditPage() {
 
     if (!userPassword) {
       setPasswordModalIsOpen(true); // Open the password modal if password is not yet verified
-
       return;
     }
 
@@ -313,13 +341,21 @@ export default function EditPage() {
       return;
     }
 
+    // Normalize phone numbers before saving
+    const normalizedCommunication = {
+      whatsApp: normalizePhoneNumber(communication.whatsApp || ''),
+      viber: normalizePhoneNumber(communication.viber || ''),
+      telegram: communication.telegram || '',
+    };
+
     const updatedFormData: User = {
       ...formData,
       profilePictureUrl: uploadedFiles.profilePictureUrl || profilePictureUrl,
       bannerUrl: uploadedFiles.bannerUrl || bannerUrl,
       backgroundUrl: uploadedFiles.backgroundUrl || backgroundUrl,
       portfolioImages, // Use formData portfolioImages directly,
-      dateUpdated: new Date()
+      communication: normalizedCommunication,
+      dateUpdated: new Date(),
     };
 
     // Save the form data to Firestore
