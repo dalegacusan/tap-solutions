@@ -153,6 +153,8 @@ export default function DashboardPage() {
     bannerUrl: '',
     backgroundUrl: '',
     portfolioImages: [],
+    dateCreated: null,
+    dateUpdated: null,
   });
 
   const [items, setItems] = useState(getWidgetContent(formData));
@@ -333,13 +335,17 @@ export default function DashboardPage() {
       const { data } = await axios.post('/api/hash-password', { password });
       const hashedPassword = data.hashedPassword;
 
-      const updatedFormData = {
+      const dateCreated = new Date();
+
+      const updatedFormData: User = {
         ...formData,
         password: hashedPassword, // Save the hashed password
         profilePictureUrl: uploadedFiles.profilePictureUrl || profilePictureUrl,
         bannerUrl: uploadedFiles.bannerUrl || bannerUrl,
         backgroundUrl: uploadedFiles.backgroundUrl || backgroundUrl,
         portfolioImages, // Use formData portfolioImages directly
+        dateCreated,
+        dateUpdated: dateCreated,
       };
 
       // Save the form data to Firestore

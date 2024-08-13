@@ -26,4 +26,6 @@ export interface User {
   backgroundUrl: string;
   portfolioImages: string[];
   password?: string;
+  dateCreated: Date;
+  dateUpdated: Date;
 }

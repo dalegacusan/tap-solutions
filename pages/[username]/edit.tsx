@@ -157,6 +157,8 @@ export default function EditPage() {
     bannerUrl: '',
     backgroundUrl: '',
     portfolioImages: [],
+    dateCreated: null,
+    dateUpdated: null,
   });
 
   const [items, setItems] = useState(getWidgetContent(formData));
@@ -309,12 +311,13 @@ export default function EditPage() {
       return;
     }
 
-    const updatedFormData = {
+    const updatedFormData: User = {
       ...formData,
       profilePictureUrl: uploadedFiles.profilePictureUrl || profilePictureUrl,
       bannerUrl: uploadedFiles.bannerUrl || bannerUrl,
       backgroundUrl: uploadedFiles.backgroundUrl || backgroundUrl,
-      portfolioImages, // Use formData portfolioImages directly
+      portfolioImages, // Use formData portfolioImages directly,
+      dateUpdated: new Date()
     };
 
     // Save the form data to Firestore
