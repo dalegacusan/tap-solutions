@@ -42,13 +42,6 @@ const AddWidgetModal = ({ open, onClose, formData, setFormData }) => {
     const [currentWidget, setCurrentWidget] = useState('');
     const [currentValue, setCurrentValue] = useState('');
   
-    const handleTextFieldChange = (field) => (event) => {
-      setFormData({
-        ...formData,
-        [field]: event.target.value,
-      });
-    };
-  
     const handleOpenSubModal = (widgetType) => {
       setCurrentWidget(widgetType);
       setCurrentValue(formData[widgetType] || '');

@@ -11,6 +11,11 @@ export interface User {
     youtube: string;
     tiktok: string;
   };
+  communication: {
+    whatsApp: string;
+    viber: string;
+    telegram: string;
+  };
   aboutMe: string;
   emailAddress: string;
   address: string;
