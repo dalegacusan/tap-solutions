@@ -20,7 +20,7 @@ import ViberIcon from './icons/viber-icon';
 
 export const capitalizeFirstLetter = (text: string) => {
   return text.charAt(0).toUpperCase() + text.slice(1);
-}
+};
 
 const modalStyle = {
   position: 'absolute',
@@ -48,11 +48,13 @@ const AddWidgetModal = ({ open, onClose, formData, setFormData }) => {
   const [subModalOpen, setSubModalOpen] = useState(false);
   const [currentWidget, setCurrentWidget] = useState('');
   const [currentWidgetLabel, setCurrentWidgetLabel] = useState('');
+  const [currentWidgetNote, setCurrentWidgetNote] = useState('');
   const [currentValue, setCurrentValue] = useState('');
 
-  const handleOpenSubModal = (widgetType, widgetLabel) => {
+  const handleOpenSubModal = (widgetType, widgetLabel, widgetNote) => {
     setCurrentWidget(widgetType);
     setCurrentWidgetLabel(widgetLabel);
+    setCurrentWidgetNote(widgetNote);
     setCurrentValue(formData[widgetType] || '');
     setSubModalOpen(true);
   };
@@ -88,7 +90,12 @@ const AddWidgetModal = ({ open, onClose, formData, setFormData }) => {
     { type: 'address', icon: <BusinessIcon />, label: 'Address' },
     { type: 'jobTitle', icon: <WorkIcon />, label: 'Job Title' },
     { type: 'company', icon: <AssignmentIcon />, label: 'Company' },
-    { type: 'whatsApp', icon: <WhatsAppIcon />, label: 'WhatsApp (Phone Number)' },
+    {
+      type: 'whatsApp',
+      icon: <WhatsAppIcon />,
+      label: 'WhatsApp (Phone Number)',
+      note: 'Phone number must be in international format (without zero in the beginning, dashes, brackets, or + sign)',
+    },
     { type: 'viber', icon: <ViberIcon />, label: 'Viber (Phone Number)' },
     { type: 'telegram', icon: <TelegramIcon />, label: 'Telegram (Username)' },
   ];
@@ -145,7 +152,9 @@ const AddWidgetModal = ({ open, onClose, formData, setFormData }) => {
               {nonCommunicationWidgets.map((widget) => (
                 <ListItemButton
                   key={widget.type}
-                  onClick={() => handleOpenSubModal(widget.type, widget.label)}
+                  onClick={() =>
+                    handleOpenSubModal(widget.type, widget.label, widget.note)
+                  }
                   sx={{
                     margin: '8px 0px',
                     boxShadow: 1,
@@ -166,7 +175,13 @@ const AddWidgetModal = ({ open, onClose, formData, setFormData }) => {
                   {communicationWidgets.map((widget) => (
                     <ListItemButton
                       key={widget.type}
-                      onClick={() => handleOpenSubModal(widget.type, widget.label)}
+                      onClick={() =>
+                        handleOpenSubModal(
+                          widget.type,
+                          widget.label,
+                          widget.note
+                        )
+                      }
                       sx={{
                         margin: '8px 0px',
                         boxShadow: 1,
@@ -192,9 +207,21 @@ const AddWidgetModal = ({ open, onClose, formData, setFormData }) => {
         aria-describedby='sub-modal-description'
       >
         <Box sx={nestedModalStyle}>
-          <Typography id='sub-modal-title' variant='h6' component='h2' mb={3}>
+          <Typography
+            id='sub-modal-title'
+            variant='h6'
+            component='h2'
+            mb={currentWidgetNote ? 0 : 3}
+          >
             Enter {currentWidgetLabel}
           </Typography>
+          {currentWidgetNote && (
+            <Box mb={3}>
+              <Typography id='sub-modal-title' variant='caption'>
+                {currentWidgetNote}
+              </Typography>
+            </Box>
+          )}
           <TextField
             fullWidth
             label={currentWidgetLabel}

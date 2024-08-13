@@ -29,6 +29,7 @@ const DraggableWidgets = ({ items, onDragEnd, setItems, setFormData }) => {
   const [subModalOpen, setSubModalOpen] = useState(false);
   const [currentWidget, setCurrentWidget] = useState('');
   const [currentWidgetLabel, setCurrentWidgetLabel] = useState('');
+  const [currentWidgetNote, setCurrentWidgetNote] = useState('');
   const [currentValue, setCurrentValue] = useState('');
 
   const handleDelete = (id: string) => {
@@ -54,9 +55,10 @@ const DraggableWidgets = ({ items, onDragEnd, setItems, setFormData }) => {
     }
   };
 
-  const handleWidgetClick = (id, label, value) => {
+  const handleWidgetClick = (id, label, value, note) => {
     setCurrentWidget(id);
     setCurrentWidgetLabel(label);
+    setCurrentWidgetNote(note);
     setCurrentValue(value);
     setSubModalOpen(true);
   };
@@ -67,10 +69,12 @@ const DraggableWidgets = ({ items, onDragEnd, setItems, setFormData }) => {
       item.id === currentWidget ? { ...item, content: currentValue } : item
     );
     setItems(updatedItems);
-  
+
     // Check if the currentWidget is part of the communication object
-    const isCommunicationWidget = ['whatsApp', 'viber', 'telegram'].includes(currentWidget);
-  
+    const isCommunicationWidget = ['whatsApp', 'viber', 'telegram'].includes(
+      currentWidget
+    );
+
     if (isCommunicationWidget) {
       // Update the formData communication object
       setFormData((prevFormData) => ({
@@ -87,7 +91,7 @@ const DraggableWidgets = ({ items, onDragEnd, setItems, setFormData }) => {
         [currentWidget]: currentValue,
       }));
     }
-  
+
     setSubModalOpen(false);
   };
 
@@ -113,7 +117,12 @@ const DraggableWidgets = ({ items, onDragEnd, setItems, setFormData }) => {
                       }}
                       className='card-socials'
                       onClick={() =>
-                        handleWidgetClick(item.id, item.label, item.content)
+                        handleWidgetClick(
+                          item.id,
+                          item.label,
+                          item.content,
+                          item.note
+                        )
                       }
                     >
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -148,9 +157,21 @@ const DraggableWidgets = ({ items, onDragEnd, setItems, setFormData }) => {
         aria-describedby='sub-modal-description'
       >
         <Box sx={modalStyle}>
-          <Typography id='sub-modal-title' variant='h6' component='h2' mb={3}>
+          <Typography
+            id='sub-modal-title'
+            variant='h6'
+            component='h2'
+            mb={currentWidgetNote ? 0 : 3}
+          >
             Edit {currentWidgetLabel}
           </Typography>
+          {currentWidgetNote && (
+            <Box mb={3}>
+              <Typography id='sub-modal-title' variant='caption'>
+                {currentWidgetNote}
+              </Typography>
+            </Box>
+          )}
           <TextField
             fullWidth
             label={currentWidgetLabel}

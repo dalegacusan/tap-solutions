@@ -100,6 +100,7 @@ const getWidgetContent = (formData) => {
     {
       id: 'whatsApp',
       label: 'WhatsApp (Phone Number)',
+      note: 'Phone number must be in international format (without zero in the beginning, dashes, brackets, or + sign)',
       content: formData.communication?.whatsApp || '',
       icon: <WhatsAppIcon />,
     },
