@@ -48,6 +48,8 @@ import addDocument from '../firestore/addDocument';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import axios from 'axios';
+import YouTubeIcon from '@mui/icons-material/YouTube';
+import TikTokIcon from '../components/icons/tiktok-icon';
 
 const widgetIcons = {
   aboutMe: <InfoIcon />,
@@ -62,6 +64,8 @@ const socialMediaItems = [
   { icon: <FacebookIcon />, identifier: 'facebook', label: 'Facebook' },
   { icon: <InstagramIcon />, identifier: 'instagram', label: 'Instagram' },
   { icon: <LinkedInIcon />, identifier: 'linkedIn', label: 'LinkedIn' },
+  { icon: <YouTubeIcon />, identifier: 'youtube', label: 'Youtube' },
+  { icon: <TikTokIcon />, identifier: 'tiktok', label: 'TikTok' },
 ];
 
 const getWidgetContent = (formData) => {
@@ -114,6 +118,8 @@ export default function DashboardPage() {
       facebook: '',
       instagram: '',
       linkedIn: '',
+      youtube: '',
+      tiktok: '',
     },
     aboutMe: '',
     emailAddress: '',

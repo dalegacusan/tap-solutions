@@ -36,12 +36,16 @@ import { User } from '../../interfaces/user.interface';
 import getDocument from '../../firestore/getDocument';
 import CloseIcon from '@mui/icons-material/Close';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
+import YouTubeIcon from '@mui/icons-material/YouTube';
+import TikTokIcon from '../../components/icons/tiktok-icon';
 
 const iconMapping = {
   twitter: <XIcon />,
   facebook: <FacebookIcon />,
   instagram: <InstagramIcon />,
   linkedIn: <LinkedInIcon />,
+  youtube: <YouTubeIcon />,
+  tiktok: <TikTokIcon color='rgba(0, 0, 0, 0.54)'/>
 };
 
 const StyledListItemButtonWithHover = styled(ListItemButton)`
@@ -106,6 +110,16 @@ export default function Home() {
       `${
         user.socialMediaLinks.linkedIn
           ? `URL;TYPE=LINKEDIN:${user.socialMediaLinks.linkedIn}\n`
+          : ''
+      }` +
+      `${
+        user.socialMediaLinks.youtube
+          ? `URL;TYPE=YOUTUBE:${user.socialMediaLinks.youtube}\n`
+          : ''
+      }` +
+      `${
+        user.socialMediaLinks.tiktok
+          ? `URL;TYPE=TIKTOK:${user.socialMediaLinks.tiktok}\n`
           : ''
       }` +
       `NOTE:Created with tapsolutionsph.com\n` +

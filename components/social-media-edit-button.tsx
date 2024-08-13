@@ -1,6 +1,7 @@
 import React from 'react';
 import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import TikTokIcon from './icons/tiktok-icon';
 
 interface SocialMediaEditButtonProps {
   identifier: string;
@@ -43,7 +44,14 @@ const SocialMediaEditButton: React.FC<SocialMediaEditButtonProps> = ({
         },
       }}
     >
-      <ListItemIcon sx={{ color: textColor }}>{icon}</ListItemIcon>
+      {React.isValidElement(icon) && icon.type === TikTokIcon ? (
+        <ListItemIcon>
+          <TikTokIcon color={textColor} />
+        </ListItemIcon>
+      ) : (
+        <ListItemIcon sx={{ color: textColor }}>{icon}</ListItemIcon>
+      )}
+
       <ListItemText primary={label} />
     </ListItemButton>
   );

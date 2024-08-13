@@ -8,6 +8,8 @@ export interface User {
     facebook: string;
     instagram: string;
     linkedIn: string;
+    youtube: string;
+    tiktok: string;
   };
   aboutMe: string;
   emailAddress: string;

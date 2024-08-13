@@ -42,6 +42,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import PasswordModal from '../../components/password-modal'; // Import the PasswordModal component
 import Image from 'next/image';
 import CloseIcon from '@mui/icons-material/Close';
+import YouTubeIcon from '@mui/icons-material/YouTube';
+import TikTokIcon from '../../components/icons/tiktok-icon';
 
 const widgetIcons = {
   aboutMe: <InfoIcon />,
@@ -56,6 +58,8 @@ const socialMediaItems = [
   { icon: <FacebookIcon />, identifier: 'facebook', label: 'Facebook' },
   { icon: <InstagramIcon />, identifier: 'instagram', label: 'Instagram' },
   { icon: <LinkedInIcon />, identifier: 'linkedIn', label: 'LinkedIn' },
+  { icon: <YouTubeIcon />, identifier: 'youtube', label: 'Youtube' },
+  { icon: <TikTokIcon />, identifier: 'tiktok', label: 'TikTok' },
 ];
 
 const getWidgetContent = (formData) => {
@@ -109,6 +113,8 @@ export default function EditPage() {
       facebook: '',
       instagram: '',
       linkedIn: '',
+      youtube: '',
+      tiktok: '',
     },
     aboutMe: '',
     emailAddress: '',
