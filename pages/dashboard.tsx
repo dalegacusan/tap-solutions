@@ -52,7 +52,7 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 import TikTokIcon from '../components/icons/tiktok-icon';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
-import ViberIcon from '@mui/icons-material/Call';
+import ViberIcon from '../components/icons/viber-icon';
 
 const widgetIcons = {
   aboutMe: <InfoIcon />,

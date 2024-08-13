@@ -16,7 +16,7 @@ import WorkIcon from '@mui/icons-material/Work';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
-import ViberIcon from '@mui/icons-material/Call'; // Use appropriate icon for Viber
+import ViberIcon from './icons/viber-icon';
 
 export const capitalizeFirstLetter = (text: string) => {
   return text.charAt(0).toUpperCase() + text.slice(1);
