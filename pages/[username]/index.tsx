@@ -221,7 +221,6 @@ export default function Home() {
             <Box>
               <CardContent className='card-main'>
                 {/* Header */}
-
                 <Grid
                   container
                   spacing={0}
@@ -260,7 +259,7 @@ export default function Home() {
                       : user.jobTitle || user.company}
                   </Typography>
 
-                  <Box style={{ marginTop: '160px' }}>
+                  <Box style={{ marginTop: '80px' }}>
                     {/* Contact Information */}
 
                     <nav>

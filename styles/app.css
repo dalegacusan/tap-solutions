@@ -13,12 +13,12 @@ html, body {
 }
 
 .header-banner {
-  height: 400px;
+  height: 200px;
 }
 
 .header-banner-divider{
-  height: 20px;
-  margin-bottom: -350px;
+  height: 10px;
+  margin-bottom: -120px;
   background: rgb(30,213,195);
   background: -moz-linear-gradient(90deg, rgba(30,213,195,1) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,1) 53%, rgba(255,145,77,1) 100%);
   background: -webkit-linear-gradient(90deg, rgba(30,213,195,1) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,1) 53%, rgba(255,145,77,1) 100%);
