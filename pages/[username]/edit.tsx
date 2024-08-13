@@ -56,6 +56,10 @@ console.log(normalizePhoneNumber('+639123456789'));// Output: +639123456789
 
 */
 export const normalizePhoneNumber = (phoneNumber: string): string => {
+  if(phoneNumber === ''){
+    return '';
+  }
+
   // Trim any leading or trailing whitespace
   phoneNumber = phoneNumber.trim();
 
