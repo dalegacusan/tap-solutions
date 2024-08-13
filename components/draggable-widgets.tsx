@@ -29,13 +29,27 @@ const DraggableWidgets = ({ items, onDragEnd, setItems, setFormData }) => {
   const [currentWidget, setCurrentWidget] = useState('');
   const [currentValue, setCurrentValue] = useState('');
 
-  const handleDelete = (id) => {
+  const handleDelete = (id: string) => {
+    // Filter out the widget from the list
     const updatedItems = items.filter((item) => item.id !== id);
     setItems(updatedItems);
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [id]: '',
-    }));
+
+    // Determine if the widget to be deleted is part of the communication object
+    if (['whatsApp', 'viber', 'telegram'].includes(id)) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        communication: {
+          ...prevFormData.communication,
+          [id]: '', // Clear the value of the deleted communication widget
+        },
+      }));
+    } else {
+      // For non-communication widgets, just remove them from formData
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [id]: '',
+      }));
+    }
   };
 
   const handleWidgetClick = (id, value) => {
@@ -47,9 +61,7 @@ const DraggableWidgets = ({ items, onDragEnd, setItems, setFormData }) => {
   const handleSaveSubModal = () => {
     // Update the item in the `items` array
     const updatedItems = items.map((item) =>
-      item.id === currentWidget
-        ? { ...item, content: currentValue }
-        : item
+      item.id === currentWidget ? { ...item, content: currentValue } : item
     );
     setItems(updatedItems);
 
@@ -58,7 +70,7 @@ const DraggableWidgets = ({ items, onDragEnd, setItems, setFormData }) => {
       ...prevFormData,
       [currentWidget]: currentValue,
     }));
-    
+
     setSubModalOpen(false);
   };
 

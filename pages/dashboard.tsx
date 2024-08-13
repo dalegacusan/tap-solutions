@@ -50,6 +50,9 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import axios from 'axios';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import TikTokIcon from '../components/icons/tiktok-icon';
+import TelegramIcon from '@mui/icons-material/Telegram';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import ViberIcon from '@mui/icons-material/Call';
 
 const widgetIcons = {
   aboutMe: <InfoIcon />,
@@ -95,6 +98,21 @@ const getWidgetContent = (formData) => {
       content: formData.company || '',
       icon: widgetIcons.company,
     },
+    {
+      id: 'whatsApp',
+      content: formData.communication?.whatsApp || '',
+      icon: <WhatsAppIcon />,
+    },
+    {
+      id: 'viber',
+      content: formData.communication?.viber || '',
+      icon: <ViberIcon />,
+    },
+    {
+      id: 'telegram',
+      content: formData.communication?.telegram || '',
+      icon: <TelegramIcon />,
+    },
   ].filter((widget) => widget.content); // Only include widgets with content
 };
 
@@ -120,6 +138,11 @@ export default function DashboardPage() {
       linkedIn: '',
       youtube: '',
       tiktok: '',
+    },
+    communication: {
+      whatsApp: '',
+      viber: '',
+      telegram: '',
     },
     aboutMe: '',
     emailAddress: '',

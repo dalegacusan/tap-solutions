@@ -38,6 +38,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import TikTokIcon from '../../components/icons/tiktok-icon';
+import TelegramIcon from '@mui/icons-material/Telegram';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import ViberIcon from '@mui/icons-material/Call';
 
 const iconMapping = {
   twitter: <XIcon />,
@@ -268,13 +271,20 @@ export default function Home() {
                   </Typography>
 
                   {user.company && (
-                    <Typography variant='h6' style={{ textAlign: 'center', fontWeight: 'bold' }}>
+                    <Typography
+                      variant='h6'
+                      style={{ textAlign: 'center', fontWeight: 'bold' }}
+                    >
                       {user.company}
                     </Typography>
                   )}
 
                   {user.jobTitle && (
-                    <Typography variant='body2' style={{ textAlign: 'center' }} mt={1}>
+                    <Typography
+                      variant='body2'
+                      style={{ textAlign: 'center' }}
+                      mt={1}
+                    >
                       {user.jobTitle}
                     </Typography>
                   )}
@@ -408,6 +418,105 @@ export default function Home() {
                       )}
                     </Grid>
                   </Box>
+
+                  {/* Communication */}
+                  {user.communication &&
+                    Object.keys(user.communication).some(
+                      (key) => user.communication[key]
+                    ) && (
+                      <Box mt={4}>
+                        <Typography>Communication</Typography>
+
+                        <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                          {/* WhatsApp */}
+                          {user.communication.whatsApp && (
+                            <Grid item xs={6} key='whatsApp'>
+                              <a
+                                href={`https://wa.me/${user.communication.whatsApp}`}
+                                style={{
+                                  textDecoration: 'none',
+                                  color: 'inherit',
+                                }}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                              >
+                                <StyledListItemButtonWithHover
+                                  sx={{
+                                    margin: '8px 0px',
+                                    boxShadow: 1,
+                                    borderRadius: '6px',
+                                  }}
+                                  className='card-socials'
+                                >
+                                  <ListItemIcon>
+                                    <WhatsAppIcon />
+                                  </ListItemIcon>
+                                  <ListItemText primary='WhatsApp' />
+                                </StyledListItemButtonWithHover>
+                              </a>
+                            </Grid>
+                          )}
+
+                          {/* Viber */}
+                          {user.communication.viber && (
+                            <Grid item xs={6} key='viber'>
+                              <a
+                                href={`viber://${user.communication.viber}`}
+                                style={{
+                                  textDecoration: 'none',
+                                  color: 'inherit',
+                                }}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                              >
+                                <StyledListItemButtonWithHover
+                                  sx={{
+                                    margin: '8px 0px',
+                                    boxShadow: 1,
+                                    borderRadius: '6px',
+                                  }}
+                                  className='card-socials'
+                                >
+                                  <ListItemIcon>
+                                    <ViberIcon />
+                                  </ListItemIcon>
+                                  <ListItemText primary='Viber' />
+                                </StyledListItemButtonWithHover>
+                              </a>
+                            </Grid>
+                          )}
+
+                          {/* Telegram */}
+                          {user.communication.telegram && (
+                            <Grid item xs={6} key='telegram'>
+                              <a
+                                href={`https://t.me/${user.communication.telegram}`}
+                                style={{
+                                  textDecoration: 'none',
+                                  color: 'inherit',
+                                }}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                              >
+                                <StyledListItemButtonWithHover
+                                  sx={{
+                                    margin: '8px 0px',
+                                    boxShadow: 1,
+                                    borderRadius: '6px',
+                                  }}
+                                  className='card-socials'
+                                >
+                                  <ListItemIcon>
+                                    <TelegramIcon />
+                                  </ListItemIcon>
+                                  <ListItemText primary='Telegram' />
+                                </StyledListItemButtonWithHover>
+                              </a>
+                            </Grid>
+                          )}
+                        </Grid>
+                      </Box>
+                    )}
 
                   {/* Address */}
                   {user.address && (
