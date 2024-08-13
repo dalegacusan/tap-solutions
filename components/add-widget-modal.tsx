@@ -94,10 +94,9 @@ const AddWidgetModal = ({ open, onClose, formData, setFormData }) => {
       type: 'whatsApp',
       icon: <WhatsAppIcon />,
       label: 'WhatsApp (Phone Number)',
-      note: 'Phone number must be in international format (without zero in the beginning, dashes, brackets, or + sign)',
     },
     { type: 'viber', icon: <ViberIcon />, label: 'Viber (Phone Number)' },
-    { type: 'telegram', icon: <TelegramIcon />, label: 'Telegram (Username)' },
+    { type: 'telegram', icon: <TelegramIcon />, label: 'Telegram', note: 'Please use phone number (starting with +63) or username' },
   ];
 
   // Function to check if a widget is used

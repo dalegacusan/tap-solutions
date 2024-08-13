@@ -100,7 +100,6 @@ const getWidgetContent = (formData) => {
     {
       id: 'whatsApp',
       label: 'WhatsApp (Phone Number)',
-      note: 'Phone number must be in international format (without zero in the beginning, dashes, brackets, or + sign)',
       content: formData.communication?.whatsApp || '',
       icon: <WhatsAppIcon />,
     },
@@ -112,8 +111,9 @@ const getWidgetContent = (formData) => {
     },
     {
       id: 'telegram',
-      label: 'Telegram (Username)',
+      label: 'Telegram',
       content: formData.communication?.telegram || '',
+      note: 'Please use phone number (starting with +63) or username',
       icon: <TelegramIcon />,
     },
   ].filter((widget) => widget.content); // Only include widgets with content
