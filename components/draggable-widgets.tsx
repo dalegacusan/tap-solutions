@@ -67,13 +67,27 @@ const DraggableWidgets = ({ items, onDragEnd, setItems, setFormData }) => {
       item.id === currentWidget ? { ...item, content: currentValue } : item
     );
     setItems(updatedItems);
-
-    // Update the formData
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [currentWidget]: currentValue,
-    }));
-
+  
+    // Check if the currentWidget is part of the communication object
+    const isCommunicationWidget = ['whatsApp', 'viber', 'telegram'].includes(currentWidget);
+  
+    if (isCommunicationWidget) {
+      // Update the formData communication object
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        communication: {
+          ...prevFormData.communication,
+          [currentWidget]: currentValue,
+        },
+      }));
+    } else {
+      // Update the formData for non-communication widgets
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [currentWidget]: currentValue,
+      }));
+    }
+  
     setSubModalOpen(false);
   };
 
