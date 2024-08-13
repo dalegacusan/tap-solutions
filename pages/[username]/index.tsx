@@ -45,7 +45,7 @@ const iconMapping = {
   instagram: <InstagramIcon />,
   linkedIn: <LinkedInIcon />,
   youtube: <YouTubeIcon />,
-  tiktok: <TikTokIcon color='rgba(0, 0, 0, 0.54)'/>
+  tiktok: <TikTokIcon color='rgba(0, 0, 0, 0.54)' />,
 };
 
 const StyledListItemButtonWithHover = styled(ListItemButton)`
@@ -267,11 +267,17 @@ export default function Home() {
                     {user.firstName} {user.lastName}
                   </Typography>
 
-                  <Typography variant='body2' style={{ textAlign: 'center' }}>
-                    {user.jobTitle && user.company
-                      ? `${user.jobTitle}, ${user.company}`
-                      : user.jobTitle || user.company}
-                  </Typography>
+                  {user.company && (
+                    <Typography variant='h6' style={{ textAlign: 'center', fontWeight: 'bold' }}>
+                      {user.company}
+                    </Typography>
+                  )}
+
+                  {user.jobTitle && (
+                    <Typography variant='body2' style={{ textAlign: 'center' }} mt={1}>
+                      {user.jobTitle}
+                    </Typography>
+                  )}
 
                   <Box style={{ marginTop: '80px' }}>
                     {/* Contact Information */}
