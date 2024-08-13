@@ -28,6 +28,7 @@ const modalStyle = {
 const DraggableWidgets = ({ items, onDragEnd, setItems, setFormData }) => {
   const [subModalOpen, setSubModalOpen] = useState(false);
   const [currentWidget, setCurrentWidget] = useState('');
+  const [currentWidgetLabel, setCurrentWidgetLabel] = useState('');
   const [currentValue, setCurrentValue] = useState('');
 
   const handleDelete = (id: string) => {
@@ -53,8 +54,9 @@ const DraggableWidgets = ({ items, onDragEnd, setItems, setFormData }) => {
     }
   };
 
-  const handleWidgetClick = (id, value) => {
+  const handleWidgetClick = (id, label, value) => {
     setCurrentWidget(id);
+    setCurrentWidgetLabel(label);
     setCurrentValue(value);
     setSubModalOpen(true);
   };
@@ -96,7 +98,9 @@ const DraggableWidgets = ({ items, onDragEnd, setItems, setFormData }) => {
                         justifyContent: 'space-between', // Align delete button to the right
                       }}
                       className='card-socials'
-                      onClick={() => handleWidgetClick(item.id, item.content)}
+                      onClick={() =>
+                        handleWidgetClick(item.id, item.label, item.content)
+                      }
                     >
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <ListItemIcon>{item.icon}</ListItemIcon>
@@ -131,11 +135,11 @@ const DraggableWidgets = ({ items, onDragEnd, setItems, setFormData }) => {
       >
         <Box sx={modalStyle}>
           <Typography id='sub-modal-title' variant='h6' component='h2' mb={3}>
-            Edit {capitalizeFirstLetter(currentWidget)}
+            Edit {currentWidgetLabel}
           </Typography>
           <TextField
             fullWidth
-            label={capitalizeFirstLetter(currentWidget)}
+            label={currentWidgetLabel}
             value={currentValue}
             onChange={(e) => setCurrentValue(e.target.value)}
             sx={{ mb: 2 }}

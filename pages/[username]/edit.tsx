@@ -69,41 +69,49 @@ const getWidgetContent = (formData) => {
   return [
     {
       id: 'aboutMe',
+      label: 'About Me',
       content: formData.aboutMe || '',
       icon: widgetIcons.aboutMe,
     },
     {
       id: 'emailAddress',
+      label: 'Email Address',
       content: formData.emailAddress || '',
       icon: widgetIcons.emailAddress,
     },
     {
       id: 'address',
+      label: 'Address',
       content: formData.address || '',
       icon: widgetIcons.address,
     },
     {
       id: 'jobTitle',
+      label: 'Job Title',
       content: formData.jobTitle || '',
       icon: widgetIcons.jobTitle,
     },
     {
       id: 'company',
+      label: 'Company',
       content: formData.company || '',
       icon: widgetIcons.company,
     },
     {
       id: 'whatsApp',
+      label: 'WhatsApp',
       content: formData.communication?.whatsApp || '',
       icon: <WhatsAppIcon />,
     },
     {
       id: 'viber',
+      label: 'Viber',
       content: formData.communication?.viber || '',
       icon: <ViberIcon />,
     },
     {
       id: 'telegram',
+      label: 'Telegram',
       content: formData.communication?.telegram || '',
       icon: <TelegramIcon />,
     },
