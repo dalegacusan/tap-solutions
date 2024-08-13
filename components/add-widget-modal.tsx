@@ -47,10 +47,12 @@ const nestedModalStyle = {
 const AddWidgetModal = ({ open, onClose, formData, setFormData }) => {
   const [subModalOpen, setSubModalOpen] = useState(false);
   const [currentWidget, setCurrentWidget] = useState('');
+  const [currentWidgetLabel, setCurrentWidgetLabel] = useState('');
   const [currentValue, setCurrentValue] = useState('');
 
-  const handleOpenSubModal = (widgetType) => {
+  const handleOpenSubModal = (widgetType, widgetLabel) => {
     setCurrentWidget(widgetType);
+    setCurrentWidgetLabel(widgetLabel);
     setCurrentValue(formData[widgetType] || '');
     setSubModalOpen(true);
   };
@@ -143,7 +145,7 @@ const AddWidgetModal = ({ open, onClose, formData, setFormData }) => {
               {nonCommunicationWidgets.map((widget) => (
                 <ListItemButton
                   key={widget.type}
-                  onClick={() => handleOpenSubModal(widget.type)}
+                  onClick={() => handleOpenSubModal(widget.type, widget.label)}
                   sx={{
                     margin: '8px 0px',
                     boxShadow: 1,
@@ -164,7 +166,7 @@ const AddWidgetModal = ({ open, onClose, formData, setFormData }) => {
                   {communicationWidgets.map((widget) => (
                     <ListItemButton
                       key={widget.type}
-                      onClick={() => handleOpenSubModal(widget.type)}
+                      onClick={() => handleOpenSubModal(widget.type, widget.label)}
                       sx={{
                         margin: '8px 0px',
                         boxShadow: 1,
@@ -191,11 +193,11 @@ const AddWidgetModal = ({ open, onClose, formData, setFormData }) => {
       >
         <Box sx={nestedModalStyle}>
           <Typography id='sub-modal-title' variant='h6' component='h2' mb={3}>
-            Enter {capitalizeFirstLetter(currentWidget)}
+            Enter {currentWidgetLabel}
           </Typography>
           <TextField
             fullWidth
-            label={capitalizeFirstLetter(currentWidget)}
+            label={currentWidgetLabel}
             value={currentValue}
             onChange={(e) => setCurrentValue(e.target.value)}
             sx={{ mb: 2 }}
