@@ -432,7 +432,7 @@ export default function Home() {
                           {user.communication.whatsApp && (
                             <Grid item xs={6} key='whatsApp'>
                               <a
-                                href={`https://wa.me/+63${user.communication.whatsApp}`}
+                                href={`https://wa.me/${user.communication.whatsApp}`}
                                 style={{
                                   textDecoration: 'none',
                                   color: 'inherit',
@@ -461,7 +461,7 @@ export default function Home() {
                           {user.communication.viber && (
                             <Grid item xs={6} key='viber'>
                               <a
-                                href={`viber://contact?number=+63${user.communication.viber}`}
+                                href={`viber://contact?number=${user.communication.viber}`}
                                 style={{
                                   textDecoration: 'none',
                                   color: 'inherit',
