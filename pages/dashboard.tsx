@@ -21,6 +21,7 @@ import {
   FilledInput,
   InputAdornment,
   OutlinedInput,
+  Switch,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useEffect, useState } from 'react';
@@ -55,6 +56,7 @@ import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import ViberIcon from '../components/icons/viber-icon';
 import { normalizePhoneNumber } from './[username]/edit';
 import LanguageIcon from '@mui/icons-material/Language';
+import ColorPicker from '../components/color-picker';
 
 const widgetIcons = {
   aboutMe: <InfoIcon />,
@@ -160,15 +162,22 @@ export default function DashboardPage() {
     company: '',
     profilePictureUrl: '',
     bannerUrl: '',
+    bannerColor: '',
     backgroundUrl: '',
+    backgroundColor: '',
     websiteUrl: '',
     portfolioImages: [],
     dateCreated: null,
     dateUpdated: null,
   });
 
+  // Define the state for background and banner options
+  const [useBannerImage, setUseBannerImage] = useState<boolean>(true);
+  const [bannerColor, setBannerColor] = useState<string>('#FFFFFF'); // Default color
+  const [useBackgroundImage, setUseBackgroundImage] = useState<boolean>(true);
+  const [backgroundColor, setBackgroundColor] = useState<string>('#FFFFFF'); // Default color
+
   const [items, setItems] = useState(getWidgetContent(formData));
-  const [user, setUser] = useState<User | null>(null);
   const [editSocialMediaModalIsOpen, setEditSocialMediaModalIsOpen] =
     useState(false);
   const [currentIdentifier, setCurrentIdentifier] = useState<string | null>(
@@ -194,6 +203,85 @@ export default function DashboardPage() {
   const [currentImage, setCurrentImage] = useState<string | null>(null);
 
   const [showPassword, setShowPassword] = useState(false);
+
+  const handleBannerSwitchChange = () => {
+    setUseBannerImage((prev) => {
+      const newUseBannerImage = !prev;
+      if (newUseBannerImage) {
+        // Switch to image, clear color
+        setBannerColor('#FFFFFF'); // or your default color
+        setFormData((prev) => ({
+          ...prev,
+          bannerColor: '',
+          bannerUrl: uploadedFiles.bannerUrl || prev.bannerUrl,
+        }));
+      } else {
+        let prevBannerColor;
+
+        // Switch to color, clear image
+        setFormData((prev) => {
+          prevBannerColor = prev.bannerColor;
+
+          return {
+            ...prev,
+            bannerUrl: '',
+            bannerColor: prev.bannerColor || '#FFFFFF',
+          };
+        });
+
+        setBannerColor(prevBannerColor || '#FFFFFF'); // or use default color
+      }
+      return newUseBannerImage;
+    });
+  };
+
+  const handleBackgroundSwitchChange = () => {
+    setUseBackgroundImage((prev) => {
+      const newUseBackgroundImage = !prev;
+      if (newUseBackgroundImage) {
+        // Switch to image, clear color
+        setBackgroundColor('#FFFFFF'); // or your default color
+        setFormData((prev) => ({
+          ...prev,
+          backgroundColor: '',
+          backgroundUrl: uploadedFiles.backgroundUrl || prev.backgroundUrl,
+        }));
+      } else {
+        let prevBackgroundColor;
+        setFormData((prev) => {
+          prevBackgroundColor = prev.backgroundColor;
+
+          return {
+            ...prev,
+            backgroundUrl: '',
+            backgroundColor: prev.backgroundColor || '#FFFFFF',
+          };
+        });
+
+        // Switch to color, clear image
+        setBackgroundColor(prevBackgroundColor || '#FFFFFF'); // or use default color
+      }
+      return newUseBackgroundImage;
+    });
+  };
+
+  const handleBannerColorChange = (color: string) => {
+    setBannerColor(color);
+    setFormData((prev) => ({
+      ...prev,
+      bannerColor: color, // Set the color value
+      bannerUrl: '', // Clear the image URL
+    }));
+  };
+
+  const handleBackgroundColorChange = (color: string) => {
+    setBackgroundColor(color);
+    setFormData((prev) => ({
+      ...prev,
+      backgroundColor: color, // Set the color value
+      backgroundUrl: '', // Clear the image URL
+    }));
+  };
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -432,6 +520,21 @@ export default function DashboardPage() {
     (field: 'profilePictureUrl' | 'bannerUrl' | 'backgroundUrl') =>
     (url: string) => {
       setUploadedFiles((prev) => ({ ...prev, [field]: url }));
+
+      // Clear color values if image is selected
+      if (field === 'bannerUrl') {
+        setFormData((prev) => ({
+          ...prev,
+          bannerUrl: url,
+          bannerColor: '', // Clear the color value
+        }));
+      } else if (field === 'backgroundUrl') {
+        setFormData((prev) => ({
+          ...prev,
+          backgroundUrl: url,
+          backgroundColor: '', // Clear the color value
+        }));
+      }
     };
 
   return (
@@ -535,22 +638,68 @@ export default function DashboardPage() {
               <Grid container spacing={2} mt={3}>
                 <Grid item xs={8}>
                   <Typography gutterBottom>Banner</Typography>
-                  <FileUpload onUpload={handleFileUpload('bannerUrl')} />
+
+                  <Typography
+                    style={{
+                      marginRight: '8px',
+                      display: 'inline',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    Color
+                  </Typography>
+                  <Switch
+                    checked={useBannerImage}
+                    onChange={handleBannerSwitchChange}
+                    color='primary'
+                  />
+                  <Typography
+                    style={{
+                      marginLeft: '8px',
+                      display: 'inline',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    Image
+                  </Typography>
+
+                  {useBannerImage ? (
+                    <>
+                      <FileUpload onUpload={handleFileUpload('bannerUrl')} />
+                      {!formData.bannerUrl && !uploadedFiles.bannerUrl && (
+                        <Typography mt={2}>
+                          No banner picture uploaded.
+                        </Typography>
+                      )}
+                    </>
+                  ) : (
+                    <Box mt={2}>
+                      <ColorPicker
+                        color={bannerColor}
+                        onChange={handleBannerColorChange}
+                      />
+                    </Box>
+                  )}
                 </Grid>
                 <Grid item xs={4}>
-                  {formData.bannerUrl || uploadedFiles.bannerUrl ? (
-                    <Avatar
-                      src={
-                        uploadedFiles.bannerUrl ||
-                        formData.bannerUrl ||
-                        '/images/banner.png' ||
-                        '/images/logo.png'
-                      }
-                      alt='Banner'
-                      style={{ width: 120, height: 120, marginLeft: '40px' }}
-                    />
-                  ) : (
-                    <Typography>No banner picture uploaded.</Typography>
+                  {useBannerImage && (
+                    <>
+                      {(formData.bannerUrl || uploadedFiles.bannerUrl) && (
+                        <Avatar
+                          src={
+                            uploadedFiles.bannerUrl ||
+                            formData.bannerUrl ||
+                            '/images/banner.png'
+                          }
+                          alt='Banner'
+                          style={{
+                            width: 120,
+                            height: 120,
+                            marginLeft: '40px',
+                          }}
+                        />
+                      )}
+                    </>
                   )}
                 </Grid>
               </Grid>
@@ -558,21 +707,75 @@ export default function DashboardPage() {
               <Grid container spacing={2} mt={3}>
                 <Grid item xs={8}>
                   <Typography gutterBottom>Background</Typography>
-                  <FileUpload onUpload={handleFileUpload('backgroundUrl')} />
-                </Grid>
-                <Grid item xs={4}>
-                  {formData.backgroundUrl || uploadedFiles.backgroundUrl ? (
-                    <Avatar
-                      src={
-                        uploadedFiles.backgroundUrl ||
-                        formData.backgroundUrl ||
-                        '/images/logo.png'
-                      }
-                      alt='Background'
-                      style={{ width: 120, height: 120, marginLeft: '40px' }}
-                    />
+
+                  {/* Color/Image Toggle */}
+                  <Typography
+                    style={{
+                      marginRight: '8px',
+                      display: 'inline',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    Color
+                  </Typography>
+                  <Switch
+                    checked={useBackgroundImage}
+                    onChange={handleBackgroundSwitchChange}
+                    color='primary'
+                  />
+                  <Typography
+                    style={{
+                      marginLeft: '8px',
+                      display: 'inline',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    Image
+                  </Typography>
+
+                  {/* Conditional Rendering based on Switch */}
+                  {useBackgroundImage ? (
+                    <>
+                      <FileUpload
+                        onUpload={handleFileUpload('backgroundUrl')}
+                      />
+                      {!formData.backgroundUrl &&
+                        !uploadedFiles.backgroundUrl && (
+                          <Typography mt={2}>
+                            No background picture uploaded.
+                          </Typography>
+                        )}
+                    </>
                   ) : (
-                    <Typography>No background picture uploaded.</Typography>
+                    <Box mt={2}>
+                      <ColorPicker
+                        color={backgroundColor}
+                        onChange={handleBackgroundColorChange}
+                      />
+                    </Box>
+                  )}
+                </Grid>
+
+                <Grid item xs={4}>
+                  {useBackgroundImage && (
+                    <>
+                      {(formData.backgroundUrl ||
+                        uploadedFiles.backgroundUrl) && (
+                        <Avatar
+                          src={
+                            uploadedFiles.backgroundUrl ||
+                            formData.backgroundUrl ||
+                            '/images/logo.png'
+                          }
+                          alt='Background'
+                          style={{
+                            width: 120,
+                            height: 120,
+                            marginLeft: '40px',
+                          }}
+                        />
+                      )}
+                    </>
                   )}
                 </Grid>
               </Grid>
