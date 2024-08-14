@@ -36,8 +36,10 @@ const FileUpload = ({ onUpload }) => {
       // Compress the image
       try {
         const options = {
-          maxSizeMB: 0.3, // Maximum size in MB
-          useWebWorker: true, // Use a web worker for compression
+          maxSizeMB: 0.3,
+          useWebWorker: true,
+          fileType: 'image/jpeg', // Convert to JPEG if not already
+          initialQuality: 0.7, // Adjust quality for JPEG
         };
 
         const compressedFile = await imageCompression(file, options);
