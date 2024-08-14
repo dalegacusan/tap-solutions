@@ -16,6 +16,7 @@ export interface User {
     viber: string;
     telegram: string;
   };
+  websiteUrl: string;
   aboutMe: string;
   emailAddress: string;
   address: string;
