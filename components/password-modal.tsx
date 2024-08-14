@@ -16,18 +16,6 @@ import {
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-const modalStyle = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '1px solid #ccc',
-  boxShadow: 24,
-  p: 4,
-};
-
 interface PasswordModalProps {
   open: boolean;
   onClose: () => void;
@@ -164,7 +152,19 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
       disableEnforceFocus
     >
       <Box
-        sx={modalStyle}
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: { xs: '70%', sm: '80%', md: 400 },
+          maxWidth: 600,
+          bgcolor: 'background.paper',
+          border: '1px solid #ccc',
+          boxShadow: 24,
+          p: 4,
+          borderRadius: 2,
+        }}
         onClick={handleClose}
         onKeyDown={(e) => e.key === 'Escape' && e.preventDefault()}
       >
