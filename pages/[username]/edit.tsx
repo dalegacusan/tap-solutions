@@ -17,6 +17,9 @@ import {
   Avatar,
   Dialog,
   Switch,
+  Checkbox,
+  FormGroup,
+  FormControlLabel,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useEffect, useState } from 'react';
@@ -211,8 +214,13 @@ export default function EditPage() {
   // Define the state for background and banner options
   const [useBannerImage, setUseBannerImage] = useState<boolean>(true);
   const [bannerColor, setBannerColor] = useState<string>('#FFFFFF'); // Default color
+  const [isBannerUseDefaultChecked, setIsBannerUseDefaultChecked] =
+    useState<boolean>(true);
+
   const [useBackgroundImage, setUseBackgroundImage] = useState<boolean>(true);
   const [backgroundColor, setBackgroundColor] = useState<string>('#FFFFFF'); // Default color
+  const [isBackgroundUseDefaultChecked, setIsBackgroundUseDefaultChecked] =
+    useState<boolean>(true);
 
   const [items, setItems] = useState(getWidgetContent(formData));
   const [user, setUser] = useState<User | null>(null);
@@ -474,6 +482,16 @@ export default function EditPage() {
       dateUpdated: new Date(),
     };
 
+    if (isBackgroundUseDefaultChecked) {
+      updatedFormData.backgroundUrl = '';
+      updatedFormData.backgroundColor = '';
+    }
+
+    if (isBannerUseDefaultChecked) {
+      updatedFormData.bannerUrl = '';
+      updatedFormData.bannerColor = '';
+    }
+
     // Save the form data to Firestore
     const { result, error } = await updateDocument(
       'users',
@@ -509,20 +527,28 @@ export default function EditPage() {
       setUserPassword(user.password || ''); // Store the user password
       setFormData(user);
 
-      // Determine the correct values for banner
-      if (user.bannerColor) {
-        setBannerColor(user.bannerColor); // Use bannerColor from user
-        setUseBannerImage(false); // Banner is a color, not an image
-      } else if (user.bannerUrl) {
-        setUseBannerImage(true); // Banner is an image
+      if (!user.bannerColor && !user.bannerUrl) {
+        setIsBannerUseDefaultChecked(true);
+      } else {
+        // Determine the correct values for banner
+        if (user.bannerColor) {
+          setBannerColor(user.bannerColor); // Use bannerColor from user
+          setUseBannerImage(false); // Banner is a color, not an image
+        } else if (user.bannerUrl) {
+          setUseBannerImage(true); // Banner is an image
+        }
       }
 
-      // Determine the correct values for background
-      if (user.backgroundColor) {
-        setBackgroundColor(user.backgroundColor); // Use backgroundColor from user
-        setUseBackgroundImage(false); // Background is a color, not an image
-      } else if (user.backgroundUrl) {
-        setUseBackgroundImage(true); // Background is an image
+      if (!user.backgroundColor && !user.backgroundUrl) {
+        setIsBackgroundUseDefaultChecked(true);
+      } else {
+        // Determine the correct values for background
+        if (user.backgroundColor) {
+          setBackgroundColor(user.backgroundColor); // Use backgroundColor from user
+          setUseBackgroundImage(false); // Background is a color, not an image
+        } else if (user.backgroundUrl) {
+          setUseBackgroundImage(true); // Background is an image
+        }
       }
 
       // Update items based on the updated formData
@@ -713,65 +739,99 @@ export default function EditPage() {
                 <Grid item md={8} xs={12}>
                   <Typography gutterBottom>Banner</Typography>
 
-                  <Typography
-                    style={{
-                      marginRight: '8px',
-                      display: 'inline',
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    Color
-                  </Typography>
-                  <Switch
-                    checked={useBannerImage}
-                    onChange={handleBannerSwitchChange}
-                    color='primary'
-                  />
-                  <Typography
-                    style={{
-                      marginLeft: '8px',
-                      display: 'inline',
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    Image
-                  </Typography>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={isBannerUseDefaultChecked}
+                          size='small'
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            setIsBannerUseDefaultChecked(event.target.checked);
+                            setUseBannerImage(false);
+                            setBannerColor('#FFFFFF');
+                          }}
+                        />
+                      }
+                      label='Use Default'
+                      sx={{
+                        '& .MuiFormControlLabel-label': {
+                          fontSize: '12px', // Adjust font size here
+                        },
+                      }}
+                    />
+                  </FormGroup>
 
-                  {useBannerImage ? (
+                  {!isBannerUseDefaultChecked && (
                     <>
-                      <FileUpload onUpload={handleFileUpload('bannerUrl')} />
-                      {!formData.bannerUrl && !uploadedFiles.bannerUrl && (
-                        <Typography mt={2}>
-                          No banner picture uploaded.
-                        </Typography>
+                      <Typography
+                        style={{
+                          marginRight: '8px',
+                          display: 'inline',
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        Color
+                      </Typography>
+                      <Switch
+                        checked={useBannerImage}
+                        onChange={handleBannerSwitchChange}
+                        color='primary'
+                      />
+                      <Typography
+                        style={{
+                          marginLeft: '8px',
+                          display: 'inline',
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        Image
+                      </Typography>
+
+                      {useBannerImage ? (
+                        <>
+                          <FileUpload
+                            onUpload={handleFileUpload('bannerUrl')}
+                          />
+                          {!formData.bannerUrl && !uploadedFiles.bannerUrl && (
+                            <Typography mt={2}>
+                              No banner picture uploaded.
+                            </Typography>
+                          )}
+                        </>
+                      ) : (
+                        <Box mt={2}>
+                          <ColorPicker
+                            color={bannerColor}
+                            onChange={handleBannerColorChange}
+                          />
+                        </Box>
                       )}
                     </>
-                  ) : (
-                    <Box mt={2}>
-                      <ColorPicker
-                        color={bannerColor}
-                        onChange={handleBannerColorChange}
-                      />
-                    </Box>
                   )}
                 </Grid>
                 <Grid item md={4} xs={12}>
-                  {useBannerImage && (
+                  {!isBannerUseDefaultChecked && (
                     <>
-                      {(formData.bannerUrl || uploadedFiles.bannerUrl) && (
-                        <img
-                          src={
-                            uploadedFiles.bannerUrl ||
-                            formData.bannerUrl ||
-                            '/images/banner.png'
-                          }
-                          alt='Banner'
-                          style={{
-                            height: 120,
-                            marginLeft: '40px',
-                            marginTop: '20px'
-                          }}
-                        />
+                      {useBannerImage && (
+                        <>
+                          {(formData.bannerUrl || uploadedFiles.bannerUrl) && (
+                            <img
+                              src={
+                                uploadedFiles.bannerUrl ||
+                                formData.bannerUrl ||
+                                '/images/banner2.png'
+                              }
+                              alt='Banner'
+                              style={{
+                                height: 120,
+                                marginLeft: '40px',
+                                marginTop: '20px',
+                              }}
+                            />
+                          )}
+                        </>
                       )}
                     </>
                   )}
@@ -782,71 +842,105 @@ export default function EditPage() {
                 <Grid item md={8} xs={12}>
                   <Typography gutterBottom>Background</Typography>
 
-                  {/* Color/Image Toggle */}
-                  <Typography
-                    style={{
-                      marginRight: '8px',
-                      display: 'inline',
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    Color
-                  </Typography>
-                  <Switch
-                    checked={useBackgroundImage}
-                    onChange={handleBackgroundSwitchChange}
-                    color='primary'
-                  />
-                  <Typography
-                    style={{
-                      marginLeft: '8px',
-                      display: 'inline',
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    Image
-                  </Typography>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={isBackgroundUseDefaultChecked}
+                          size='small'
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            setIsBackgroundUseDefaultChecked(
+                              event.target.checked
+                            );
+                            setUseBackgroundImage(false);
+                            setBackgroundColor('#FFFFFF');
+                          }}
+                        />
+                      }
+                      label='Use Default'
+                      sx={{
+                        '& .MuiFormControlLabel-label': {
+                          fontSize: '12px', // Adjust font size here
+                        },
+                      }}
+                    />
+                  </FormGroup>
 
-                  {/* Conditional Rendering based on Switch */}
-                  {useBackgroundImage ? (
+                  {!isBackgroundUseDefaultChecked && (
                     <>
-                      <FileUpload
-                        onUpload={handleFileUpload('backgroundUrl')}
+                      {/* Color/Image Toggle */}
+                      <Typography
+                        style={{
+                          marginRight: '8px',
+                          display: 'inline',
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        Color
+                      </Typography>
+                      <Switch
+                        checked={useBackgroundImage}
+                        onChange={handleBackgroundSwitchChange}
+                        color='primary'
                       />
-                      {!formData.backgroundUrl &&
-                        !uploadedFiles.backgroundUrl && (
-                          <Typography mt={2}>
-                            No background picture uploaded.
-                          </Typography>
-                        )}
+                      <Typography
+                        style={{
+                          marginLeft: '8px',
+                          display: 'inline',
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        Image
+                      </Typography>
+
+                      {/* Conditional Rendering based on Switch */}
+                      {useBackgroundImage ? (
+                        <>
+                          <FileUpload
+                            onUpload={handleFileUpload('backgroundUrl')}
+                          />
+                          {!formData.backgroundUrl &&
+                            !uploadedFiles.backgroundUrl && (
+                              <Typography mt={2}>
+                                No background picture uploaded.
+                              </Typography>
+                            )}
+                        </>
+                      ) : (
+                        <Box mt={2}>
+                          <ColorPicker
+                            color={backgroundColor}
+                            onChange={handleBackgroundColorChange}
+                          />
+                        </Box>
+                      )}
                     </>
-                  ) : (
-                    <Box mt={2}>
-                      <ColorPicker
-                        color={backgroundColor}
-                        onChange={handleBackgroundColorChange}
-                      />
-                    </Box>
                   )}
                 </Grid>
                 <Grid item md={4} xs={12}>
-                  {useBackgroundImage && (
+                  {!isBackgroundUseDefaultChecked && (
                     <>
-                      {(formData.backgroundUrl ||
-                        uploadedFiles.backgroundUrl) && (
-                        <img
-                          src={
-                            uploadedFiles.backgroundUrl ||
-                            formData.backgroundUrl ||
-                            '/images/logo.png'
-                          }
-                          alt='Background'
-                          style={{
-                            height: 120,
-                            marginLeft: '40px',
-                            marginTop: '20px'
-                          }}
-                        />
+                      {useBackgroundImage && (
+                        <>
+                          {(formData.backgroundUrl ||
+                            uploadedFiles.backgroundUrl) && (
+                            <img
+                              src={
+                                uploadedFiles.backgroundUrl ||
+                                formData.backgroundUrl ||
+                                '/images/logo.png'
+                              }
+                              alt='Background'
+                              style={{
+                                height: 120,
+                                marginLeft: '40px',
+                                marginTop: '20px',
+                              }}
+                            />
+                          )}
+                        </>
                       )}
                     </>
                   )}

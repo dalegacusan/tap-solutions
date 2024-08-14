@@ -240,7 +240,7 @@ export default function Home() {
               : {
                   backgroundImage: user?.bannerUrl
                     ? `url('${user.bannerUrl}')`
-                    : `url('/images/banner.png')`,
+                    : `url('/images/banner2.png')`,
                   backgroundRepeat: 'no-repeat',
                   backgroundSize: 'cover',
                 }
