@@ -13,7 +13,7 @@
     "@mui/material": "^5.16.0",
     "axios": "^1.7.3",
     "bcrypt": "^5.1.1",
-    "browser-image-compression": "^2.0.2",
+    "compressorjs": "^1.2.1",
     "firebase": "^10.12.5",
     "next": "latest",
     "react": "18.2.0",

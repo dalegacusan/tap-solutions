@@ -3,7 +3,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { Button, styled, Typography } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { storage } from '../firebase/config';
-import imageCompression from 'browser-image-compression';
+import Compressor from 'compressorjs';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -21,7 +21,7 @@ const FileUpload = ({ onUpload }) => {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleFileChange = async (e) => {
+  const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       // Check if the file type is allowed
@@ -34,19 +34,17 @@ const FileUpload = ({ onUpload }) => {
       setError(''); // Clear previous errors
 
       // Compress the image
-      try {
-        const options = {
-          maxSizeMB: 0.3,
-          useWebWorker: true,
-          fileType: 'image/jpeg', // Convert to JPEG if not already
-          initialQuality: 0.7, // Adjust quality for JPEG
-        };
-
-        const compressedFile = await imageCompression(file, options);
-        handleUpload(compressedFile); // Handle upload after compression
-      } catch (compressionError) {
-        setError('Error compressing the image. Please try again.');
-      }
+      new Compressor(file, {
+        quality: 0.3, // Adjust quality
+        maxWidth: 1024, // Adjust max width
+        maxHeight: 1024, // Adjust max height
+        success: (compressedFile) => {
+          handleUpload(compressedFile); // Handle upload after compression
+        },
+        error: (compressionError) => {
+          setError('Error compressing the image. Please try again.');
+        }
+      });
     }
   };
 
