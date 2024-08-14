@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { Button, styled } from '@mui/material';
+import { Button, styled, Typography } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { storage } from '../firebase/config';
 
@@ -69,8 +69,16 @@ const FileUpload = ({ onUpload }) => {
           onChange={handleFileChange}
         />
       </Button>
-      {uploading && <p>Uploading...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {uploading && (
+        <Typography mt={2} style={{ fontStyle: 'italic' }}>
+          Uploading...
+        </Typography>
+      )}
+      {error && (
+        <Typography style={{ color: 'red' }} mt={2}>
+          {error}
+        </Typography>
+      )}
     </div>
   );
 };
