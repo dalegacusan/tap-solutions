@@ -17,6 +17,7 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import ViberIcon from './icons/viber-icon';
+import LanguageIcon from '@mui/icons-material/Language';
 
 export const capitalizeFirstLetter = (text: string) => {
   return text.charAt(0).toUpperCase() + text.slice(1);
@@ -90,6 +91,7 @@ const AddWidgetModal = ({ open, onClose, formData, setFormData }) => {
     { type: 'address', icon: <BusinessIcon />, label: 'Address' },
     { type: 'jobTitle', icon: <WorkIcon />, label: 'Job Title' },
     { type: 'company', icon: <AssignmentIcon />, label: 'Company' },
+    { type: 'websiteUrl', icon: <LanguageIcon />, label: 'Website URL' },
     {
       type: 'whatsApp',
       icon: <WhatsAppIcon />,

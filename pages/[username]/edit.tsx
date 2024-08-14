@@ -47,6 +47,7 @@ import TikTokIcon from '../../components/icons/tiktok-icon';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import ViberIcon from '../../components/icons/viber-icon';
+import LanguageIcon from '@mui/icons-material/Language';
 
 /*
 
@@ -56,7 +57,7 @@ console.log(normalizePhoneNumber('+639123456789'));// Output: +639123456789
 
 */
 export const normalizePhoneNumber = (phoneNumber: string): string => {
-  if(phoneNumber === ''){
+  if (phoneNumber === '') {
     return '';
   }
 
@@ -88,6 +89,7 @@ const widgetIcons = {
   address: <BusinessIcon />,
   jobTitle: <WorkIcon />,
   company: <AssignmentIcon />,
+  website: <LanguageIcon />,
 };
 
 const socialMediaItems = [
@@ -130,6 +132,12 @@ const getWidgetContent = (formData) => {
       label: 'Company',
       content: formData.company || '',
       icon: widgetIcons.company,
+    },
+    {
+      id: 'websiteUrl',
+      label: 'Website URL',
+      content: formData.websiteUrl || '',
+      icon: widgetIcons.website,
     },
     {
       id: 'whatsApp',
@@ -190,6 +198,7 @@ export default function EditPage() {
     profilePictureUrl: '',
     bannerUrl: '',
     backgroundUrl: '',
+    websiteUrl: '',
     portfolioImages: [],
     dateCreated: null,
     dateUpdated: null,

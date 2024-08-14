@@ -54,6 +54,7 @@ import TelegramIcon from '@mui/icons-material/Telegram';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import ViberIcon from '../components/icons/viber-icon';
 import { normalizePhoneNumber } from './[username]/edit';
+import LanguageIcon from '@mui/icons-material/Language';
 
 const widgetIcons = {
   aboutMe: <InfoIcon />,
@@ -61,6 +62,7 @@ const widgetIcons = {
   address: <BusinessIcon />,
   jobTitle: <WorkIcon />,
   company: <AssignmentIcon />,
+  website: <LanguageIcon />,
 };
 
 const socialMediaItems = [
@@ -98,6 +100,12 @@ const getWidgetContent = (formData) => {
       id: 'company',
       content: formData.company || '',
       icon: widgetIcons.company,
+    },
+    {
+      id: 'websiteUrl',
+      label: 'Website URL',
+      content: formData.websiteUrl || '',
+      icon: widgetIcons.website,
     },
     {
       id: 'whatsApp',
@@ -153,6 +161,7 @@ export default function DashboardPage() {
     profilePictureUrl: '',
     bannerUrl: '',
     backgroundUrl: '',
+    websiteUrl: '',
     portfolioImages: [],
     dateCreated: null,
     dateUpdated: null,
