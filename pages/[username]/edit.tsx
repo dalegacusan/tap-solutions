@@ -422,20 +422,6 @@ export default function EditPage() {
       return;
     }
 
-    if (useBannerImage && !bannerUrl) {
-      setSnackbarMessage('Please upload a banner image.');
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
-      return;
-    }
-
-    if (useBackgroundImage && !backgroundUrl) {
-      setSnackbarMessage('Please upload a background image.');
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
-      return;
-    }
-
     // Validation check
     if (!firstName.trim()) {
       setSnackbarMessage('First Name is required.');
@@ -492,6 +478,24 @@ export default function EditPage() {
       updatedFormData.bannerColor = '';
     }
 
+    if (!isBannerUseDefaultChecked && useBannerImage && !bannerUrl) {
+      setSnackbarMessage('Please upload a banner image.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+      return;
+    }
+
+    if (
+      !isBackgroundUseDefaultChecked &&
+      useBackgroundImage &&
+      !backgroundUrl
+    ) {
+      setSnackbarMessage('Please upload a background image.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+      return;
+    }
+
     // Save the form data to Firestore
     const { result, error } = await updateDocument(
       'users',
@@ -537,6 +541,8 @@ export default function EditPage() {
         } else if (user.bannerUrl) {
           setUseBannerImage(true); // Banner is an image
         }
+
+        setIsBannerUseDefaultChecked(false);
       }
 
       if (!user.backgroundColor && !user.backgroundUrl) {
@@ -549,6 +555,8 @@ export default function EditPage() {
         } else if (user.backgroundUrl) {
           setUseBackgroundImage(true); // Background is an image
         }
+
+        setIsBackgroundUseDefaultChecked(false);
       }
 
       // Update items based on the updated formData
@@ -749,8 +757,11 @@ export default function EditPage() {
                             event: React.ChangeEvent<HTMLInputElement>
                           ) => {
                             setIsBannerUseDefaultChecked(event.target.checked);
-                            setUseBannerImage(false);
-                            setBannerColor('#FFFFFF');
+
+                            if (event.target.checked) {
+                              setUseBannerImage(false);
+                              setBannerColor('#FFFFFF');
+                            }
                           }}
                         />
                       }
@@ -854,8 +865,11 @@ export default function EditPage() {
                             setIsBackgroundUseDefaultChecked(
                               event.target.checked
                             );
-                            setUseBackgroundImage(false);
-                            setBackgroundColor('#FFFFFF');
+
+                            if (event.target.checked) {
+                              setUseBackgroundImage(false);
+                              setBackgroundColor('#FFFFFF');
+                            }
                           }}
                         />
                       }

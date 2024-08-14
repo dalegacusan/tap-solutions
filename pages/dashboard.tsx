@@ -394,20 +394,6 @@ export default function DashboardPage() {
       return;
     }
 
-    if (useBannerImage && !bannerUrl) {
-      setSnackbarMessage('Please upload a banner image.');
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
-      return;
-    }
-
-    if (useBackgroundImage && !backgroundUrl) {
-      setSnackbarMessage('Please upload a background image.');
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
-      return;
-    }
-
     // Validation check
     if (!username.trim()) {
       setSnackbarMessage('Username is required.');
@@ -484,6 +470,24 @@ export default function DashboardPage() {
       if (isBannerUseDefaultChecked) {
         updatedFormData.bannerUrl = '';
         updatedFormData.bannerColor = '';
+      }
+
+      if (!isBannerUseDefaultChecked && useBannerImage && !bannerUrl) {
+        setSnackbarMessage('Please upload a banner image.');
+        setSnackbarSeverity('error');
+        setSnackbarOpen(true);
+        return;
+      }
+
+      if (
+        !isBackgroundUseDefaultChecked &&
+        useBackgroundImage &&
+        !backgroundUrl
+      ) {
+        setSnackbarMessage('Please upload a background image.');
+        setSnackbarSeverity('error');
+        setSnackbarOpen(true);
+        return;
       }
 
       // Save the form data to Firestore
@@ -681,8 +685,11 @@ export default function DashboardPage() {
                             event: React.ChangeEvent<HTMLInputElement>
                           ) => {
                             setIsBannerUseDefaultChecked(event.target.checked);
-                            setUseBannerImage(false);
-                            setBannerColor('#FFFFFF');
+
+                            if (event.target.checked) {
+                              setUseBannerImage(false);
+                              setBannerColor('#FFFFFF');
+                            }
                           }}
                         />
                       }
@@ -786,8 +793,11 @@ export default function DashboardPage() {
                             setIsBackgroundUseDefaultChecked(
                               event.target.checked
                             );
-                            setUseBackgroundImage(false);
-                            setBackgroundColor('#FFFFFF');
+
+                            if (event.target.checked) {
+                              setUseBackgroundImage(false);
+                              setBackgroundColor('#FFFFFF');
+                            }
                           }}
                         />
                       }
