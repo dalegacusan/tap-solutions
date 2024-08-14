@@ -41,6 +41,7 @@ import TikTokIcon from '../../components/icons/tiktok-icon';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import ViberIcon from '../../components/icons/viber-icon';
+import LanguageIcon from '@mui/icons-material/Language';
 
 const iconMapping = {
   twitter: <XIcon />,
@@ -376,6 +377,32 @@ export default function Home() {
                       )}
                     </nav>
                   </Box>
+
+                  {/* Website */}
+                  {user.websiteUrl && (
+                    <Box>
+                      <Typography mt={4}>Website</Typography>
+
+                      <a
+                        href={user.websiteUrl}
+                        style={{ textDecoration: 'none', color: 'inherit' }}
+                      >
+                        <StyledListItemButtonWithHover
+                          sx={{
+                            margin: '8px 0px',
+                            boxShadow: 1,
+                            borderRadius: '6px',
+                          }}
+                          className='card-socials'
+                        >
+                          <ListItemIcon>
+                            <LanguageIcon />
+                          </ListItemIcon>
+                          <ListItemText primary={user.websiteUrl} />
+                        </StyledListItemButtonWithHover>
+                      </a>
+                    </Box>
+                  )}
 
                   {/* Social Media */}
                   <Box>
