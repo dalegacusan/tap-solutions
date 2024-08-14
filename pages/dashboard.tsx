@@ -625,13 +625,13 @@ export default function DashboardPage() {
               </Typography>
 
               <Grid container spacing={2}>
-                <Grid item xs={8}>
+                <Grid item md={8} xs={12}>
                   <Typography gutterBottom>Profile Picture</Typography>
                   <FileUpload
                     onUpload={handleFileUpload('profilePictureUrl')}
                   />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item md={4} xs={12}>
                   {formData.profilePictureUrl ||
                   uploadedFiles.profilePictureUrl ? (
                     <Avatar
@@ -650,7 +650,7 @@ export default function DashboardPage() {
               </Grid>
 
               <Grid container spacing={2} mt={3}>
-                <Grid item xs={8}>
+                <Grid item md={8} xs={12}>
                   <Typography gutterBottom>Banner</Typography>
 
                   <Typography
@@ -695,11 +695,11 @@ export default function DashboardPage() {
                     </Box>
                   )}
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item md={4} xs={12}>
                   {useBannerImage && (
                     <>
                       {(formData.bannerUrl || uploadedFiles.bannerUrl) && (
-                        <Avatar
+                        <img
                           src={
                             uploadedFiles.bannerUrl ||
                             formData.bannerUrl ||
@@ -707,9 +707,9 @@ export default function DashboardPage() {
                           }
                           alt='Banner'
                           style={{
-                            width: 120,
                             height: 120,
                             marginLeft: '40px',
+                            marginTop: '20px'
                           }}
                         />
                       )}
@@ -719,7 +719,7 @@ export default function DashboardPage() {
               </Grid>
 
               <Grid container spacing={2} mt={3}>
-                <Grid item xs={8}>
+                <Grid item md={8} xs={12}>
                   <Typography gutterBottom>Background</Typography>
 
                   {/* Color/Image Toggle */}
@@ -770,7 +770,7 @@ export default function DashboardPage() {
                   )}
                 </Grid>
 
-                <Grid item xs={4}>
+                <Grid item md={4} xs={12}>
                   {useBackgroundImage && (
                     <>
                       {(formData.backgroundUrl ||
@@ -783,9 +783,9 @@ export default function DashboardPage() {
                           }
                           alt='Background'
                           style={{
-                            width: 120,
                             height: 120,
                             marginLeft: '40px',
+                            marginTop: '20px'
                           }}
                         />
                       )}

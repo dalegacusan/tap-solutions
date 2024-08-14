@@ -685,13 +685,13 @@ export default function EditPage() {
               </Typography>
 
               <Grid container spacing={2}>
-                <Grid item xs={8}>
+                <Grid item md={8} xs={12}>
                   <Typography gutterBottom>Profile Picture</Typography>
                   <FileUpload
                     onUpload={handleFileUpload('profilePictureUrl')}
                   />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item md={4} xs={12}>
                   {formData.profilePictureUrl ||
                   uploadedFiles.profilePictureUrl ? (
                     <Avatar
@@ -710,7 +710,7 @@ export default function EditPage() {
               </Grid>
 
               <Grid container spacing={2} mt={3}>
-                <Grid item xs={8}>
+                <Grid item md={8} xs={12}>
                   <Typography gutterBottom>Banner</Typography>
 
                   <Typography
@@ -755,11 +755,11 @@ export default function EditPage() {
                     </Box>
                   )}
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item md={4} xs={12}>
                   {useBannerImage && (
                     <>
                       {(formData.bannerUrl || uploadedFiles.bannerUrl) && (
-                        <Avatar
+                        <img
                           src={
                             uploadedFiles.bannerUrl ||
                             formData.bannerUrl ||
@@ -767,9 +767,9 @@ export default function EditPage() {
                           }
                           alt='Banner'
                           style={{
-                            width: 120,
                             height: 120,
                             marginLeft: '40px',
+                            marginTop: '20px'
                           }}
                         />
                       )}
@@ -779,7 +779,7 @@ export default function EditPage() {
               </Grid>
 
               <Grid container spacing={2} mt={3}>
-                <Grid item xs={8}>
+                <Grid item md={8} xs={12}>
                   <Typography gutterBottom>Background</Typography>
 
                   {/* Color/Image Toggle */}
@@ -829,13 +829,12 @@ export default function EditPage() {
                     </Box>
                   )}
                 </Grid>
-
-                <Grid item xs={4}>
+                <Grid item md={4} xs={12}>
                   {useBackgroundImage && (
                     <>
                       {(formData.backgroundUrl ||
                         uploadedFiles.backgroundUrl) && (
-                        <Avatar
+                        <img
                           src={
                             uploadedFiles.backgroundUrl ||
                             formData.backgroundUrl ||
@@ -843,9 +842,9 @@ export default function EditPage() {
                           }
                           alt='Background'
                           style={{
-                            width: 120,
                             height: 120,
                             marginLeft: '40px',
+                            marginTop: '20px'
                           }}
                         />
                       )}
