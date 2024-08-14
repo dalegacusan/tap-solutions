@@ -63,32 +63,37 @@ const DraggableWidgets = ({ items, onDragEnd, setItems, setFormData }) => {
   };
 
   const handleSaveSubModal = () => {
-    // Update the item in the `items` array
-    const updatedItems = items.map((item) =>
-      item.id === currentWidget ? { ...item, content: currentValue } : item
-    );
-    setItems(updatedItems);
-
-    // Check if the currentWidget is part of the communication object
-    const isCommunicationWidget = ['whatsApp', 'viber', 'telegram'].includes(
-      currentWidget
-    );
-
-    if (isCommunicationWidget) {
-      // Update the formData communication object
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        communication: {
-          ...prevFormData.communication,
-          [currentWidget]: currentValue,
-        },
-      }));
+    if (currentValue.trim() === '') {
+      // If the currentValue is empty, remove the widget
+      handleDelete(currentWidget);
     } else {
-      // Update the formData for non-communication widgets
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        [currentWidget]: currentValue,
-      }));
+      // Update the item in the `items` array
+      const updatedItems = items.map((item) =>
+        item.id === currentWidget ? { ...item, content: currentValue } : item
+      );
+      setItems(updatedItems);
+
+      // Check if the currentWidget is part of the communication object
+      const isCommunicationWidget = ['whatsApp', 'viber', 'telegram'].includes(
+        currentWidget
+      );
+
+      if (isCommunicationWidget) {
+        // Update the formData communication object
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          communication: {
+            ...prevFormData.communication,
+            [currentWidget]: currentValue,
+          },
+        }));
+      } else {
+        // Update the formData for non-communication widgets
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          [currentWidget]: currentValue,
+        }));
+      }
     }
 
     setSubModalOpen(false);
