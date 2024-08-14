@@ -3,6 +3,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { Button, styled, Typography } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { storage } from '../firebase/config';
+import imageCompression from 'browser-image-compression';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -20,7 +21,7 @@ const FileUpload = ({ onUpload }) => {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
       // Check if the file type is allowed
@@ -31,7 +32,20 @@ const FileUpload = ({ onUpload }) => {
       }
 
       setError(''); // Clear previous errors
-      handleUpload(file);
+
+      // Compress the image
+      try {
+        const options = {
+          maxSizeMB: 1, // Maximum size in MB
+          maxWidthOrHeight: 1920, // Maximum width or height of the image
+          useWebWorker: true, // Use a web worker for compression
+        };
+
+        const compressedFile = await imageCompression(file, options);
+        handleUpload(compressedFile); // Handle upload after compression
+      } catch (compressionError) {
+        setError('Error compressing the image. Please try again.');
+      }
     }
   };
 
