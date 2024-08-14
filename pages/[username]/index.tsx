@@ -177,7 +177,16 @@ export default function Home() {
   }, [isErrorRetrievingUser, router]);
 
   // Dynamically set the background style
-  const backgroundStyle = user?.backgroundUrl
+  const backgroundStyle = user?.backgroundColor
+    ? {
+        background: `linear-gradient(
+        rgba(255, 255, 255, 0.4), 
+        rgba(255, 255, 255, 0.4)
+      ), ${user.backgroundColor}`,
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+      }
+    : user?.backgroundUrl
     ? {
         backgroundImage: `url('${user.backgroundUrl}')`,
         backgroundRepeat: 'no-repeat',
@@ -218,13 +227,24 @@ export default function Home() {
 
       <main style={backgroundStyle}>
         <div
-          style={{
-            backgroundImage: user?.bannerUrl
-              ? `url('${user.bannerUrl}')`
-              : `url('/images/banner.png')`,
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: 'cover',
-          }}
+          style={
+            user?.bannerColor
+              ? {
+                  background: `linear-gradient(
+                rgba(255, 255, 255, 0.4), 
+                rgba(255, 255, 255, 0.4)
+              ), ${user.bannerColor}`,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundSize: 'cover',
+                }
+              : {
+                  backgroundImage: user?.bannerUrl
+                    ? `url('${user.bannerUrl}')`
+                    : `url('/images/banner.png')`,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundSize: 'cover',
+                }
+          }
           className='header-banner'
         ></div>
         <div className='header-banner-divider'></div>
