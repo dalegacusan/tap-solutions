@@ -37,7 +37,6 @@ const FileUpload = ({ onUpload }) => {
       try {
         const options = {
           maxSizeMB: 1, // Maximum size in MB
-          maxWidthOrHeight: 1920, // Maximum width or height of the image
           useWebWorker: true, // Use a web worker for compression
         };
 
