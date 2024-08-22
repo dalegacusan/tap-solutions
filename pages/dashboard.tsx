@@ -47,7 +47,7 @@ import SocialMediaEditButtonModal from '../components/social-media-edit-button-m
 import PasswordModal from '../components/password-modal';
 import SocialMediaEditButton from '../components/social-media-edit-button';
 import DraggableWidgets from '../components/draggable-widgets';
-import FileUpload from '../components/file-upload';
+import FileUpload, { s3Client } from '../components/file-upload';
 import addDocument from '../firestore/addDocument';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -60,6 +60,9 @@ import ViberIcon from '../components/icons/viber-icon';
 import { normalizePhoneNumber } from './[username]/edit';
 import LanguageIcon from '@mui/icons-material/Language';
 import ColorPicker from '../components/color-picker';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { v4 as uuidv4 } from 'uuid'; // Import UUID library
+
 
 const widgetIcons = {
   aboutMe: <InfoIcon />,
@@ -316,23 +319,29 @@ export default function DashboardPage() {
     }));
   };
 
-  const handlePortfolioImageUpload = (file: File) => {
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      const url = reader.result as string;
-      setFormData((prev) => ({
-        ...prev,
-        portfolioImages: [...prev.portfolioImages, url], // Update formData with new image URL
-      }));
+  const handlePortfolioImageUpload = async (file: File) => {
+    const fileName = `${uuidv4()}`; // Generate UUID and append file name
+    const uploadParams = {
+      Bucket: 'tapsolutionsph', // Replace with your bucket name
+      Key: fileName,
+      Body: file,
+      ContentType: file.type,
     };
 
-    if (file) {
-      reader.readAsDataURL(file);
+    try {
+      const command = new PutObjectCommand(uploadParams);
+      await s3Client.send(command);
+      // Construct the URL to access the file
+      const url = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.amazonaws.com/${fileName}`;
+      return url; // The S3 URL of the uploaded file
+    } catch (error) {
+      throw new Error('Error uploading file');
     }
   };
 
-  const handleAddImageClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAddImageClick = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
       // Check if the file type is allowed
@@ -346,7 +355,18 @@ export default function DashboardPage() {
         return;
       }
 
-      handlePortfolioImageUpload(file);
+      try {
+        const url = await handlePortfolioImageUpload(file);
+        // Update form data with S3 URL
+        setFormData((prev) => ({
+          ...prev,
+          portfolioImages: [...prev.portfolioImages, url], // Update formData with new image URL
+        }));
+      } catch (error) {
+        setSnackbarMessage('Error uploading file. Please try again.');
+        setSnackbarSeverity('error');
+        setSnackbarOpen(true);
+      }
     }
   };
 

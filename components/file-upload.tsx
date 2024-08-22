@@ -1,9 +1,17 @@
 import React, { useState } from 'react';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
 import { Button, styled, Typography } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { storage } from '../firebase/config';
-import Compressor from 'compressorjs';
+import { v4 as uuidv4 } from 'uuid'; // Import UUID library
+
+// AWS S3 Configuration
+export const s3Client = new S3Client({
+  region: process.env.NEXT_PUBLIC_REGION, // Replace with your region
+  credentials: {
+    accessKeyId: process.env.NEXT_PUBLIC_ACCESS_KEY_ID, // Replace with your AWS access key ID
+    secretAccessKey: process.env.NEXT_PUBLIC_SECRET_ACCESS_KEY, // Replace with your AWS secret access key
+  },
+});
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -24,47 +32,44 @@ const FileUpload = ({ onUpload }) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Check if the file type is allowed
+      // Check file size and type
       const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
       if (!allowedTypes.includes(file.type)) {
         setError('Invalid file type. Please upload PNG, JPEG, or JPG images.');
         return;
       }
 
-      setError(''); // Clear previous errors
+      if (file.size > 5 * 1024 * 1024) { // 5 MB limit
+        setError('File size exceeds 5 MB.');
+        return;
+      }
 
-      // Compress the image
-      new Compressor(file, {
-        quality: 0.3, // Adjust quality
-        maxWidth: 1024, // Adjust max width
-        maxHeight: 1024, // Adjust max height
-        success: (compressedFile) => {
-          handleUpload(compressedFile); // Handle upload after compression
-        },
-        error: (compressionError) => {
-          setError('Error compressing the image. Please try again.');
-        }
-      });
+      setError('');
+      handleUpload(file);
     }
   };
 
-  const handleUpload = (file) => {
+  const handleUpload = async (file) => {
     setUploading(true);
-    const fileRef = ref(storage, `files/${file.name}`); // Create a reference to the file
-    uploadBytes(fileRef, file)
-      .then((snapshot) => {
-        return getDownloadURL(fileRef);
-      })
-      .then((downloadURL) => {
-        setUploading(false);
-        if (onUpload) {
-          onUpload(downloadURL); // Call the callback with the URL
-        }
-      })
-      .catch((error) => {
-        setUploading(false);
-        setError('Upload failed. Please try again.');
-      });
+    const fileName = `${uuidv4()}`; // Generate UUID and append file name
+    const params = {
+      Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME, // Replace with your bucket name
+      Key: fileName,
+      Body: file,
+      ContentType: file.type,
+    };
+
+    try {
+      const result = await s3Client.send(new PutObjectCommand(params));
+      console.log(result);
+
+      const fileUrl = `https://${params.Bucket}.s3.amazonaws.com/${fileName}`; // Construct the file URL
+      setUploading(false);
+      if (onUpload) onUpload(fileUrl);
+    } catch (err) {
+      setUploading(false);
+      setError('Upload failed. Please try again.');
+    }
   };
 
   return (
