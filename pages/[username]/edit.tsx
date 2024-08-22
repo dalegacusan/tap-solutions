@@ -352,7 +352,7 @@ export default function EditPage() {
   const handlePortfolioImageUpload = async (file: File) => {
     const fileName = `${uuidv4()}`; // Generate UUID and append file name
     const uploadParams = {
-      Bucket: 'tapsolutionsph', // Replace with your bucket name
+      Bucket: process.env.NEXT_PUBLIC_BUCKET_NAME, // Replace with your bucket name
       Key: fileName,
       Body: file,
       ContentType: file.type,
@@ -360,10 +360,10 @@ export default function EditPage() {
 
     try {
       const command = new PutObjectCommand(uploadParams);
-      await s3Client.send(command);
+      const result = await s3Client.send(command);
       // Construct the URL to access the file
-      const url = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.amazonaws.com/${fileName}`;
-      return url; // The S3 URL of the uploaded file
+      const fileUrl = `https://${uploadParams.Bucket}.s3.amazonaws.com/${fileName}`; // Construct the file URL
+      return fileUrl; // The S3 URL of the uploaded file
     } catch (error) {
       throw new Error('Error uploading file');
     }
