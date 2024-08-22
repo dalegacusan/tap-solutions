@@ -246,7 +246,7 @@ export default function EditPage() {
   // Snackbar state
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>(
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'info' | 'error'>(
     'success'
   );
 
@@ -374,6 +374,14 @@ export default function EditPage() {
   ) => {
     const file = event.target.files?.[0];
     if (file) {
+      const maxNumberOfPortfolioImages = 9;
+      if (formData.portfolioImages.length === maxNumberOfPortfolioImages) {
+        setSnackbarMessage(`You can only upload up to ${maxNumberOfPortfolioImages} images.`);
+        setSnackbarSeverity('error');
+        setSnackbarOpen(true);
+        return;
+      }
+
       // Check if the file type is allowed
       const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
       if (!allowedTypes.includes(file.type)) {
@@ -514,6 +522,10 @@ export default function EditPage() {
       setSnackbarOpen(true);
       return;
     }
+
+    setSnackbarMessage('Updating account...');
+    setSnackbarSeverity('info');
+    setSnackbarOpen(true);
 
     // Save the form data to Firestore
     const { result, error } = await updateDocument(
@@ -683,8 +695,11 @@ export default function EditPage() {
           severity={snackbarSeverity}
           sx={{ width: '100%' }}
           style={{
-            backgroundColor:
-              snackbarSeverity === 'success' ? '#4caf50' : '#f44336',
+            backgroundColor: 
+              snackbarSeverity === 'success' ? '#4caf50' :
+              snackbarSeverity === 'error' ? '#f44336' :
+              snackbarSeverity === 'info' ? '#0288d1' :
+              '#000000', // default color if severity is none of the above
             color: '#ffffff',
           }}
         >

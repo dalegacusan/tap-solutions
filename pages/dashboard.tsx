@@ -63,7 +63,6 @@ import ColorPicker from '../components/color-picker';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { v4 as uuidv4 } from 'uuid'; // Import UUID library
 
-
 const widgetIcons = {
   aboutMe: <InfoIcon />,
   emailAddress: <EmailIcon />,
@@ -206,7 +205,7 @@ export default function DashboardPage() {
   // Snackbar state
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>(
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'info' | 'error'>(
     'success'
   );
 
@@ -344,6 +343,14 @@ export default function DashboardPage() {
   ) => {
     const file = event.target.files?.[0];
     if (file) {
+      const maxNumberOfPortfolioImages = 9;
+      if (formData.portfolioImages.length === maxNumberOfPortfolioImages) {
+        setSnackbarMessage(`You can only upload up to ${maxNumberOfPortfolioImages} images.`);
+        setSnackbarSeverity('error');
+        setSnackbarOpen(true);
+        return;
+      }
+
       // Check if the file type is allowed
       const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
       if (!allowedTypes.includes(file.type)) {
@@ -510,6 +517,10 @@ export default function DashboardPage() {
         return;
       }
 
+      setSnackbarMessage('Creating account...');
+      setSnackbarSeverity('info');
+      setSnackbarOpen(true);
+
       // Save the form data to Firestore
       const { result, error } = await addDocument(
         'users',
@@ -521,7 +532,7 @@ export default function DashboardPage() {
         setSnackbarMessage(`Error adding data: ${error}`);
         setSnackbarSeverity('error');
       } else {
-        setSnackbarMessage('Document added successfully!');
+        setSnackbarMessage('Account added successfully!');
         setSnackbarSeverity('success');
       }
       setSnackbarOpen(true);
@@ -610,8 +621,11 @@ export default function DashboardPage() {
           severity={snackbarSeverity}
           sx={{ width: '100%' }}
           style={{
-            backgroundColor:
-              snackbarSeverity === 'success' ? '#4caf50' : '#f44336',
+            backgroundColor: 
+              snackbarSeverity === 'success' ? '#4caf50' :
+              snackbarSeverity === 'error' ? '#f44336' :
+              snackbarSeverity === 'info' ? '#0288d1' :
+              '#000000', // default color if severity is none of the above
             color: '#ffffff',
           }}
         >
