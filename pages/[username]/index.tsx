@@ -406,6 +406,8 @@ export default function Home() {
                       <a
                         href={user.websiteUrl}
                         style={{ textDecoration: 'none', color: 'inherit' }}
+                        target='_blank'
+                        rel='noopener noreferrer'
                       >
                         <StyledListItemButtonWithHover
                           sx={{
