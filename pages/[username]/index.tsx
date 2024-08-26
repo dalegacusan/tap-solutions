@@ -126,7 +126,7 @@ export default function Home() {
           ? `URL;TYPE=TIKTOK:${user.socialMediaLinks.tiktok}\n`
           : ''
       }` +
-      `NOTE:Created with tapsolutionsph.com\n` +
+      `NOTE:Created with taptech.ph\n` +
       `END:VCARD`;
 
     // Create a Blob with the vCard data
@@ -665,7 +665,7 @@ export default function Home() {
                       </Box>
                       <Box fontSize='14px'>
                         <Typography variant='caption'>
-                          Powered by Tap Solutions PH
+                          Powered by Tap Technologies
                         </Typography>
                       </Box>
                     </Box>
@@ -687,7 +687,7 @@ export default function Home() {
                       }}
                     >
                       <a
-                        href='https://www.facebook.com/people/Tap-Solutions-PH/61562222303031'
+                        href='https://www.facebook.com/taptechnologies24'
                         style={{ color: 'red', textDecoration: 'none' }}
                         target='_blank'
                       >

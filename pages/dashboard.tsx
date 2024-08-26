@@ -607,7 +607,7 @@ export default function DashboardPage() {
   return (
     <div>
       <Head>
-        <title>Tap Solutions PH - Dashboard</title>
+        <title>Tap Technologies - Dashboard</title>
         <link rel='icon' href='/images/logo.png' />
       </Head>
 

@@ -5,7 +5,7 @@ export default function HomePage() {
   return (
     <div>
       <Head>
-        <title>Tap Solutions PH</title>
+        <title>Tap Technologies</title>
         <link rel='icon' href='/images/logo.png' />
       </Head>
 
