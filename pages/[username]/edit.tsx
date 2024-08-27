@@ -246,9 +246,9 @@ export default function EditPage() {
   // Snackbar state
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'info' | 'error'>(
-    'success'
-  );
+  const [snackbarSeverity, setSnackbarSeverity] = useState<
+    'success' | 'info' | 'error'
+  >('success');
 
   const [openLightbox, setOpenLightbox] = useState(false);
   const [currentImage, setCurrentImage] = useState<string | null>(null);
@@ -376,7 +376,9 @@ export default function EditPage() {
     if (file) {
       const maxNumberOfPortfolioImages = 9;
       if (formData.portfolioImages.length === maxNumberOfPortfolioImages) {
-        setSnackbarMessage(`You can only upload up to ${maxNumberOfPortfolioImages} images.`);
+        setSnackbarMessage(
+          `You can only upload up to ${maxNumberOfPortfolioImages} images.`
+        );
         setSnackbarSeverity('error');
         setSnackbarOpen(true);
         return;
@@ -683,6 +685,15 @@ export default function EditPage() {
           {user?.firstName} {user?.lastName} - Edit
         </title>
         <link rel='icon' href='/images/logo.png' />
+        <meta name='title' content='Tap Technologies' />
+        <meta
+          name='description'
+          content='Tap into the future and revolutionize the way you share your business and contact information by using an environmentally friendly alternative business card'
+        />
+        <meta name='keywords' content='taptech, taptechnologies' />
+        <meta name='robots' content='index, follow' />
+        <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+        <meta name='language' content='English' />
       </Head>
 
       <Snackbar
@@ -695,11 +706,14 @@ export default function EditPage() {
           severity={snackbarSeverity}
           sx={{ width: '100%' }}
           style={{
-            backgroundColor: 
-              snackbarSeverity === 'success' ? '#4caf50' :
-              snackbarSeverity === 'error' ? '#f44336' :
-              snackbarSeverity === 'info' ? '#0288d1' :
-              '#000000', // default color if severity is none of the above
+            backgroundColor:
+              snackbarSeverity === 'success'
+                ? '#4caf50'
+                : snackbarSeverity === 'error'
+                ? '#f44336'
+                : snackbarSeverity === 'info'
+                ? '#0288d1'
+                : '#000000', // default color if severity is none of the above
             color: '#ffffff',
           }}
         >

@@ -7,6 +7,15 @@ export default function HomePage() {
       <Head>
         <title>Tap Technologies</title>
         <link rel='icon' href='/images/logo.png' />
+        <meta name='title' content='Tap Technologies' />
+        <meta
+          name='description'
+          content='Tap into the future and revolutionize the way you share your business and contact information by using an environmentally friendly alternative business card'
+        />
+        <meta name='keywords' content='taptech, taptechnologies' />
+        <meta name='robots' content='index, follow' />
+        <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+        <meta name='language' content='English' />
       </Head>
 
       <div
