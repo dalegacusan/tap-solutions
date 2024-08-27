@@ -628,7 +628,7 @@ export default function DashboardPage() {
         />
         <meta
           property='og:image'
-          content='/images/logo.png'
+          content='/images/banner3.jpg'
         />
 
         <meta property='twitter:card' content='summary_large_image' />
@@ -640,7 +640,7 @@ export default function DashboardPage() {
         />
         <meta
           property='twitter:image'
-          content='/images/logo.png'
+          content='/images/banner3.jpg'
         />
       </Head>
 
