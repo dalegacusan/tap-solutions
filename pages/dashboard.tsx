@@ -612,7 +612,7 @@ export default function DashboardPage() {
         <meta name='title' content='Tap Technologies' />
         <meta
           name='description'
-          content='Tap into the future and revolutionize the way you share your business and contact information by using an environmentally friendly alternative business card'
+          content='Revolutionize the way you share your business and contact information by using an environmentally friendly alternative business card'
         />
         <meta name='keywords' content='taptech, taptechnologies' />
         <meta name='robots' content='index, follow' />
@@ -624,7 +624,7 @@ export default function DashboardPage() {
         <meta property='og:title' content='Tap Technologies' />
         <meta
           property='og:description'
-          content='Tap into the future and revolutionize the way you share your business and contact information by using an environmentally friendly alternative business card'
+          content='Revolutionize the way you share your business and contact information by using an environmentally friendly alternative business card'
         />
         <meta
           property='og:image'
@@ -636,7 +636,7 @@ export default function DashboardPage() {
         <meta property='twitter:title' content='Tap Technologies' />
         <meta
           property='twitter:description'
-          content='Tap into the future and revolutionize the way you share your business and contact information by using an environmentally friendly alternative business card'
+          content='Revolutionize the way you share your business and contact information by using an environmentally friendly alternative business card'
         />
         <meta
           property='twitter:image'
