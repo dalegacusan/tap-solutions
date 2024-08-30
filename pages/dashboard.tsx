@@ -718,6 +718,7 @@ export default function DashboardPage() {
                   <Typography gutterBottom>Profile Picture</Typography>
                   <FileUpload
                     onUpload={handleFileUpload('profilePictureUrl')}
+                    imageType='profilePictureUrl'
                   />
                 </Grid>
                 <Grid item md={4} xs={12}>
@@ -799,6 +800,7 @@ export default function DashboardPage() {
                         <>
                           <FileUpload
                             onUpload={handleFileUpload('bannerUrl')}
+                            imageType='bannerUrl'
                           />
                           {!formData.bannerUrl && !uploadedFiles.bannerUrl && (
                             <Typography mt={2}>
@@ -909,6 +911,7 @@ export default function DashboardPage() {
                         <>
                           <FileUpload
                             onUpload={handleFileUpload('backgroundUrl')}
+                            imageType='backgroundUrl'
                           />
                           {!formData.backgroundUrl &&
                             !uploadedFiles.backgroundUrl && (
