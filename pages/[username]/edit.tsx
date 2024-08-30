@@ -702,10 +702,7 @@ export default function EditPage() {
           property='og:description'
           content='Revolutionize the way you share your business and contact information by using an environmentally friendly alternative business card'
         />
-        <meta
-          property='og:image'
-          content='/images/banner3.jpg'
-        />
+        <meta property='og:image' content='/images/banner3.jpg' />
 
         <meta property='twitter:card' content='summary_large_image' />
         <meta property='twitter:url' content='https://taptech.ph/' />
@@ -714,10 +711,7 @@ export default function EditPage() {
           property='twitter:description'
           content='Revolutionize the way you share your business and contact information by using an environmentally friendly alternative business card'
         />
-        <meta
-          property='twitter:image'
-          content='/images/banner3.jpg'
-        />
+        <meta property='twitter:image' content='/images/banner3.jpg' />
       </Head>
 
       <Snackbar
@@ -795,6 +789,7 @@ export default function EditPage() {
                   <Typography gutterBottom>Profile Picture</Typography>
                   <FileUpload
                     onUpload={handleFileUpload('profilePictureUrl')}
+                    imageType='profilePictureUrl'
                   />
                 </Grid>
                 <Grid item md={4} xs={12}>
@@ -876,6 +871,7 @@ export default function EditPage() {
                         <>
                           <FileUpload
                             onUpload={handleFileUpload('bannerUrl')}
+                            imageType='bannerUrl'
                           />
                           {!formData.bannerUrl && !uploadedFiles.bannerUrl && (
                             <Typography mt={2}>
@@ -986,6 +982,7 @@ export default function EditPage() {
                         <>
                           <FileUpload
                             onUpload={handleFileUpload('backgroundUrl')}
+                            imageType='backgroundUrl'
                           />
                           {!formData.backgroundUrl &&
                             !uploadedFiles.backgroundUrl && (

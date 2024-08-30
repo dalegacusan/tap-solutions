@@ -12,10 +12,6 @@ html, body {
   background-size: cover; 
 }
 
-.header-banner {
-  height: 250px;
-}
-
 .header-banner-divider{
   height: 10px;
   margin-bottom: -120px;

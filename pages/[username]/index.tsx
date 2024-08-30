@@ -240,10 +240,7 @@ export default function Home() {
           property='og:description'
           content='Revolutionize the way you share your business and contact information by using an environmentally friendly alternative business card'
         />
-        <meta
-          property='og:image'
-          content='/images/banner3.jpg'
-        />
+        <meta property='og:image' content='/images/banner3.jpg' />
 
         <meta property='twitter:card' content='summary_large_image' />
         <meta property='twitter:url' content='https://taptech.ph/' />
@@ -252,34 +249,42 @@ export default function Home() {
           property='twitter:description'
           content='Revolutionize the way you share your business and contact information by using an environmentally friendly alternative business card'
         />
-        <meta
-          property='twitter:image'
-          content='/images/banner3.jpg'
-        />
+        <meta property='twitter:image' content='/images/banner3.jpg' />
       </Head>
 
       <main style={backgroundStyle}>
         <div
-          style={
-            user?.bannerColor
-              ? {
-                  background: `linear-gradient(
-                rgba(255, 255, 255, 0.4), 
-                rgba(255, 255, 255, 0.4)
-              ), ${user.bannerColor}`,
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: 'cover',
-                }
-              : {
-                  backgroundImage: user?.bannerUrl
-                    ? `url('${user.bannerUrl}')`
-                    : `url('/images/banner2.png')`,
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: 'cover',
-                }
-          }
-          className='header-banner'
-        ></div>
+          style={{
+            position: 'relative',
+            width: '100%',
+            paddingBottom: '250px', // Maintain aspect ratio (250px height)
+            background: user?.bannerColor
+              ? `linear-gradient(
+          rgba(255, 255, 255, 0.4),
+          rgba(255, 255, 255, 0.4)
+        ), ${user.bannerColor}`
+              : `url('${user?.bannerUrl || '/images/banner2.png'}')`,
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+          }}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              backgroundImage: `url('${
+                user?.bannerUrl || '/images/banner2.png'
+              }')`,
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          />
+        </div>
+
         <div className='header-banner-divider'></div>
         <Grid
           container
