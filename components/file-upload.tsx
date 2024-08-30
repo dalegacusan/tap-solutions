@@ -126,7 +126,14 @@ const FileUpload = ({
       setError('');
       setFile(file);
       setImageSrc(URL.createObjectURL(file));
-      setOpen(true); // Open the crop modal
+
+      if (imageType === 'backgroundUrl') {
+        // Directly upload if the imageType is backgroundUrl
+        handleUpload(file);
+      } else {
+        // Open the crop modal for other imageTypes
+        setOpen(true);
+      }
     }
   };
 
@@ -142,14 +149,14 @@ const FileUpload = ({
         rotation
       );
       await handleUpload(croppedImage);
-      setOpen(false); // Close the crop modal
+      setOpen(false); // Close the modal
     } catch (e) {
       console.error(e);
       setError('Crop failed. Please try again.');
     }
   };
 
-  const handleUpload = async (imageBlob: Blob | null) => {
+  const handleUpload = async (imageBlob: Blob | File) => {
     if (!imageBlob) return;
 
     setUploading(true);
@@ -190,46 +197,48 @@ const FileUpload = ({
         />
       </Button>
 
-      <Dialog
-        open={open}
-        onClose={() => setOpen(false)}
-        maxWidth='md'
-        fullWidth
-      >
-        <DialogTitle>Crop Image</DialogTitle>
-        <DialogContent>
-          {imageSrc && (
-            <div
-              style={{
-                position: 'relative',
-                height: imageType === 'backgroundUrl' ? 'auto' : 400,
-                width: imageType === 'backgroundUrl' ? 'auto' : 400
-              }}
-            >
-              <Cropper
-                image={imageSrc}
-                crop={crop}
-                rotation={rotation}
-                zoom={zoom}
-                aspect={aspectRatio} // Set aspect ratio based on imageType
-                onCropChange={setCrop}
-                onRotationChange={setRotation}
-                onCropComplete={onCropComplete}
-                onZoomChange={setZoom}
-                style={{ containerStyle: { width: cropDimensions.width, height: cropDimensions.height } }}
-              />
-            </div>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)} color='primary'>
-            Cancel
-          </Button>
-          <Button onClick={handleCropSave} color='primary'>
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {imageType !== 'backgroundUrl' && (
+        <Dialog
+          open={open}
+          onClose={() => setOpen(false)}
+          maxWidth='md'
+          fullWidth
+        >
+          <DialogTitle>Crop Image</DialogTitle>
+          <DialogContent>
+            {imageSrc && (
+              <div
+                style={{
+                  position: 'relative',
+                  height: 400,
+                  width: 400,
+                }}
+              >
+                <Cropper
+                  image={imageSrc}
+                  crop={crop}
+                  rotation={rotation}
+                  zoom={zoom}
+                  aspect={aspectRatio} // Set aspect ratio based on imageType
+                  onCropChange={setCrop}
+                  onRotationChange={setRotation}
+                  onCropComplete={onCropComplete}
+                  onZoomChange={setZoom}
+                  style={{ containerStyle: { width: cropDimensions.width, height: cropDimensions.height } }}
+                />
+              </div>
+            )}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpen(false)} color='primary'>
+              Cancel
+            </Button>
+            <Button onClick={handleCropSave} color='primary'>
+              Save
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
 
       {uploading && (
         <Typography mt={2} style={{ fontStyle: 'italic' }}>
