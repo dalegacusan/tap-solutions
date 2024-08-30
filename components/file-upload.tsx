@@ -84,7 +84,7 @@ const aspectRatios = {
 };
 
 const dimensions = {
-  profilePictureUrl: { width: 1080, height: 1080 },
+  profilePictureUrl: { width: 320, height: 320 },
   bannerUrl: { width: 1080, height: 250 },
   backgroundUrl: { width: 10000, height: 10000 }, // Large values for full size
 };
