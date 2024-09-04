@@ -250,7 +250,7 @@ const ContactUs = () => {
                 src='/images/tap_card.png'
                 alt='Tap Card'
                 style={{
-                  width: '70%', // Make the image responsive
+                  width: '62%', // Make the image responsive
                   maxWidth: '600px', // Set a maximum width
                   height: 'auto', // Maintain aspect ratio
                   marginTop: '0', // Adjust as needed
