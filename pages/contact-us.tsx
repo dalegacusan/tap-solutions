@@ -8,6 +8,7 @@ import {
   styled,
   useTheme,
   useMediaQuery,
+  Link as MuiLink, // Import Link component from MUI
 } from '@mui/material';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -45,7 +46,7 @@ const ContactUsHeader = styled(Typography)(({ theme }) => ({
   fontWeight: 600,
 }));
 
-const ContactBox = styled(Box)(({ theme }) => ({
+const ContactBox = styled(MuiLink)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   backgroundColor: 'black',
@@ -53,7 +54,11 @@ const ContactBox = styled(Box)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   padding: theme.spacing(1),
   marginBottom: theme.spacing(1),
-  height: '50px', // Adjust height as needed,
+  height: '50px', // Adjust height as needed
+  textDecoration: 'none', // Remove default underline from links
+  '&:hover': {
+    backgroundColor: theme.palette.grey[800], // Change background on hover
+  },
 }));
 
 const ContactIcon = styled(Box)(({ theme }) => ({
@@ -151,24 +156,24 @@ const ContactUs = () => {
 
       {/* Horizontal Menu */}
       <AppBar position='static' sx={{ backgroundColor: 'black' }}>
-      <Toolbar>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: isMobile ? 'column' : 'row', // Stack buttons vertically on mobile
-            justifyContent: 'center', // Center items horizontally
-            width: '100%',
-            alignItems: 'center', // Center items vertically
-          }}
-        >
-          <MenuButton>Home</MenuButton>
-          <MenuButton>How to Order</MenuButton>
-          <MenuButton>Contact Us</MenuButton>
-          <MenuButton>About Us</MenuButton>
-          <MenuButton>Login</MenuButton>
-        </Box>
-      </Toolbar>
-    </AppBar>
+        <Toolbar>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: isMobile ? 'column' : 'row', // Stack buttons vertically on mobile
+              justifyContent: 'center', // Center items horizontally
+              width: '100%',
+              alignItems: 'center', // Center items vertically
+            }}
+          >
+            <MenuButton>Home</MenuButton>
+            <MenuButton>How to Order</MenuButton>
+            <MenuButton>Contact Us</MenuButton>
+            <MenuButton>About Us</MenuButton>
+            <MenuButton>Login</MenuButton>
+          </Box>
+        </Toolbar>
+      </AppBar>
 
       {/* Content */}
       <Box
@@ -185,7 +190,7 @@ const ContactUs = () => {
           {/* Contact Boxes */}
           <Grid item xs={12} md={6}>
             <Box>
-              <ContactBox>
+              <ContactBox href='https://facebook.com/taptechnologies24' target='_blank' rel='noopener'>
                 <ContactIcon>
                   <Image
                     src='/images/social/facebook.png'
@@ -196,7 +201,7 @@ const ContactUs = () => {
                 </ContactIcon>
                 <Typography>Tap Technologies</Typography>
               </ContactBox>
-              <ContactBox>
+              <ContactBox href='https://instagram.com/taptechnologiesph' target='_blank' rel='noopener'>
                 <ContactIcon>
                   <Image
                     src='/images/social/instagram.png'
@@ -207,7 +212,7 @@ const ContactUs = () => {
                 </ContactIcon>
                 <Typography>@taptechnologiesph</Typography>
               </ContactBox>
-              <ContactBox>
+              <ContactBox href='https://tiktok.com/@taptechnologiesph' target='_blank' rel='noopener'>
                 <ContactIcon>
                   <Image
                     src='/images/social/tiktok.png'
@@ -218,13 +223,13 @@ const ContactUs = () => {
                 </ContactIcon>
                 <Typography>@taptechnologiesph</Typography>
               </ContactBox>
-              <ContactBox>
+              <ContactBox href='mailto:taptechnologies24@gmail.com'>
                 <ContactIcon>
                   <EmailIcon />
                 </ContactIcon>
                 <Typography>taptechnologies24@gmail.com</Typography>
               </ContactBox>
-              <ContactBox>
+              <ContactBox href='tel:+639178600703'>
                 <ContactIcon>
                   <CallIcon />
                 </ContactIcon>
