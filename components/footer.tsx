@@ -1,4 +1,4 @@
-// components/Footer.js
+// components/Footer.tsx
 import React from 'react';
 import { Box, Typography, styled } from '@mui/material';
 
@@ -9,11 +9,9 @@ const FooterContainer = styled(Box)(({ theme }) => ({
   backgroundColor: 'black',
   color: 'white',
   padding: theme.spacing(2),
-  position: 'fixed',
-  bottom: 0,
-  width: '100%',
   boxSizing: 'border-box',
   height: '60px',
+  width: '100%',
 }));
 
 const Footer = () => (

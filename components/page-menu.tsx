@@ -1,6 +1,15 @@
 // components/Menu.js
 import React from 'react';
-import { AppBar, Toolbar, Box, Button, styled, useMediaQuery, useTheme } from '@mui/material';
+import {
+  AppBar,
+  Toolbar,
+  Box,
+  Button,
+  styled,
+  useMediaQuery,
+  useTheme,
+  Link,
+} from '@mui/material';
 
 const MenuButton = styled(Button)(({ theme }) => ({
   color: theme.palette.common.white,
@@ -28,9 +37,18 @@ const Menu = () => {
             alignItems: 'center',
           }}
         >
-          <MenuButton>Home</MenuButton>
-          <MenuButton>How to Order</MenuButton>
-          <MenuButton>Contact Us</MenuButton>
+          <Link href='/'>
+            <MenuButton>Home</MenuButton>
+          </Link>
+
+          <Link href='/how-to-order'>
+            <MenuButton>How to Order</MenuButton>
+          </Link>
+
+          <Link href='/contact-us'>
+            <MenuButton>Contact Us</MenuButton>
+          </Link>
+
           <MenuButton>About Us</MenuButton>
           <MenuButton>Login</MenuButton>
         </Box>

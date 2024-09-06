@@ -40,7 +40,7 @@ const ContactUs = () => (
     <Head>
       <title>Tap Technologies - Contact Us</title>
       <link rel='icon' href='/images/logo.png' />
-      <meta name='title' content='Tap Technologies' />
+      <meta name='title' content='Tap Technologies - Contact Us' />
       <meta
         name='description'
         content='Revolutionize the way you share your business and contact information by using an environmentally friendly alternative business card'
@@ -69,7 +69,7 @@ const ContactUs = () => (
 
     <Header />
     <Menu />
-    <Content>
+    <Content backgroundColor='#F6E9DB'>
       <ContactUsHeader variant='h4' sx={{ marginBottom: '30px' }}>
         Contact Us!
       </ContactUsHeader>
