@@ -8,20 +8,24 @@ import Menu from '../components/page-menu';
 import Content from '../components/page-content';
 import Slideshow from '../components/slideshow';
 
-const InfoBox = ({
+export const InfoBox = ({
   imageSrc,
   title,
   description,
+  backgroundColor,
+  textColor
 }: {
   imageSrc: string;
   title: string;
   description: string;
+  backgroundColor?: string;
+  textColor?: string;
 }) => (
   <Box
     sx={{
       textAlign: 'center',
       padding: 3,
-      backgroundColor: 'white',
+      backgroundColor: backgroundColor ? backgroundColor : 'white',
       borderRadius: 2,
       boxShadow: 4,
       display: 'flex',
@@ -55,7 +59,7 @@ const InfoBox = ({
         marginTop: 1,
       }}
     >
-      <Typography variant='body2'>{description}</Typography>
+      <Typography variant='body2' style={{color: textColor ? textColor : 'black'}}>{description}</Typography>
     </Box>
   </Box>
 );

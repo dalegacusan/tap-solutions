@@ -18,7 +18,7 @@ const ContactUsHeader = styled(Typography)(({ theme }) => ({
 const ContactBox = styled(MuiLink)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  backgroundColor: 'black',
+  backgroundColor: '#282828',
   color: 'white',
   borderRadius: theme.shape.borderRadius,
   padding: theme.spacing(1),
@@ -69,7 +69,7 @@ const ContactUs = () => (
 
     <Header />
     <Menu />
-    <Content backgroundColor='#F6E9DB'>
+    <Content>
       <ContactUsHeader variant='h4' sx={{ marginBottom: '30px' }}>
         Contact Us!
       </ContactUsHeader>

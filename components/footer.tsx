@@ -6,7 +6,7 @@ const FooterContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  backgroundColor: 'black',
+  backgroundColor: '#282828',
   color: 'white',
   padding: theme.spacing(2),
   boxSizing: 'border-box',

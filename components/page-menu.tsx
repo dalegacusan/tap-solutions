@@ -26,7 +26,7 @@ const Menu = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <AppBar position='static' sx={{ backgroundColor: 'black' }}>
+    <AppBar position='static' sx={{ backgroundColor: '#282828' }}>
       <Toolbar>
         <Box
           sx={{
