@@ -68,12 +68,12 @@ export default function HomePage() {
 
           {/* Right Column */}
           <Grid item xs={12} md={6}>
-            <Grid container spacing={4} sx={{ marginTop: 4 }}>
+            <Grid container spacing={1} sx={{ marginTop: 4 }}>
               {/* First Row with 4 Boxes */}
               <Grid item xs={12} sm={6} md={3}>
                 <InfoBox
-                  imageSrc='/images/how-to-order/customize.png'
-                  title='Share information easier'
+                  imageSrc='/images/home/innovative-solutions.png'
+                  title='Innovative Solutions'
                   description='Share information easier'
                   backgroundColor='#282828'
                   textColor='#ffffff'
@@ -81,8 +81,8 @@ export default function HomePage() {
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
                 <InfoBox
-                  imageSrc='/images/how-to-order/pay.png'
-                  title='Reduce paper waste with a sustainable alternative'
+                  imageSrc='/images/home/eco-friendly.png'
+                  title='Eco-Friendly'
                   description='Reduce paper waste with a sustainable alternative'
                   backgroundColor='#282828'
                   textColor='#ffffff'
@@ -90,8 +90,8 @@ export default function HomePage() {
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
                 <InfoBox
-                  imageSrc='/images/how-to-order/production.png'
-                  title="Make your profile unique to your brand's identity"
+                  imageSrc='/images/home/customizable.png'
+                  title="Customizable & Professional"
                   description="Make your profile unique to your brand's identity"
                   backgroundColor='#282828'
                   textColor='#ffffff'
@@ -99,8 +99,8 @@ export default function HomePage() {
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
                 <InfoBox
-                  imageSrc='/images/how-to-order/deliver.png'
-                  title='Share your digital business card using your custom link'
+                  imageSrc='/images/home/shareable-link.png'
+                  title='Shareable Link'
                   description='Share your digital business card using your custom link'
                   backgroundColor='#282828'
                   textColor='#ffffff'
@@ -112,8 +112,8 @@ export default function HomePage() {
               {/* Second Row with 4 Boxes */}
               <Grid item xs={12} sm={6} md={3}>
                 <InfoBox
-                  imageSrc='/images/how-to-order/deliver.png'
-                  title='Update details anytime'
+                  imageSrc='/images/home/effortless-updates.png'
+                  title='Effortless Updates'
                   description='Update details anytime'
                   backgroundColor='#282828'
                   textColor='#ffffff'
@@ -121,8 +121,8 @@ export default function HomePage() {
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
                 <InfoBox
-                  imageSrc='/images/how-to-order/deliver.png'
-                  title='Works on most smartphones, no app needed'
+                  imageSrc='/images/home/seamless-integration.png'
+                  title='Seamless Integration'
                   description='Works on most smartphones, no app needed'
                   backgroundColor='#282828'
                   textColor='#ffffff'
@@ -130,8 +130,8 @@ export default function HomePage() {
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
                 <InfoBox
-                  imageSrc='/images/how-to-order/deliver.png'
-                  title='Share your digital business just by tapping the card on the phone'
+                  imageSrc='/images/home/one-tap.png'
+                  title='One Tap to Share'
                   description='Share your digital business just by tapping the card on the phone'
                   backgroundColor='#282828'
                   textColor='#ffffff'
@@ -139,8 +139,8 @@ export default function HomePage() {
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
                 <InfoBox
-                  imageSrc='/images/how-to-order/deliver.png'
-                  title='Build connections and network with peace of mind'
+                  imageSrc='/images/home/secure.png'
+                  title='Secure'
                   description='Build connections and network with peace of mind'
                   backgroundColor='#282828'
                   textColor='#ffffff'

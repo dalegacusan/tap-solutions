@@ -10,14 +10,14 @@ import Slideshow from '../components/slideshow';
 
 export const InfoBox = ({
   imageSrc,
-  title,
   description,
+  title,
   backgroundColor,
-  textColor
+  textColor,
 }: {
   imageSrc: string;
-  title: string;
   description: string;
+  title?: string;
   backgroundColor?: string;
   textColor?: string;
 }) => (
@@ -59,7 +59,24 @@ export const InfoBox = ({
         marginTop: 1,
       }}
     >
-      <Typography variant='body2' style={{color: textColor ? textColor : 'black'}}>{description}</Typography>
+      {title && (
+        <Typography
+          variant='h6'
+          style={{ color: textColor ? textColor : 'black' }}
+          mb={2}
+          mt={2}
+          fontWeight={600}
+        >
+          {title}
+        </Typography>
+      )}
+      <Typography
+        variant='body2'
+        style={{ color: textColor ? textColor : 'black' }}
+        mt={title ? 0 : 2}
+      >
+        {description}
+      </Typography>
     </Box>
   </Box>
 );
@@ -176,28 +193,24 @@ const HowToOrder = () => (
         <Grid item xs={12} sm={6} md={3}>
           <InfoBox
             imageSrc='/images/how-to-order/customize.png'
-            title='Select a design and personalize your NFC business card'
             description='Select a design and personalize your NFC business card'
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <InfoBox
             imageSrc='/images/how-to-order/pay.png'
-            title='Pay the total amount'
             description='Pay the total amount'
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <InfoBox
             imageSrc='/images/how-to-order/production.png'
-            title='Print and programming of your NFC Card'
             description='Print and programming of your NFC Card'
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <InfoBox
             imageSrc='/images/how-to-order/deliver.png'
-            title='Shipping of your NFC Card through Grab, Lalamove or LBC'
             description='Shipping of your NFC Card through Grab, Lalamove or LBC'
           />
         </Grid>
@@ -208,21 +221,18 @@ const HowToOrder = () => (
         <Grid item xs={12} sm={4}>
           <InfoBox
             imageSrc='/images/how-to-order/edit.png'
-            title='Edit your profile through your Tap Technology account'
             description='Edit your profile through your Tap Technology account'
           />
         </Grid>
         <Grid item xs={12} sm={4}>
           <InfoBox
             imageSrc='/images/how-to-order/tap.png'
-            title='Tap your NFC Card on the phone'
             description='Tap your NFC Card on the phone'
           />
         </Grid>
         <Grid item xs={12} sm={4}>
           <InfoBox
             imageSrc='/images/how-to-order/share.png'
-            title='Share your contact information and experience networking to a whole new level'
             description='Share your contact information and experience networking to a whole new level'
           />
         </Grid>
