@@ -49,8 +49,10 @@ const Menu = () => {
             <MenuButton>Contact Us</MenuButton>
           </Link>
 
-          <MenuButton>About Us</MenuButton>
-          <MenuButton>Login</MenuButton>
+          <Link href='/about-us'>
+            <MenuButton>About Us</MenuButton>
+          </Link>
+
         </Box>
       </Toolbar>
     </AppBar>
