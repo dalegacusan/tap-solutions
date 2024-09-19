@@ -44,7 +44,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import { User } from '../interfaces/user.interface';
 import AddWidgetModal from '../components/add-widget-modal';
 import SocialMediaEditButtonModal from '../components/social-media-edit-button-modal';
-import PasswordModal from '../components/password-modal';
 import SocialMediaEditButton from '../components/social-media-edit-button';
 import DraggableWidgets from '../components/draggable-widgets';
 import FileUpload, { s3Client } from '../components/file-upload';
@@ -62,6 +61,8 @@ import LanguageIcon from '@mui/icons-material/Language';
 import ColorPicker from '../components/color-picker';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { v4 as uuidv4 } from 'uuid'; // Import UUID library
+import { useAuth } from '../context/AuthContext';
+import { useRouter } from 'next/router';
 
 const widgetIcons = {
   aboutMe: <InfoIcon />,
@@ -141,6 +142,9 @@ const reorder = (list, startIndex, endIndex) => {
 };
 
 export default function DashboardPage() {
+  const { isLoggedIn, logout } = useAuth();
+  const router = useRouter();
+
   const [formData, setFormData] = useState<User>({
     username: '',
     password: '',
@@ -198,16 +202,14 @@ export default function DashboardPage() {
   const [uploadedFiles, setUploadedFiles] = useState<{ [key: string]: string }>(
     {}
   );
-  const [passwordModalIsOpen, setPasswordModalIsOpen] = useState(true); // Show password modal on load
   const [userPassword, setUserPassword] = useState<string>('');
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   // Snackbar state
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'info' | 'error'>(
-    'success'
-  );
+  const [snackbarSeverity, setSnackbarSeverity] = useState<
+    'success' | 'info' | 'error'
+  >('success');
 
   const [openLightbox, setOpenLightbox] = useState(false);
   const [currentImage, setCurrentImage] = useState<string | null>(null);
@@ -345,7 +347,9 @@ export default function DashboardPage() {
     if (file) {
       const maxNumberOfPortfolioImages = 9;
       if (formData.portfolioImages.length === maxNumberOfPortfolioImages) {
-        setSnackbarMessage(`You can only upload up to ${maxNumberOfPortfolioImages} images.`);
+        setSnackbarMessage(
+          `You can only upload up to ${maxNumberOfPortfolioImages} images.`
+        );
         setSnackbarSeverity('error');
         setSnackbarOpen(true);
         return;
@@ -417,7 +421,7 @@ export default function DashboardPage() {
     );
 
     if (!isLoggedIn) {
-      setPasswordModalIsOpen(true); // Open the password modal if password is not yet verified
+      router.push('/'); // Open the password modal if password is not yet verified
       return;
     }
 
@@ -543,16 +547,22 @@ export default function DashboardPage() {
     }
   };
 
-  const handlePasswordCorrect = () => {
-    setPasswordModalIsOpen(false);
-  };
-
   useEffect(() => {
+    if (!isLoggedIn) {
+      router.push('/login'); // Redirect to login if not logged in
+      return; // Prevent further execution
+    }
+
     setFormData(formData);
 
     // Update items based on the updated formData
     setItems(getWidgetContent(formData));
-  }, []);
+
+    // Cleanup function to log out the user when leaving this page
+    return () => {
+      logout(); // Call the logout function
+    };
+  }, [isLoggedIn]);
 
   const handleTextFieldChange =
     (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -626,10 +636,7 @@ export default function DashboardPage() {
           property='og:description'
           content='Revolutionize the way you share your business and contact information by using an environmentally friendly alternative business card'
         />
-        <meta
-          property='og:image'
-          content='/images/banner3.jpg'
-        />
+        <meta property='og:image' content='/images/banner3.jpg' />
 
         <meta property='twitter:card' content='summary_large_image' />
         <meta property='twitter:url' content='https://taptech.ph/' />
@@ -638,10 +645,7 @@ export default function DashboardPage() {
           property='twitter:description'
           content='Revolutionize the way you share your business and contact information by using an environmentally friendly alternative business card'
         />
-        <meta
-          property='twitter:image'
-          content='/images/banner3.jpg'
-        />
+        <meta property='twitter:image' content='/images/banner3.jpg' />
       </Head>
 
       <Snackbar
@@ -654,27 +658,20 @@ export default function DashboardPage() {
           severity={snackbarSeverity}
           sx={{ width: '100%' }}
           style={{
-            backgroundColor: 
-              snackbarSeverity === 'success' ? '#4caf50' :
-              snackbarSeverity === 'error' ? '#f44336' :
-              snackbarSeverity === 'info' ? '#0288d1' :
-              '#000000', // default color if severity is none of the above
+            backgroundColor:
+              snackbarSeverity === 'success'
+                ? '#4caf50'
+                : snackbarSeverity === 'error'
+                ? '#f44336'
+                : snackbarSeverity === 'info'
+                ? '#0288d1'
+                : '#000000', // default color if severity is none of the above
             color: '#ffffff',
           }}
         >
           {snackbarMessage}
         </Alert>
       </Snackbar>
-
-      <PasswordModal
-        open={passwordModalIsOpen}
-        onClose={() => setPasswordModalIsOpen(false)}
-        onPasswordCorrect={handlePasswordCorrect}
-        userPassword={userPassword} // Pass the user password
-        setUserPassword={setUserPassword}
-        username={formData.username as string} // Pass the username
-        setIsLoggedIn={setIsLoggedIn}
-      />
 
       <SocialMediaEditButtonModal
         open={editSocialMediaModalIsOpen}
@@ -698,457 +695,463 @@ export default function DashboardPage() {
       />
 
       <main>
-        <Grid
-          container
-          spacing={0}
-          alignItems='center'
-          justifyContent='center'
-          sx={{ minHeight: '100vh' }}
-          mt={8}
-          mb={8}
-        >
-          <Grid item lg={4} md={6} xs={12} px={4}>
-            <Box>
-              <Typography variant='h5' mb={4} style={{ fontWeight: 'bold' }}>
-                Add User
-              </Typography>
+        {isLoggedIn && (
+          <Grid
+            container
+            spacing={0}
+            alignItems='center'
+            justifyContent='center'
+            sx={{ minHeight: '100vh' }}
+            mt={8}
+            mb={8}
+          >
+            <Grid item lg={4} md={6} xs={12} px={4}>
+              <Box>
+                <Typography variant='h5' mb={4} style={{ fontWeight: 'bold' }}>
+                  Add User
+                </Typography>
 
-              <Grid container spacing={2}>
-                <Grid item md={8} xs={12}>
-                  <Typography gutterBottom>Profile Picture</Typography>
-                  <FileUpload
-                    onUpload={handleFileUpload('profilePictureUrl')}
-                    imageType='profilePictureUrl'
-                  />
-                </Grid>
-                <Grid item md={4} xs={12}>
-                  {formData.profilePictureUrl ||
-                  uploadedFiles.profilePictureUrl ? (
-                    <Avatar
-                      src={
-                        uploadedFiles.profilePictureUrl ||
-                        formData.profilePictureUrl ||
-                        '/images/logo.png'
-                      }
-                      alt='Profile Picture'
-                      style={{ width: 120, height: 120, marginLeft: '40px' }}
+                <Grid container spacing={2}>
+                  <Grid item md={8} xs={12}>
+                    <Typography gutterBottom>Profile Picture</Typography>
+                    <FileUpload
+                      onUpload={handleFileUpload('profilePictureUrl')}
+                      imageType='profilePictureUrl'
                     />
-                  ) : (
-                    <Typography>No profile picture uploaded.</Typography>
-                  )}
-                </Grid>
-              </Grid>
-
-              <Grid container spacing={2} mt={3}>
-                <Grid item md={8} xs={12}>
-                  <Typography gutterBottom>Banner</Typography>
-
-                  <FormGroup>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={isBannerUseDefaultChecked}
-                          size='small'
-                          onChange={(
-                            event: React.ChangeEvent<HTMLInputElement>
-                          ) => {
-                            setIsBannerUseDefaultChecked(event.target.checked);
-
-                            if (event.target.checked) {
-                              setUseBannerImage(false);
-                              setBannerColor('#FFFFFF');
-                            }
-                          }}
-                        />
-                      }
-                      label='Use Default'
-                      sx={{
-                        '& .MuiFormControlLabel-label': {
-                          fontSize: '12px', // Adjust font size here
-                        },
-                      }}
-                    />
-                  </FormGroup>
-
-                  {!isBannerUseDefaultChecked && (
-                    <>
-                      <Typography
-                        style={{
-                          marginRight: '8px',
-                          display: 'inline',
-                          fontWeight: 'bold',
-                        }}
-                      >
-                        Color
-                      </Typography>
-                      <Switch
-                        checked={useBannerImage}
-                        onChange={handleBannerSwitchChange}
-                        color='primary'
+                  </Grid>
+                  <Grid item md={4} xs={12}>
+                    {formData.profilePictureUrl ||
+                    uploadedFiles.profilePictureUrl ? (
+                      <Avatar
+                        src={
+                          uploadedFiles.profilePictureUrl ||
+                          formData.profilePictureUrl ||
+                          '/images/logo.png'
+                        }
+                        alt='Profile Picture'
+                        style={{ width: 120, height: 120, marginLeft: '40px' }}
                       />
-                      <Typography
-                        style={{
-                          marginLeft: '8px',
-                          display: 'inline',
-                          fontWeight: 'bold',
-                        }}
-                      >
-                        Image
-                      </Typography>
-
-                      {useBannerImage ? (
-                        <>
-                          <FileUpload
-                            onUpload={handleFileUpload('bannerUrl')}
-                            imageType='bannerUrl'
-                          />
-                          {!formData.bannerUrl && !uploadedFiles.bannerUrl && (
-                            <Typography mt={2}>
-                              No banner picture uploaded.
-                            </Typography>
-                          )}
-                        </>
-                      ) : (
-                        <Box mt={2}>
-                          <ColorPicker
-                            color={bannerColor}
-                            onChange={handleBannerColorChange}
-                          />
-                        </Box>
-                      )}
-                    </>
-                  )}
-                </Grid>
-                <Grid item md={4} xs={12}>
-                  {!isBannerUseDefaultChecked && (
-                    <>
-                      {useBannerImage && (
-                        <>
-                          {(formData.bannerUrl || uploadedFiles.bannerUrl) && (
-                            <img
-                              src={
-                                uploadedFiles.bannerUrl ||
-                                formData.bannerUrl ||
-                                '/images/banner2.png'
-                              }
-                              alt='Banner'
-                              style={{
-                                height: 120,
-                                marginLeft: '40px',
-                                marginTop: '20px',
-                              }}
-                            />
-                          )}
-                        </>
-                      )}
-                    </>
-                  )}
-                </Grid>
-              </Grid>
-
-              <Grid container spacing={2} mt={3}>
-                <Grid item md={8} xs={12}>
-                  <Typography gutterBottom>Background</Typography>
-
-                  <FormGroup>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={isBackgroundUseDefaultChecked}
-                          size='small'
-                          onChange={(
-                            event: React.ChangeEvent<HTMLInputElement>
-                          ) => {
-                            setIsBackgroundUseDefaultChecked(
-                              event.target.checked
-                            );
-
-                            if (event.target.checked) {
-                              setUseBackgroundImage(false);
-                              setBackgroundColor('#FFFFFF');
-                            }
-                          }}
-                        />
-                      }
-                      label='Use Default'
-                      sx={{
-                        '& .MuiFormControlLabel-label': {
-                          fontSize: '12px', // Adjust font size here
-                        },
-                      }}
-                    />
-                  </FormGroup>
-
-                  {!isBackgroundUseDefaultChecked && (
-                    <>
-                      {/* Color/Image Toggle */}
-                      <Typography
-                        style={{
-                          marginRight: '8px',
-                          display: 'inline',
-                          fontWeight: 'bold',
-                        }}
-                      >
-                        Color
-                      </Typography>
-                      <Switch
-                        checked={useBackgroundImage}
-                        onChange={handleBackgroundSwitchChange}
-                        color='primary'
-                      />
-                      <Typography
-                        style={{
-                          marginLeft: '8px',
-                          display: 'inline',
-                          fontWeight: 'bold',
-                        }}
-                      >
-                        Image
-                      </Typography>
-
-                      {/* Conditional Rendering based on Switch */}
-                      {useBackgroundImage ? (
-                        <>
-                          <FileUpload
-                            onUpload={handleFileUpload('backgroundUrl')}
-                            imageType='backgroundUrl'
-                          />
-                          {!formData.backgroundUrl &&
-                            !uploadedFiles.backgroundUrl && (
-                              <Typography mt={2}>
-                                No background picture uploaded.
-                              </Typography>
-                            )}
-                        </>
-                      ) : (
-                        <Box mt={2}>
-                          <ColorPicker
-                            color={backgroundColor}
-                            onChange={handleBackgroundColorChange}
-                          />
-                        </Box>
-                      )}
-                    </>
-                  )}
-                </Grid>
-                <Grid item md={4} xs={12}>
-                  {!isBackgroundUseDefaultChecked && (
-                    <>
-                      {useBackgroundImage && (
-                        <>
-                          {(formData.backgroundUrl ||
-                            uploadedFiles.backgroundUrl) && (
-                            <img
-                              src={
-                                uploadedFiles.backgroundUrl ||
-                                formData.backgroundUrl ||
-                                '/images/logo.png'
-                              }
-                              alt='Background'
-                              style={{
-                                height: 120,
-                                marginLeft: '40px',
-                                marginTop: '20px',
-                              }}
-                            />
-                          )}
-                        </>
-                      )}
-                    </>
-                  )}
-                </Grid>
-              </Grid>
-
-              <Box mt={4}>
-                <TextField
-                  fullWidth
-                  required
-                  label='Username'
-                  value={formData.username}
-                  onChange={handleTextFieldChange('username')}
-                />
-              </Box>
-
-              <Box mt={4}>
-                <FormControl variant='outlined' fullWidth required>
-                  <InputLabel htmlFor='outlined-adornment-password'>
-                    Password
-                  </InputLabel>
-                  <OutlinedInput
-                    id='outlined-adornment-password'
-                    type={showPassword ? 'text' : 'password'}
-                    value={formData.password}
-                    onChange={handleTextFieldChange('password')}
-                    endAdornment={
-                      <InputAdornment position='end'>
-                        <IconButton
-                          aria-label='toggle password visibility'
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                          edge='end'
-                        >
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                    label='Password'
-                  />
-                </FormControl>
-              </Box>
-
-              <Box mt={4}>
-                <TextField
-                  fullWidth
-                  required
-                  label='First Name'
-                  value={formData.firstName}
-                  onChange={handleTextFieldChange('firstName')}
-                />
-              </Box>
-
-              <Box mt={4}>
-                <TextField
-                  fullWidth
-                  required
-                  label='Last Name'
-                  value={formData.lastName}
-                  onChange={handleTextFieldChange('lastName')}
-                />
-              </Box>
-
-              <Box mt={4}>
-                <TextField
-                  fullWidth
-                  required
-                  label='Phone Number'
-                  value={formData.phoneNumber}
-                  onChange={handleTextFieldChange('phoneNumber')}
-                />
-              </Box>
-
-              <Grid container spacing={2} mt={2}>
-                <Grid item xs={12}>
-                  <Typography variant='h6'>Socials</Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                    {socialMediaItems.map((item) => (
-                      <Grid item xs={6} key={item.identifier}>
-                        <SocialMediaEditButton
-                          identifier={item.identifier}
-                          icon={item.icon}
-                          label={item.label}
-                          isSocialMediaDefined={isSocialMediaDefined}
-                          onClick={() => handleButtonClick(item.identifier)}
-                        />
-                      </Grid>
-                    ))}
+                    ) : (
+                      <Typography>No profile picture uploaded.</Typography>
+                    )}
                   </Grid>
                 </Grid>
-              </Grid>
 
-              <Grid container spacing={2} mt={2}>
-                <Grid item xs={8}>
-                  <Typography variant='h6'>Widgets</Typography>
+                <Grid container spacing={2} mt={3}>
+                  <Grid item md={8} xs={12}>
+                    <Typography gutterBottom>Banner</Typography>
+
+                    <FormGroup>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={isBannerUseDefaultChecked}
+                            size='small'
+                            onChange={(
+                              event: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                              setIsBannerUseDefaultChecked(
+                                event.target.checked
+                              );
+
+                              if (event.target.checked) {
+                                setUseBannerImage(false);
+                                setBannerColor('#FFFFFF');
+                              }
+                            }}
+                          />
+                        }
+                        label='Use Default'
+                        sx={{
+                          '& .MuiFormControlLabel-label': {
+                            fontSize: '12px', // Adjust font size here
+                          },
+                        }}
+                      />
+                    </FormGroup>
+
+                    {!isBannerUseDefaultChecked && (
+                      <>
+                        <Typography
+                          style={{
+                            marginRight: '8px',
+                            display: 'inline',
+                            fontWeight: 'bold',
+                          }}
+                        >
+                          Color
+                        </Typography>
+                        <Switch
+                          checked={useBannerImage}
+                          onChange={handleBannerSwitchChange}
+                          color='primary'
+                        />
+                        <Typography
+                          style={{
+                            marginLeft: '8px',
+                            display: 'inline',
+                            fontWeight: 'bold',
+                          }}
+                        >
+                          Image
+                        </Typography>
+
+                        {useBannerImage ? (
+                          <>
+                            <FileUpload
+                              onUpload={handleFileUpload('bannerUrl')}
+                              imageType='bannerUrl'
+                            />
+                            {!formData.bannerUrl &&
+                              !uploadedFiles.bannerUrl && (
+                                <Typography mt={2}>
+                                  No banner picture uploaded.
+                                </Typography>
+                              )}
+                          </>
+                        ) : (
+                          <Box mt={2}>
+                            <ColorPicker
+                              color={bannerColor}
+                              onChange={handleBannerColorChange}
+                            />
+                          </Box>
+                        )}
+                      </>
+                    )}
+                  </Grid>
+                  <Grid item md={4} xs={12}>
+                    {!isBannerUseDefaultChecked && (
+                      <>
+                        {useBannerImage && (
+                          <>
+                            {(formData.bannerUrl ||
+                              uploadedFiles.bannerUrl) && (
+                              <img
+                                src={
+                                  uploadedFiles.bannerUrl ||
+                                  formData.bannerUrl ||
+                                  '/images/banner2.png'
+                                }
+                                alt='Banner'
+                                style={{
+                                  height: 120,
+                                  marginLeft: '40px',
+                                  marginTop: '20px',
+                                }}
+                              />
+                            )}
+                          </>
+                        )}
+                      </>
+                    )}
+                  </Grid>
                 </Grid>
-                <Grid item xs={4}>
-                  <Button
+
+                <Grid container spacing={2} mt={3}>
+                  <Grid item md={8} xs={12}>
+                    <Typography gutterBottom>Background</Typography>
+
+                    <FormGroup>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={isBackgroundUseDefaultChecked}
+                            size='small'
+                            onChange={(
+                              event: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                              setIsBackgroundUseDefaultChecked(
+                                event.target.checked
+                              );
+
+                              if (event.target.checked) {
+                                setUseBackgroundImage(false);
+                                setBackgroundColor('#FFFFFF');
+                              }
+                            }}
+                          />
+                        }
+                        label='Use Default'
+                        sx={{
+                          '& .MuiFormControlLabel-label': {
+                            fontSize: '12px', // Adjust font size here
+                          },
+                        }}
+                      />
+                    </FormGroup>
+
+                    {!isBackgroundUseDefaultChecked && (
+                      <>
+                        {/* Color/Image Toggle */}
+                        <Typography
+                          style={{
+                            marginRight: '8px',
+                            display: 'inline',
+                            fontWeight: 'bold',
+                          }}
+                        >
+                          Color
+                        </Typography>
+                        <Switch
+                          checked={useBackgroundImage}
+                          onChange={handleBackgroundSwitchChange}
+                          color='primary'
+                        />
+                        <Typography
+                          style={{
+                            marginLeft: '8px',
+                            display: 'inline',
+                            fontWeight: 'bold',
+                          }}
+                        >
+                          Image
+                        </Typography>
+
+                        {/* Conditional Rendering based on Switch */}
+                        {useBackgroundImage ? (
+                          <>
+                            <FileUpload
+                              onUpload={handleFileUpload('backgroundUrl')}
+                              imageType='backgroundUrl'
+                            />
+                            {!formData.backgroundUrl &&
+                              !uploadedFiles.backgroundUrl && (
+                                <Typography mt={2}>
+                                  No background picture uploaded.
+                                </Typography>
+                              )}
+                          </>
+                        ) : (
+                          <Box mt={2}>
+                            <ColorPicker
+                              color={backgroundColor}
+                              onChange={handleBackgroundColorChange}
+                            />
+                          </Box>
+                        )}
+                      </>
+                    )}
+                  </Grid>
+                  <Grid item md={4} xs={12}>
+                    {!isBackgroundUseDefaultChecked && (
+                      <>
+                        {useBackgroundImage && (
+                          <>
+                            {(formData.backgroundUrl ||
+                              uploadedFiles.backgroundUrl) && (
+                              <img
+                                src={
+                                  uploadedFiles.backgroundUrl ||
+                                  formData.backgroundUrl ||
+                                  '/images/logo.png'
+                                }
+                                alt='Background'
+                                style={{
+                                  height: 120,
+                                  marginLeft: '40px',
+                                  marginTop: '20px',
+                                }}
+                              />
+                            )}
+                          </>
+                        )}
+                      </>
+                    )}
+                  </Grid>
+                </Grid>
+
+                <Box mt={4}>
+                  <TextField
                     fullWidth
-                    variant='contained'
-                    startIcon={<AddIcon />}
-                    onClick={() => setAddWidgetModalIsOpen(true)}
-                    style={{ backgroundColor: '#FF914D' }}
-                  >
-                    Add Widget
-                  </Button>
-                </Grid>
-                <Grid item xs={12}>
-                  <DraggableWidgets
-                    items={items}
-                    onDragEnd={onDragEnd}
-                    setItems={setItems}
-                    setFormData={setFormData}
+                    required
+                    label='Username'
+                    value={formData.username}
+                    onChange={handleTextFieldChange('username')}
                   />
-                </Grid>
-              </Grid>
+                </Box>
 
-              <Grid container spacing={2} mt={2}>
-                <Grid item xs={8}>
-                  <Typography variant='h6'>Portfolio</Typography>
-                </Grid>
-                <Grid item xs={4}>
-                  <input
-                    accept='image/png, image/jpeg, image/jpg'
-                    id='upload-image'
-                    type='file'
-                    style={{ display: 'none' }}
-                    onChange={handleAddImageClick}
+                <Box mt={4}>
+                  <FormControl variant='outlined' fullWidth required>
+                    <InputLabel htmlFor='outlined-adornment-password'>
+                      Password
+                    </InputLabel>
+                    <OutlinedInput
+                      id='outlined-adornment-password'
+                      type={showPassword ? 'text' : 'password'}
+                      value={formData.password}
+                      onChange={handleTextFieldChange('password')}
+                      endAdornment={
+                        <InputAdornment position='end'>
+                          <IconButton
+                            aria-label='toggle password visibility'
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge='end'
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                      label='Password'
+                    />
+                  </FormControl>
+                </Box>
+
+                <Box mt={4}>
+                  <TextField
+                    fullWidth
+                    required
+                    label='First Name'
+                    value={formData.firstName}
+                    onChange={handleTextFieldChange('firstName')}
                   />
-                  <label htmlFor='upload-image'>
+                </Box>
+
+                <Box mt={4}>
+                  <TextField
+                    fullWidth
+                    required
+                    label='Last Name'
+                    value={formData.lastName}
+                    onChange={handleTextFieldChange('lastName')}
+                  />
+                </Box>
+
+                <Box mt={4}>
+                  <TextField
+                    fullWidth
+                    required
+                    label='Phone Number'
+                    value={formData.phoneNumber}
+                    onChange={handleTextFieldChange('phoneNumber')}
+                  />
+                </Box>
+
+                <Grid container spacing={2} mt={2}>
+                  <Grid item xs={12}>
+                    <Typography variant='h6'>Socials</Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                      {socialMediaItems.map((item) => (
+                        <Grid item xs={6} key={item.identifier}>
+                          <SocialMediaEditButton
+                            identifier={item.identifier}
+                            icon={item.icon}
+                            label={item.label}
+                            isSocialMediaDefined={isSocialMediaDefined}
+                            onClick={() => handleButtonClick(item.identifier)}
+                          />
+                        </Grid>
+                      ))}
+                    </Grid>
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={2} mt={2}>
+                  <Grid item xs={8}>
+                    <Typography variant='h6'>Widgets</Typography>
+                  </Grid>
+                  <Grid item xs={4}>
                     <Button
                       fullWidth
                       variant='contained'
                       startIcon={<AddIcon />}
+                      onClick={() => setAddWidgetModalIsOpen(true)}
                       style={{ backgroundColor: '#FF914D' }}
-                      component='span'
                     >
-                      Add Image
+                      Add Widget
                     </Button>
-                  </label>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <DraggableWidgets
+                      items={items}
+                      onDragEnd={onDragEnd}
+                      setItems={setItems}
+                      setFormData={setFormData}
+                    />
+                  </Grid>
                 </Grid>
 
-                {formData.portfolioImages.length > 0 && (
-                  <Grid item xs={12}>
-                    <Grid item xs={12}>
-                      <ImageList cols={3} rowHeight={164} gap={8}>
-                        {formData.portfolioImages.map((imageUrl, index) => (
-                          <ImageListItem key={index}>
-                            <img
-                              src={imageUrl}
-                              alt={`Portfolio Image ${index + 1}`}
-                              loading='lazy'
-                              style={{
-                                objectFit: 'cover',
-                                width: '100%',
-                                height: '100%',
-                                cursor: 'pointer',
-                              }}
-                              onClick={() => handleImageClick(imageUrl)}
-                            />
-                            <IconButton
-                              onClick={() => handleDeleteImage(index)}
-                              style={{
-                                position: 'absolute',
-                                top: '8px',
-                                right: '8px',
-                                color: 'red',
-                                zIndex: 1,
-                              }}
-                            >
-                              <DeleteIcon />
-                            </IconButton>
-                          </ImageListItem>
-                        ))}
-                      </ImageList>
-                    </Grid>
+                <Grid container spacing={2} mt={2}>
+                  <Grid item xs={8}>
+                    <Typography variant='h6'>Portfolio</Typography>
                   </Grid>
-                )}
-              </Grid>
+                  <Grid item xs={4}>
+                    <input
+                      accept='image/png, image/jpeg, image/jpg'
+                      id='upload-image'
+                      type='file'
+                      style={{ display: 'none' }}
+                      onChange={handleAddImageClick}
+                    />
+                    <label htmlFor='upload-image'>
+                      <Button
+                        fullWidth
+                        variant='contained'
+                        startIcon={<AddIcon />}
+                        style={{ backgroundColor: '#FF914D' }}
+                        component='span'
+                      >
+                        Add Image
+                      </Button>
+                    </label>
+                  </Grid>
 
-              <Box mt={6}>
-                <Button
-                  variant='contained'
-                  fullWidth
-                  color='success'
-                  onClick={handleSaveForm}
-                  style={{ backgroundColor: '#FF914D' }}
-                >
-                  Add User
-                </Button>
+                  {formData.portfolioImages.length > 0 && (
+                    <Grid item xs={12}>
+                      <Grid item xs={12}>
+                        <ImageList cols={3} rowHeight={164} gap={8}>
+                          {formData.portfolioImages.map((imageUrl, index) => (
+                            <ImageListItem key={index}>
+                              <img
+                                src={imageUrl}
+                                alt={`Portfolio Image ${index + 1}`}
+                                loading='lazy'
+                                style={{
+                                  objectFit: 'cover',
+                                  width: '100%',
+                                  height: '100%',
+                                  cursor: 'pointer',
+                                }}
+                                onClick={() => handleImageClick(imageUrl)}
+                              />
+                              <IconButton
+                                onClick={() => handleDeleteImage(index)}
+                                style={{
+                                  position: 'absolute',
+                                  top: '8px',
+                                  right: '8px',
+                                  color: 'red',
+                                  zIndex: 1,
+                                }}
+                              >
+                                <DeleteIcon />
+                              </IconButton>
+                            </ImageListItem>
+                          ))}
+                        </ImageList>
+                      </Grid>
+                    </Grid>
+                  )}
+                </Grid>
+
+                <Box mt={6}>
+                  <Button
+                    variant='contained'
+                    fullWidth
+                    color='success'
+                    onClick={handleSaveForm}
+                    style={{ backgroundColor: '#FF914D' }}
+                  >
+                    Add User
+                  </Button>
+                </Box>
               </Box>
-            </Box>
+            </Grid>
           </Grid>
-        </Grid>
+        )}
 
         {/* Lightbox Dialog */}
         <Dialog
