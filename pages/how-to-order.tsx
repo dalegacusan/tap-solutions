@@ -119,51 +119,7 @@ const HowToOrder = () => (
     <Header />
     <Menu />
     <Content>
-      <Grid container spacing={4}>
-        {/* Left Column */}
-        <Grid item xs={12} md={6}>
-          <Box
-            sx={{
-              padding: 2,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-            }}
-          >
-            <Typography
-              variant='h4'
-              sx={{ marginBottom: '20px', fontWeight: 600 }}
-            >
-              How to Order
-            </Typography>
-            <Typography variant='body1' sx={{ marginBottom: '20px' }}>
-              Follow these simple steps to place your order:
-            </Typography>
-            <Typography variant='body1'>
-              1. Select a design and personalize your NFC business card
-            </Typography>
-            <Typography variant='body1'>2. Pay the total amount</Typography>
-            <Typography variant='body1'>
-              3. Print and programming of your NFC Card
-            </Typography>
-            <Typography variant='body1'>
-              4. Shipping of your NFC Card through Grab, Lalamove or LBC
-            </Typography>
-            <Typography variant='body1'>
-              5. Edit your profile through your Tap Technology account
-            </Typography>
-            <Typography variant='body1'>
-              6. Tap your NFC Card on the phone
-            </Typography>
-            <Typography variant='body1'>
-              7. Share your contact information and experience networking to a
-              whole new level
-            </Typography>
-          </Box>
-        </Grid>
-
         {/* Right Column */}
-        <Grid item xs={12} md={6}>
           <Box
             sx={{
               display: 'flex',
@@ -184,8 +140,7 @@ const HowToOrder = () => (
               }}
             />
           </Box>
-        </Grid>
-      </Grid>
+        
 
       {/* Additional Rows */}
       <Grid container spacing={4} sx={{ marginTop: 4 }}>
