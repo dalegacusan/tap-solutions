@@ -50,11 +50,16 @@ const AboutUs = () => (
     <Menu />
     <Content>
       <ContactUsHeader variant='h4' sx={{ marginBottom: '30px' }}>
-        About Us!
+        About Tap Technologies
       </ContactUsHeader>
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <Box>
+            <Typography>At Tap Technologies, we’re revolutionizing the way people connect. By leveraging the power of NFC, our smart business cards allow you to share contact information, social media, portfolios, and more with just a single tap—no apps, no fuss. In an age where first impressions count, our sleek, customizable cards ensure you leave a lasting mark while embracing a touchless, eco-conscious future.</Typography>
+            <br/>
+            <Typography>Our journey began with a clear vision: to eliminate the outdated practice of paper business cards and replace it with a modern, seamless, and sustainable solution. Whether you’re an entrepreneur, freelancer, or a corporate team, our NFC cards redefine networking—helping you exchange information with precision and efficiency.</Typography>
+            <br/>
+            <Typography>At Tap Technologies, innovation is at the heart of everything we do. We believe in empowering professionals to connect smarter, share effortlessly, and make every interaction meaningful. As we continue to grow, our mission remains simple: to lead the future of networking, one tap at a time.</Typography>
           </Box>
         </Grid>
         <Grid item xs={12} md={6}>
