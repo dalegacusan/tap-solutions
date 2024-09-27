@@ -64,7 +64,7 @@ export default function HomePage() {
           </video>
         </Box>
 
-        <Grid container spacing={4}  justifyContent="center" alignItems="center">
+        <Grid container spacing={4}  justifyContent="center" alignItems="center" mt={2}>
           {/* Right Column */}
           <Grid item >
             <Grid container spacing={1} sx={{ marginTop: 4 }}>
