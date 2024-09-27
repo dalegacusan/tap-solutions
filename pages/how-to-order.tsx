@@ -135,7 +135,7 @@ const HowToOrder = () => (
               style={{
                 width: '100%',
                 height: 'auto',
-                maxWidth: '100%',
+                maxWidth: '90%',
                 objectFit: 'cover',
               }}
             />
