@@ -8,7 +8,6 @@ const HeaderContainer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   backgroundColor: 'white',
-  padding: theme.spacing(2),
 }));
 
 const LogoContainer = styled(Box)(({ theme }) => ({
@@ -24,10 +23,10 @@ const Header = () => {
   return (
     <HeaderContainer>
       <LogoContainer>
-        <Image src='/images/logo.png' height={100} width={100} alt='logo' />
+        <Image src='/images/logo.png' height={70} width={70} alt='logo' />
       </LogoContainer>
       <Typography
-        variant={isMobile ? 'h6' : 'h5'}
+        variant={isMobile ? 'body1' : 'h6'}
         fontWeight={600}
         sx={{ textAlign: 'center', padding: '0 16px' }}
       >
