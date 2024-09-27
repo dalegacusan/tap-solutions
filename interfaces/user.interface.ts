@@ -3,6 +3,7 @@ export interface User {
   firstName: string;
   lastName: string;
   phoneNumber: string;
+  phoneNumber2: string;
   socialMediaLinks: {
     twitter: string;
     facebook: string;

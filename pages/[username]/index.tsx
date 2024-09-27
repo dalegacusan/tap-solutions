@@ -399,39 +399,41 @@ export default function Home() {
                         </>
                       )}
 
-                      {/* Phone Number */}
-                      {user.phoneNumber && (
+                      {/* Phone Numbers */}
+                      {[user.phoneNumber, user.phoneNumber2].some(phone => phone) && (
                         <>
-                          <Typography mt={4}>Phone Number</Typography>
-                          <a
-                            href={`tel:${user.phoneNumber}`}
-                            style={{ textDecoration: 'none', color: 'inherit' }}
-                          >
-                            <StyledListItemButtonWithHover
-                              sx={{
-                                margin: '8px 0px',
-                                boxShadow: 1,
-                                borderRadius: '6px',
-                                display: 'flex',
-                                justifyContent: 'space-between', // Ensure content is spaced out
-                                alignItems: 'center', // Center items vertically
-                              }}
-                              className='card-socials'
+                          <Typography mt={4}>Phone Numbers</Typography>
+                          {[user.phoneNumber, user.phoneNumber2].filter(phone => phone).map((phone, index) => (
+                            <a
+                              key={index}
+                              href={`tel:${phone}`}
+                              style={{ textDecoration: 'none', color: 'inherit' }}
                             >
-                              <ListItemIcon>
-                                <CallIcon />
-                              </ListItemIcon>
-                              <ListItemText primary={user.phoneNumber} />
-                              {/* Add the save icon button */}
-                              <IconButton
-                                edge='end'
-                                onClick={handleSaveToContact}
-                                sx={{ color: '#FF914D' }} // Adjust color as needed
+                              <StyledListItemButtonWithHover
+                                sx={{
+                                  margin: '8px 0px',
+                                  boxShadow: 1,
+                                  borderRadius: '6px',
+                                  display: 'flex',
+                                  justifyContent: 'space-between',
+                                  alignItems: 'center',
+                                }}
+                                className='card-socials'
                               >
-                                <BookmarkIcon />
-                              </IconButton>
-                            </StyledListItemButtonWithHover>
-                          </a>
+                                <ListItemIcon>
+                                  <CallIcon />
+                                </ListItemIcon>
+                                <ListItemText primary={phone} />
+                                <IconButton
+                                  edge='end'
+                                  onClick={handleSaveToContact}
+                                  sx={{ color: '#FF914D' }} // Adjust color as needed
+                                >
+                                  <BookmarkIcon />
+                                </IconButton>
+                              </StyledListItemButtonWithHover>
+                            </a>
+                          ))}
                         </>
                       )}
                     </nav>

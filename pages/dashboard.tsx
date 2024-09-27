@@ -63,6 +63,7 @@ import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { v4 as uuidv4 } from 'uuid'; // Import UUID library
 import { useAuth } from '../context/AuthContext';
 import { useRouter } from 'next/router';
+import CallIcon from '@mui/icons-material/Call';
 
 const widgetIcons = {
   aboutMe: <InfoIcon />,
@@ -71,6 +72,7 @@ const widgetIcons = {
   jobTitle: <WorkIcon />,
   company: <AssignmentIcon />,
   website: <LanguageIcon />,
+  phoneNumber: <CallIcon />
 };
 
 const socialMediaItems = [
@@ -88,6 +90,18 @@ const getWidgetContent = (formData) => {
       id: 'aboutMe',
       content: formData.aboutMe || '',
       icon: widgetIcons.aboutMe,
+    },
+    {
+      id: 'phoneNumber',
+      label: 'Phone Number *',
+      content: formData.phoneNumber || '',
+      icon: widgetIcons.phoneNumber,
+    },
+    {
+      id: 'phoneNumber2',
+      label: 'Phone Number',
+      content: formData.phoneNumber2 || '',
+      icon: widgetIcons.phoneNumber,
     },
     {
       id: 'emailAddress',
@@ -169,6 +183,7 @@ export default function DashboardPage() {
     firstName: '',
     lastName: '',
     phoneNumber: '',
+    phoneNumber2: '',
     socialMediaLinks: {
       twitter: '',
       facebook: '',
@@ -1039,7 +1054,7 @@ export default function DashboardPage() {
                   />
                 </Box>
 
-                <Box mt={4}>
+                {/* <Box mt={4}>
                   <TextField
                     fullWidth
                     required
@@ -1047,7 +1062,7 @@ export default function DashboardPage() {
                     value={formData.phoneNumber}
                     onChange={handleTextFieldChange('phoneNumber')}
                   />
-                </Box>
+                </Box> */}
 
                 <Grid container spacing={2} mt={2}>
                   <Grid item xs={12}>

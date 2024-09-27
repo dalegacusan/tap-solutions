@@ -18,6 +18,7 @@ import TelegramIcon from '@mui/icons-material/Telegram';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import ViberIcon from './icons/viber-icon';
 import LanguageIcon from '@mui/icons-material/Language';
+import CallIcon from '@mui/icons-material/Call';
 
 export const capitalizeFirstLetter = (text: string) => {
   return text.charAt(0).toUpperCase() + text.slice(1);
@@ -68,6 +69,13 @@ const AddWidgetModal = ({ open, onClose, formData, setFormData }) => {
         ...formData,
         [emailKey]: currentValue,
       });
+    } else if (currentWidget.startsWith('phoneNumber')) {
+      const phoneNumberIndex = currentWidget.replace('phoneNumber', '');
+      const phoneNumberKey = `phoneNumber${phoneNumberIndex || ''}`; // will be 'phoneNumber' for the first one
+      setFormData({
+        ...formData,
+        [phoneNumberKey]: currentValue,
+      });
     } else if (
       currentWidget === 'whatsApp' ||
       currentWidget === 'viber' ||
@@ -92,7 +100,9 @@ const AddWidgetModal = ({ open, onClose, formData, setFormData }) => {
   // Define the widgets and their identifiers
   const widgets = [
     { type: 'aboutMe', icon: <InfoIcon />, label: 'About Me' },
-    { type: 'emailAddress', icon: <EmailIcon />, label: 'Email Address' },
+    { type: 'phoneNumber', icon: <CallIcon />, label: 'Phone Number 1' },
+    { type: 'phoneNumber2', icon: <CallIcon />, label: 'Phone Number 2' },
+    { type: 'emailAddress', icon: <EmailIcon />, label: 'Email Address 1' },
     { type: 'emailAddress2', icon: <EmailIcon />, label: 'Email Address 2' },
     { type: 'emailAddress3', icon: <EmailIcon />, label: 'Email Address 3' },
     { type: 'emailAddress4', icon: <EmailIcon />, label: 'Email Address 4' },
@@ -128,7 +138,7 @@ const AddWidgetModal = ({ open, onClose, formData, setFormData }) => {
   );
 
   const nonCommunicationWidgets = availableWidgets.filter(
-    (widget) => !['whatsApp', 'viber', 'telegram'].includes(widget.type) && !widget.type.startsWith('emailAddress')
+    (widget) => !['whatsApp', 'viber', 'telegram'].includes(widget.type) && !widget.type.startsWith('emailAddress') && !widget.type.startsWith('phoneNumber')
   );
 
   // Check if all widgets are used
@@ -142,94 +152,117 @@ const AddWidgetModal = ({ open, onClose, formData, setFormData }) => {
     return null; // No available email widgets
   };
 
+  const getNextAvailablePhoneNumberWidget = () => {
+    if (!formData.phoneNumber) return 'phoneNumber';
+    if (!formData.phoneNumber2) return 'phoneNumber2';
+    return null; // No available email widgets
+  };
+
   // Get the next email widget to display
-const nextEmailWidget = getNextAvailableEmailWidget();
+  const nextEmailWidget = getNextAvailableEmailWidget();
+  const nextPhoneNumberWidget = getNextAvailablePhoneNumberWidget();
 
   return (
     <>
       <Modal
-      open={open}
-      onClose={onClose}
-      aria-labelledby='modal-modal-title'
-      aria-describedby='modal-modal-description'
-    >
-      <Box sx={modalStyle}>
-        <Typography id='modal-modal-title' variant='h6' component='h2' mb={3}>
-          Add Widget
-        </Typography>
-
-        {allWidgetsUsed ? (
-          <Typography variant='body1' color='textSecondary'>
-            All widgets are used.
+        open={open}
+        onClose={onClose}
+        aria-labelledby='modal-modal-title'
+        aria-describedby='modal-modal-description'
+      >
+        <Box sx={modalStyle}>
+          <Typography id='modal-modal-title' variant='h6' component='h2' mb={3}>
+            Add Widget
           </Typography>
-        ) : (
-          <>
-            {/* Render only the next available email widget */}
-            {nextEmailWidget && (
-              <ListItemButton
-                key={nextEmailWidget}
-                onClick={() => handleOpenSubModal(nextEmailWidget, `Email Address ${nextEmailWidget.replace('emailAddress', '')}`, '')}
-                sx={{
-                  margin: '8px 0px',
-                  boxShadow: 1,
-                  borderRadius: '6px',
-                }}
-              >
-                <ListItemIcon><EmailIcon /></ListItemIcon>
-                <ListItemText primary={`Email Address ${nextEmailWidget.replace('emailAddress', '')}`} />
-              </ListItemButton>
-            )}
 
-            {/* Non-communication Widgets */}
-            {nonCommunicationWidgets.map((widget) => (
-              <ListItemButton
-                key={widget.type}
-                onClick={() =>
-                  handleOpenSubModal(widget.type, widget.label, widget.note)
-                }
-                sx={{
-                  margin: '8px 0px',
-                  boxShadow: 1,
-                  borderRadius: '6px',
-                }}
-              >
-                <ListItemIcon>{widget.icon}</ListItemIcon>
-                <ListItemText primary={widget.label} />
-              </ListItemButton>
-            ))}
+          {allWidgetsUsed ? (
+            <Typography variant='body1' color='textSecondary'>
+              All widgets are used.
+            </Typography>
+          ) : (
+            <>
+              {/* Render only the next available email widget */}
+              {nextEmailWidget && (
+                <ListItemButton
+                  key={nextEmailWidget}
+                  onClick={() => handleOpenSubModal(nextEmailWidget, `Email Address ${nextEmailWidget.replace('emailAddress', '')}`, '')}
+                  sx={{
+                    margin: '8px 0px',
+                    boxShadow: 1,
+                    borderRadius: '6px',
+                  }}
+                >
+                  <ListItemIcon><EmailIcon /></ListItemIcon>
+                  <ListItemText primary={`Email Address ${nextEmailWidget.replace('emailAddress', '')}`} />
+                </ListItemButton>
+              )}
 
-            {/* Communication Widgets */}
-            {communicationWidgets.length > 0 && (
-              <>
-                <Typography variant='body1' sx={{ marginTop: 3 }}>
-                  Communication
-                </Typography>
-                {communicationWidgets.map((widget) => (
-                  <ListItemButton
-                    key={widget.type}
-                    onClick={() =>
-                      handleOpenSubModal(
-                        widget.type,
-                        widget.label,
-                        widget.note
-                      )
-                    }
-                    sx={{
-                      margin: '8px 0px',
-                      boxShadow: 1,
-                      borderRadius: '6px',
-                    }}
-                  >
-                    <ListItemIcon>{widget.icon}</ListItemIcon>
-                    <ListItemText primary={`${widget.label}`} />
-                  </ListItemButton>
-                ))}
-              </>
-            )}
-          </>
-        )}
-      </Box>
-    </Modal>
+              {/* Render only the next available phone number widget */}
+              {nextPhoneNumberWidget && (
+                <ListItemButton
+                  key={nextPhoneNumberWidget}
+                  onClick={() => handleOpenSubModal(nextPhoneNumberWidget, `Phone Number ${nextPhoneNumberWidget.replace('phoneNumber', '')}`, '')}
+                  sx={{
+                    margin: '8px 0px',
+                    boxShadow: 1,
+                    borderRadius: '6px',
+                  }}
+                >
+                  <ListItemIcon><CallIcon /></ListItemIcon>
+                  <ListItemText primary={`Phone Number ${nextPhoneNumberWidget.replace('phoneNumber', '')}`} />
+                </ListItemButton>
+              )}
+
+              {/* Non-communication Widgets */}
+              {nonCommunicationWidgets.map((widget) => (
+                <ListItemButton
+                  key={widget.type}
+                  onClick={() =>
+                    handleOpenSubModal(widget.type, widget.label, widget.note)
+                  }
+                  sx={{
+                    margin: '8px 0px',
+                    boxShadow: 1,
+                    borderRadius: '6px',
+                  }}
+                >
+                  <ListItemIcon>{widget.icon}</ListItemIcon>
+                  <ListItemText primary={widget.label} />
+                </ListItemButton>
+              ))}
+
+              {/* Communication Widgets */}
+              {communicationWidgets.length > 0 && (
+                <>
+                  <Typography variant='body1' sx={{ marginTop: 3 }}>
+                    Communication
+                  </Typography>
+                  {communicationWidgets.map((widget) => (
+                    <ListItemButton
+                      key={widget.type}
+                      onClick={() =>
+                        handleOpenSubModal(
+                          widget.type,
+                          widget.label,
+                          widget.note
+                        )
+                      }
+                      sx={{
+                        margin: '8px 0px',
+                        boxShadow: 1,
+                        borderRadius: '6px',
+                      }}
+                    >
+                      <ListItemIcon>{widget.icon}</ListItemIcon>
+                      <ListItemText primary={`${widget.label}`} />
+                    </ListItemButton>
+                  ))}
+                </>
+              )}
+            </>
+          )}
+        </Box>
+      </Modal>
 
       {/* Sub-Modal for Widget Input */}
       <Modal
