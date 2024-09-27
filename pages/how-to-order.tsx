@@ -71,7 +71,7 @@ export const InfoBox = ({
         </Typography>
       )}
       <Typography
-        variant='body2'
+        variant='body1'
         style={{ color: textColor ? textColor : 'black' }}
         mt={title ? 0 : 2}
       >
@@ -154,19 +154,19 @@ const HowToOrder = () => (
         <Grid item xs={12} sm={6} md={3}>
           <InfoBox
             imageSrc='/images/how-to-order/pay.png'
-            description='Pay the total amount'
+            description='Complete your payment'
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <InfoBox
             imageSrc='/images/how-to-order/production.png'
-            description='Print and programming of your NFC Card'
+            description='We’ll print and program your NFC card'
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <InfoBox
             imageSrc='/images/how-to-order/deliver.png'
-            description='Shipping of your NFC Card through Grab, Lalamove or LBC'
+            description='Your card is shipped via Grab, Lalamove, or LBC'
           />
         </Grid>
       </Grid>
@@ -176,7 +176,7 @@ const HowToOrder = () => (
         <Grid item xs={12} sm={4}>
           <InfoBox
             imageSrc='/images/how-to-order/edit.png'
-            description='Edit your profile through your Tap Technology account'
+            description='Edit your profile anytime through your Tap Technologies account'
           />
         </Grid>
         <Grid item xs={12} sm={4}>
@@ -188,7 +188,7 @@ const HowToOrder = () => (
         <Grid item xs={12} sm={4}>
           <InfoBox
             imageSrc='/images/how-to-order/share.png'
-            description='Share your contact information and experience networking to a whole new level'
+            description='Share your info and enjoy effortless networking!'
           />
         </Grid>
       </Grid>
