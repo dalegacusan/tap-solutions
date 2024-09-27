@@ -19,6 +19,9 @@ export interface User {
   websiteUrl: string;
   aboutMe: string;
   emailAddress: string;
+  emailAddress2: string;
+  emailAddress3: string;
+  emailAddress4: string;
   address: string;
   jobTitle: string;
   company: string;
