@@ -51,23 +51,22 @@ export default function HomePage() {
           style={{ marginBottom: '80px' }}
           alt="Home Instructions"
         />
-        <Grid container spacing={4}>
-          {/* Left Column */}
-          <Grid item xs={12} md={6}>
-            <Box
-              sx={{
-                padding: 2,
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-              }}
-            >
-              GIF / Video
-            </Box>
-          </Grid>
 
+        <Box sx={{
+          display: 'flex',
+          justifyContent: 'center', // Center horizontally
+          alignItems: 'center',     // Center vertically (if Box has a height)
+          height: '100%',           // Optional: Set height if you want vertical centering
+        }}>
+          <video width='90%' controls>
+            <source src="/videos/tap_solutions.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </Box>
+
+        <Grid container spacing={4}  justifyContent="center" alignItems="center">
           {/* Right Column */}
-          <Grid item xs={12} md={6}>
+          <Grid item >
             <Grid container spacing={1} sx={{ marginTop: 4 }}>
               {/* First Row with 4 Boxes */}
               <Grid item xs={12} sm={6} md={3}>
@@ -108,7 +107,7 @@ export default function HomePage() {
               </Grid>
             </Grid>
 
-            <Grid container spacing={4} sx={{ marginTop: 4 }}>
+            <Grid container spacing={4} sx={{ marginTop: 4, }}>
               {/* Second Row with 4 Boxes */}
               <Grid item xs={12} sm={6} md={3}>
                 <InfoBox
@@ -191,7 +190,7 @@ export default function HomePage() {
                   borderRadius: '8px',
                 }}
               >
-                <Typography variant='body2'>Partner 1</Typography>
+                <Typography variant='body2'></Typography>
               </Box>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
@@ -206,7 +205,7 @@ export default function HomePage() {
                   borderRadius: '8px',
                 }}
               >
-                <Typography variant='body2'>Partner 2</Typography>
+                <Typography variant='body2'></Typography>
               </Box>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
@@ -221,7 +220,7 @@ export default function HomePage() {
                   borderRadius: '8px',
                 }}
               >
-                <Typography variant='body2'>Partner 3</Typography>
+                <Typography variant='body2'></Typography>
               </Box>
             </Grid>
             {/* Add more placeholder images as needed */}
