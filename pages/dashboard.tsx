@@ -416,9 +416,9 @@ export default function DashboardPage() {
       communication,
     } = formData;
 
-    const hasDefinedSocialMedia = Object.values(socialMediaLinks).some(
-      (link) => link.trim() !== ''
-    );
+    // const hasDefinedSocialMedia = Object.values(socialMediaLinks).some(
+    //   (link) => link.trim() !== ''
+    // );
 
     if (!isLoggedIn) {
       router.push('/'); // Open the password modal if password is not yet verified
@@ -461,12 +461,12 @@ export default function DashboardPage() {
       return;
     }
 
-    if (!hasDefinedSocialMedia) {
-      setSnackbarMessage('At least one social media link must be defined.');
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
-      return;
-    }
+    // if (!hasDefinedSocialMedia) {
+    //   setSnackbarMessage('At least one social media link must be defined.');
+    //   setSnackbarSeverity('error');
+    //   setSnackbarOpen(true);
+    //   return;
+    // }
 
     try {
       // Hash the password using the API route

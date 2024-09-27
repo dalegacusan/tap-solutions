@@ -441,9 +441,9 @@ export default function EditPage() {
       portfolioImages,
       communication,
     } = formData;
-    const hasDefinedSocialMedia = Object.values(socialMediaLinks).some(
-      (link) => link.trim() !== ''
-    );
+    // const hasDefinedSocialMedia = Object.values(socialMediaLinks).some(
+    //   (link) => link.trim() !== ''
+    // );
 
     if (!isLoggedIn) {
       router.push('/'); // Redirect to the homepage
@@ -472,12 +472,12 @@ export default function EditPage() {
       return;
     }
 
-    if (!hasDefinedSocialMedia) {
-      setSnackbarMessage('At least one social media link must be defined.');
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
-      return;
-    }
+    // if (!hasDefinedSocialMedia) {
+    //   setSnackbarMessage('At least one social media link must be defined.');
+    //   setSnackbarSeverity('error');
+    //   setSnackbarOpen(true);
+    //   return;
+    // }
 
     // Normalize phone numbers before saving
     const normalizedCommunication = {

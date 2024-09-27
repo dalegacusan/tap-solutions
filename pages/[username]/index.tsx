@@ -465,46 +465,48 @@ export default function Home() {
                   )}
 
                   {/* Social Media */}
-                  <Box>
-                    <Typography mt={4}>Socials</Typography>
+                  {Object.values(user.socialMediaLinks).some(link => link.trim() !== '') && (
+                    <Box>
+                      <Typography mt={4}>Socials</Typography>
 
-                    <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                      {Object.entries(user.socialMediaLinks).map(
-                        ([key, link]) =>
-                          link ? (
-                            <Grid item xs={6} key={key}>
-                              <a
-                                href={link}
-                                style={{
-                                  textDecoration: 'none',
-                                  color: 'inherit',
-                                }}
-                                target='_blank'
-                                rel='noopener noreferrer'
-                              >
-                                <StyledListItemButtonWithHover
-                                  sx={{
-                                    margin: '8px 0px',
-                                    boxShadow: 1,
-                                    borderRadius: '6px',
+                      <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                        {Object.entries(user.socialMediaLinks).map(
+                          ([key, link]) =>
+                            link ? (
+                              <Grid item xs={6} key={key}>
+                                <a
+                                  href={link}
+                                  style={{
+                                    textDecoration: 'none',
+                                    color: 'inherit',
                                   }}
-                                  className='card-socials'
+                                  target='_blank'
+                                  rel='noopener noreferrer'
                                 >
-                                  <ListItemIcon>
-                                    {iconMapping[key]}
-                                  </ListItemIcon>
-                                  <ListItemText
-                                    primary={
-                                      key.charAt(0).toUpperCase() + key.slice(1)
-                                    }
-                                  />
-                                </StyledListItemButtonWithHover>
-                              </a>
-                            </Grid>
-                          ) : null
-                      )}
-                    </Grid>
-                  </Box>
+                                  <StyledListItemButtonWithHover
+                                    sx={{
+                                      margin: '8px 0px',
+                                      boxShadow: 1,
+                                      borderRadius: '6px',
+                                    }}
+                                    className='card-socials'
+                                  >
+                                    <ListItemIcon>
+                                      {iconMapping[key]}
+                                    </ListItemIcon>
+                                    <ListItemText
+                                      primary={
+                                        key.charAt(0).toUpperCase() + key.slice(1)
+                                      }
+                                    />
+                                  </StyledListItemButtonWithHover>
+                                </a>
+                              </Grid>
+                            ) : null
+                        )}
+                      </Grid>
+                    </Box>
+                  )}
 
                   {/* Communication */}
                   {user.communication &&
