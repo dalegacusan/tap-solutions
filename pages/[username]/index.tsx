@@ -55,8 +55,8 @@ const iconMapping = {
 const StyledListItemButtonWithHover = styled(ListItemButton)`
   ${({ theme }) => `
   transition: ${theme.transitions.create(['transform'], {
-    duration: theme.transitions.duration.standard,
-  })};
+  duration: theme.transitions.duration.standard,
+})};
   &:hover {
     transform: scale(1.05);
   }
@@ -96,35 +96,29 @@ export default function Home() {
       `TEL;TYPE=WORK:${user.phoneNumber || ''}\n` +
       `ORG:${user.company || ''}\n` +
       `TITLE:${user.jobTitle || ''}\n` +
-      `${
-        user.socialMediaLinks.facebook
-          ? `URL;TYPE=FACEBOOK:${user.socialMediaLinks.facebook}\n`
-          : ''
+      `${user.socialMediaLinks.facebook
+        ? `URL;TYPE=FACEBOOK:${user.socialMediaLinks.facebook}\n`
+        : ''
       }` +
-      `${
-        user.socialMediaLinks.twitter
-          ? `URL;TYPE=TWITTER:${user.socialMediaLinks.twitter}\n`
-          : ''
+      `${user.socialMediaLinks.twitter
+        ? `URL;TYPE=TWITTER:${user.socialMediaLinks.twitter}\n`
+        : ''
       }` +
-      `${
-        user.socialMediaLinks.instagram
-          ? `URL;TYPE=INSTAGRAM:${user.socialMediaLinks.instagram}\n`
-          : ''
+      `${user.socialMediaLinks.instagram
+        ? `URL;TYPE=INSTAGRAM:${user.socialMediaLinks.instagram}\n`
+        : ''
       }` +
-      `${
-        user.socialMediaLinks.linkedIn
-          ? `URL;TYPE=LINKEDIN:${user.socialMediaLinks.linkedIn}\n`
-          : ''
+      `${user.socialMediaLinks.linkedIn
+        ? `URL;TYPE=LINKEDIN:${user.socialMediaLinks.linkedIn}\n`
+        : ''
       }` +
-      `${
-        user.socialMediaLinks.youtube
-          ? `URL;TYPE=YOUTUBE:${user.socialMediaLinks.youtube}\n`
-          : ''
+      `${user.socialMediaLinks.youtube
+        ? `URL;TYPE=YOUTUBE:${user.socialMediaLinks.youtube}\n`
+        : ''
       }` +
-      `${
-        user.socialMediaLinks.tiktok
-          ? `URL;TYPE=TIKTOK:${user.socialMediaLinks.tiktok}\n`
-          : ''
+      `${user.socialMediaLinks.tiktok
+        ? `URL;TYPE=TIKTOK:${user.socialMediaLinks.tiktok}\n`
+        : ''
       }` +
       `NOTE:Created with taptech.ph\n` +
       `END:VCARD`;
@@ -179,20 +173,20 @@ export default function Home() {
   // Dynamically set the background style
   const backgroundStyle = user?.backgroundColor
     ? {
-        background: `linear-gradient(
+      background: `linear-gradient(
         rgba(255, 255, 255, 0.4), 
         rgba(255, 255, 255, 0.4)
       ), ${user.backgroundColor}`,
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover',
-      }
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: 'cover',
+    }
     : user?.backgroundUrl
-    ? {
+      ? {
         backgroundImage: `url('${user.backgroundUrl}')`,
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
       }
-    : {
+      : {
         background:
           'linear-gradient(0deg, rgba(255, 238, 218, 1) 0%, rgba(255, 255, 255, 1) 38%, rgba(255, 255, 255, 1) 61%, rgba(203, 242, 238, 1) 100%)',
         backgroundRepeat: 'no-repeat',
@@ -275,9 +269,8 @@ export default function Home() {
               left: 0,
               width: '100%',
               height: '100%',
-              backgroundImage: `url('${
-                user?.bannerUrl || '/images/banner2.png'
-              }')`,
+              backgroundImage: `url('${user?.bannerUrl || '/images/banner2.png'
+                }')`,
               backgroundRepeat: 'no-repeat',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
@@ -374,27 +367,35 @@ export default function Home() {
                       )}
 
                       {/* Email Address */}
-                      {user.emailAddress && (
+                      {[user.emailAddress, user.emailAddress2, user.emailAddress3, user.emailAddress4].some(email => email) && (
                         <>
-                          <Typography mt={4}>Email Address</Typography>
-                          <a
-                            href={`mailto:${user.emailAddress}`}
-                            style={{ textDecoration: 'none', color: 'inherit' }}
-                          >
-                            <StyledListItemButtonWithHover
-                              sx={{
-                                margin: '8px 0px',
-                                boxShadow: 1,
-                                borderRadius: '6px',
-                              }}
-                              className='card-socials'
+                          <Typography mt={4}>Email Addresses</Typography>
+                          {[
+                            user.emailAddress,
+                            user.emailAddress2,
+                            user.emailAddress3,
+                            user.emailAddress4,
+                          ].filter(email => email).map((email, index) => (
+                            <a
+                              key={index}
+                              href={`mailto:${email}`}
+                              style={{ textDecoration: 'none', color: 'inherit' }}
                             >
-                              <ListItemIcon>
-                                <EmailIcon />
-                              </ListItemIcon>
-                              <ListItemText primary={user.emailAddress} />
-                            </StyledListItemButtonWithHover>
-                          </a>
+                              <StyledListItemButtonWithHover
+                                sx={{
+                                  margin: '8px 0px',
+                                  boxShadow: 1,
+                                  borderRadius: '6px',
+                                }}
+                                className='card-socials'
+                              >
+                                <ListItemIcon>
+                                  <EmailIcon />
+                                </ListItemIcon>
+                                <ListItemText primary={email} />
+                              </StyledListItemButtonWithHover>
+                            </a>
+                          ))}
                         </>
                       )}
 
