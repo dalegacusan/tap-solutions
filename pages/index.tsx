@@ -160,9 +160,13 @@ export default function HomePage() {
           <Box sx={{ width: '100%' }}>
             <Slideshow
               slides={[
-                '/images/banner.png',
-                '/images/banner2.png',
-                '/images/banner3.jpg',
+                '/images/card-template/7.png',
+                '/images/card-template/9.png',
+                '/images/card-template/11.png',
+                '/images/card-template/13.png',
+                '/images/card-template/15.png',
+                '/images/card-template/17.png',
+                '/images/card-template/19.png',
               ]}
             />
           </Box>
